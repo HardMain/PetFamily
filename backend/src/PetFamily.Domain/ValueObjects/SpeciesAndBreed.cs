@@ -7,7 +7,7 @@ using CSharpFunctionalExtensions;
 
 namespace PetFamily.Domain.ValueObjects
 {
-    internal class SpeciesAndBreed
+    internal class SpeciesAndBreed : ValueObject
     {
         private SpeciesAndBreed(Guid speciesId, Guid breedId) 
         {
@@ -21,6 +21,12 @@ namespace PetFamily.Domain.ValueObjects
         public Result<SpeciesAndBreed> Create(Guid speciesId, Guid breedId)
         {
             return Result.Success(new SpeciesAndBreed(speciesId, breedId));
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return SpeciesId;
+            yield return BreedId;
         }
     }
 }
