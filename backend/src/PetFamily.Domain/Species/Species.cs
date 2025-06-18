@@ -12,8 +12,8 @@ namespace PetFamily.Domain.Species
             Name = name;
         }
 
-        public Guid Id { get; set; }
-        public string Name { get; set; } = default!;
+        public Guid Id { get; private set; }
+        public string Name { get; private set; } = default!;
         public IReadOnlyList<Breed> Breeds => _breeds;
 
         public static Result<Species> Create(string name)
