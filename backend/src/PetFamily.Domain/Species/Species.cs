@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Species
 {
-    internal class Species
+    public class Species
     {
         private readonly List<Breed> _breeds = [];
 
@@ -16,7 +16,7 @@ namespace PetFamily.Domain.Species
         public string Name { get; set; } = default!;
         public IReadOnlyList<Breed> Breeds => _breeds;
 
-        public Result<Species> Create(string name)
+        public static Result<Species> Create(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return Result.Failure<Species>("Name can not be empty!");

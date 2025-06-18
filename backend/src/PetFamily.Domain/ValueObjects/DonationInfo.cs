@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.ValueObjects
 {
-    internal class DonationInfo : ValueObject
+    public class DonationInfo : ValueObject
     {
         private DonationInfo(string title, string description) 
         {
@@ -13,7 +13,7 @@ namespace PetFamily.Domain.ValueObjects
         public string Title { get;} = default!;
         public string Description { get; } = default!;
 
-        public Result<DonationInfo> Create(string title, string description)
+        public static Result<DonationInfo> Create(string title, string description)
         {
             if (string.IsNullOrWhiteSpace(title))
                 return Result.Failure<DonationInfo>("Title can not be empty");

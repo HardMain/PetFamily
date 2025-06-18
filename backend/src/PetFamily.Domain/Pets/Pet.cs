@@ -3,7 +3,7 @@ using PetFamily.Domain.ValueObjects;
 
 namespace PetFamily.Domain.Pets
 {
-    internal class Pet : Entity
+    public class Pet : Entity
     {
         private readonly List<DonationInfo> _donationInfo = [];
 
@@ -17,10 +17,10 @@ namespace PetFamily.Domain.Pets
             OwnerPhone = ownerPhone;
         }
 
-        public new Guid Id { get; private set; }
+        public Guid Id { get; private set; }
         public string Name { get; private set; } = default!;
         public string Description { get; private set; } = default!;
-        public SpeciesAndBreed speciesAndBreed { get; private set; } = default!;
+        public SpeciesAndBreed SpeciesAndBreed { get; private set; } = default!;
         public string Color { get; private set; } = default!;
         public string HealthInformation { get; private set; } = default!;
         public Address Address { get; private set; } = default!;

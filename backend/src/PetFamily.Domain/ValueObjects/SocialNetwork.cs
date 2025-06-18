@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.ValueObjects
 {
-    internal class SocialNetwork : ValueObject
+    public class SocialNetwork : ValueObject
     {
         private SocialNetwork(string url, string platform)
         {
@@ -13,7 +13,7 @@ namespace PetFamily.Domain.ValueObjects
         public string URL { get; }
         public string Platform { get; }
 
-        public Result<SocialNetwork> Create(string url, string platform)
+        public static Result<SocialNetwork> Create(string url, string platform)
         {
             if (string.IsNullOrWhiteSpace(url))
                 return Result.Failure<SocialNetwork>("Url can not be empty!");

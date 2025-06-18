@@ -2,9 +2,9 @@
 
 namespace PetFamily.Domain.ValueObjects
 {
-    internal class Address : ValueObject
+    public class Address : ValueObject
     {
-        private Address(string street, string houseNumber, string city, string country)
+        public Address(string street, string houseNumber, string city, string country)
         { 
             Street = street;
             HouseNumber = houseNumber;
@@ -17,18 +17,18 @@ namespace PetFamily.Domain.ValueObjects
         public string City { get; }
         public string Country { get; }
 
-        public Result<Address> Create(string street, string houseNumber, string city, string country)
+        public static Result<Address> Create(string street, string houseNumber, string city, string country)
         {
-            if (string.IsNullOrWhiteSpace(Street))
+            if (string.IsNullOrWhiteSpace(street))
                 return Result.Failure<Address>("Street can not be empty!");
 
-            if (string.IsNullOrWhiteSpace(HouseNumber))
+            if (string.IsNullOrWhiteSpace(houseNumber))
                 return Result.Failure<Address>("HouseNumber can not be empty!");
 
-            if (string.IsNullOrWhiteSpace(City))
+            if (string.IsNullOrWhiteSpace(city))
                 return Result.Failure<Address>("City can not be empty!");
 
-            if (string.IsNullOrWhiteSpace(Country))
+            if (string.IsNullOrWhiteSpace(country))
                 return Result.Failure<Address>("Country can not be empty!");
 
             return Result.Success(new Address(street, houseNumber, city, country));

@@ -7,7 +7,7 @@ using CSharpFunctionalExtensions;
 
 namespace PetFamily.Domain.ValueObjects
 {
-    internal class SpeciesAndBreed : ValueObject
+    public class SpeciesAndBreed : ValueObject
     {
         private SpeciesAndBreed(Guid speciesId, Guid breedId) 
         {
@@ -18,7 +18,7 @@ namespace PetFamily.Domain.ValueObjects
         public Guid SpeciesId { get; }
         public Guid BreedId { get; }
 
-        public Result<SpeciesAndBreed> Create(Guid speciesId, Guid breedId)
+        public static Result<SpeciesAndBreed> Create(Guid speciesId, Guid breedId)
         {
             return Result.Success(new SpeciesAndBreed(speciesId, breedId));
         }

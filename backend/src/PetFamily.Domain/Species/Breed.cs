@@ -2,7 +2,7 @@
 
 namespace PetFamily.Domain.Species
 {
-    internal class Breed
+    public class Breed
     {
         private Breed(string name)
         {
@@ -13,7 +13,7 @@ namespace PetFamily.Domain.Species
         public Guid Id { get; private set; }
         public string Name { get; private set; } = default!;
 
-        public Result<Breed> Create(string name)
+        public static Result<Breed> Create(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return Result.Failure<Breed>("Name can not be empty!");

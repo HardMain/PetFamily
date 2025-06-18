@@ -3,7 +3,7 @@ using CSharpFunctionalExtensions;
 
 namespace PetFamily.Domain.ValueObjects
 {
-    internal class PhoneNumber : ValueObject
+    public class PhoneNumber : ValueObject
     {
         static private Regex regex = new Regex(@"^\+[1-9]\d{9,14}$");
 
@@ -14,9 +14,9 @@ namespace PetFamily.Domain.ValueObjects
 
         public string Number { get; }
 
-        public Result<PhoneNumber> Create(string number)
+        public static Result<PhoneNumber> Create(string number)
         {
-            if (string.IsNullOrWhiteSpace(Number))
+            if (string.IsNullOrWhiteSpace(number))
                 return Result.Failure<PhoneNumber>("Number can not be empty!");
 
             if (!regex.IsMatch(number))

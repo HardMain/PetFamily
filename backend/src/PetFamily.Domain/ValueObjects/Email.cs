@@ -3,7 +3,7 @@ using CSharpFunctionalExtensions;
 
 namespace PetFamily.Domain.ValueObjects
 {
-    internal class Email : ValueObject
+    public class Email : ValueObject
     {
         static private Regex regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
 
@@ -14,7 +14,7 @@ namespace PetFamily.Domain.ValueObjects
 
         public string Value { get; }
 
-        public Result<Email> Create(string email)
+        public static Result<Email> Create(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
                 return Result.Failure<Email>("Email can not be empty!");
