@@ -1,6 +1,0 @@
-@PetFamily.Api_HostAddress = http://localhost:5142
-
-GET {{PetFamily.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
