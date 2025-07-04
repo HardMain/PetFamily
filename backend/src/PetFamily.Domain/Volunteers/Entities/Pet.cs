@@ -1,23 +1,25 @@
-﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.ValueObjects;
+﻿using PetFamily.Domain.Shared.Entities;
+using PetFamily.Domain.Shared.ValueObjects;
+using PetFamily.Domain.Species.ValueObjects;
+using PetFamily.Domain.Volunteers.Enums;
+using PetFamily.Domain.Volunteers.ValueObjects;
 
-namespace PetFamily.Domain.Pets
+namespace PetFamily.Domain.Volunteers.Entities
 {
-    public class Pet : Entity
+    public class Pet : Shared.Entity<PetId>
     {
         private readonly List<DonationInfo> _donationInfo = [];
 
-        private Pet() {}
+        private Pet(PetId id) : base(id) { }
 
-        private Pet(string name, string description, PhoneNumber ownerPhone) 
-        { 
-            Id = Guid.NewGuid();
+        private Pet(PetId id, string name, string description, PhoneNumber ownerPhone) : base(id)
+        {
             Name = name;
             Description = description;
             OwnerPhone = ownerPhone;
         }
 
-        public Guid Id { get; private set; }
+        public Volunteer Volunteer { get; private set; } = default!;
         public string Name { get; private set; } = default!;
         public string Description { get; private set; } = default!;
         public SpeciesAndBreed SpeciesAndBreed { get; private set; } = default!;
@@ -28,21 +30,21 @@ namespace PetFamily.Domain.Pets
         public double HeightCm { get; private set; }
         public PhoneNumber OwnerPhone { get; private set; } = default!;
         public bool isCastrated { get; private set; }
-        public DateOnly BirthDate { get; private set; } = default!;
+        public DateTime BirthDate { get; private set; } = default!;
         public bool isVaccinated { get; private set; }
         public SupportStatus SupportStatus { get; private set; }
         public IReadOnlyList<DonationInfo> DonationsInfo => _donationInfo;
         public DateTime CreationDate { get; private set; }
 
-        public static Result<Pet> Create(string name, string description, PhoneNumber ownerPhone)
+        public static Result<Pet> Create(PetId id, string name, string description, PhoneNumber ownerPhone)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return Result.Failure<Pet>("Name can not be empty!");
+                return "Name can not be empty!";
 
             if (string.IsNullOrWhiteSpace(description))
-                return Result.Failure<Pet>("Descrition can not be empty!");
+                return "Descrition can not be empty!";
 
-            return Result.Success(new Pet(name, description, ownerPhone));
+            return new Pet(id, name, description, ownerPhone);
         }
     }
 }
