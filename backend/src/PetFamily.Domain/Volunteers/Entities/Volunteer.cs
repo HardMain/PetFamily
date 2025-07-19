@@ -1,26 +1,28 @@
-﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.ValueObjects;
-using PetFamily.Domain.Pets;
+﻿using PetFamily.Domain.ValueObjects;
+using PetFamily.Domain.Shared.ValueObjects;
+using PetFamily.Domain.Volunteers.ValueObjects;
+using PetFamily.Domain.Volunteers.Enums;
+using PetFamily.Domain.Shared.Entities;
 
-namespace PetFamily.Domain.Volunteers
+namespace PetFamily.Domain.Volunteers.Entities
 {
-    public class Volunteer : Entity
+    public class Volunteer : Shared.Entity<VolunteerId>
     {
         private readonly List<SocialNetwork> _socialNetworks = [];
         private readonly List<DonationInfo> _donationsInfo = [];
         private readonly List<Pet> _pets = [];
 
-        private Volunteer(FullName name, Email email, string description)
+        private Volunteer(VolunteerId id) : base(id) { }
+
+        private Volunteer(VolunteerId volunteerId, FullName name, Email email, string description) : base(volunteerId)
         {
-            Id = Guid.NewGuid();
             Name = name;
             Email = email;
             Description = description;
         }
 
-        public Guid Id { get; private set; }
-        public FullName Name { get; private set; }
-        public Email Email { get; private set; }
+        public FullName Name { get; private set; } = default!;
+        public Email Email { get; private set; } = default!;
         public string Description { get; private set; } = default!;
         public int ExperienceYears { get; private set; }
         public PhoneNumber Number { get; private set; } = default!;
@@ -32,12 +34,12 @@ namespace PetFamily.Domain.Volunteers
         public int CountPetsNeedHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.need_home);
         public int CountPetsNeedHelp() => _pets.Count(pet => pet.SupportStatus == SupportStatus.need_help);
 
-        public static Result<Volunteer> Create(FullName name, Email email, string description)
+        public static Result<Volunteer> Create(VolunteerId volunteerId, FullName name, Email email, string description)
         {
             if (string.IsNullOrWhiteSpace(description))
-                return Result.Failure<Volunteer>("Description can not be empty!");
+                return "Description can not be empty!";
 
-            return Result.Success(new Volunteer(name, email, description));
+            return new Volunteer(volunteerId, name, email, description);
         }
     }
 }
