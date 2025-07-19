@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.ValueObjects;
 using PetFamily.Domain.Volunteers.Entities;
@@ -45,7 +45,7 @@ namespace PetFamily.Infrastructure.Configurations
                 emb.Property(em => em.Value)
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("first_name");
+                    .HasColumnName("email");
             });
 
             builder.Property(v => v.Description)
@@ -60,7 +60,7 @@ namespace PetFamily.Infrastructure.Configurations
 
             builder.OwnsOne(v => v.Number, phb =>
             {
-                phb.Property(ph => ph.Number)
+                phb.Property(ph => ph.Value)
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                     .HasColumnName("phone_number");

@@ -1,4 +1,3 @@
-﻿
 using PetFamily.Domain.Shared.Entities;
 
 namespace PetFamily.Domain.Shared.ValueObjects
@@ -16,13 +15,13 @@ namespace PetFamily.Domain.Shared.ValueObjects
         public string Title { get; } = default!;
         public string Description { get; } = default!;
 
-        public static Result<DonationInfo> Create(string title, string description)
+        public static Result<DonationInfo, Error> Create(string title, string description)
         {
             if (string.IsNullOrWhiteSpace(title))
-                return "Title can not be empty";
+                return Errors.General.ValueIsInvalid("Title");
 
             if (string.IsNullOrWhiteSpace(description))
-                return "Description can not be empty";
+                return Errors.General.ValueIsInvalid("Description");
 
             return new DonationInfo(title, description);
         }

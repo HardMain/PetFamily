@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Application", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Infrastructure", "src\PetFamily.Infrastructure\PetFamily.Infrastructure.csproj", "{AB6B9E4F-E90D-4838-8A42-F1BA5DEE9A64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Contracts", "src\PetFamily.Contracts\PetFamily.Contracts.csproj", "{DFCCB503-41EA-4D0A-A1BD-E43A5B8EABC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AB6B9E4F-E90D-4838-8A42-F1BA5DEE9A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB6B9E4F-E90D-4838-8A42-F1BA5DEE9A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB6B9E4F-E90D-4838-8A42-F1BA5DEE9A64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFCCB503-41EA-4D0A-A1BD-E43A5B8EABC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFCCB503-41EA-4D0A-A1BD-E43A5B8EABC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFCCB503-41EA-4D0A-A1BD-E43A5B8EABC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFCCB503-41EA-4D0A-A1BD-E43A5B8EABC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

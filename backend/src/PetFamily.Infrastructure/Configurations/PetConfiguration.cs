@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared.Constants;
 using PetFamily.Domain.Volunteers.Entities;
@@ -91,7 +91,7 @@ namespace PetFamily.Infrastructure.Configurations
 
             builder.OwnsOne(p => p.OwnerPhone, phb =>
             {
-                phb.Property(ph => ph.Number)
+                phb.Property(ph => ph.Value)
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                     .HasColumnName("owner_phone");

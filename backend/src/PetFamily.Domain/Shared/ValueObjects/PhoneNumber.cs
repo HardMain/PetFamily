@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using PetFamily.Domain.Shared.Entities;
 
 namespace PetFamily.Domain.Shared.ValueObjects
@@ -11,19 +11,16 @@ namespace PetFamily.Domain.Shared.ValueObjects
 
         private PhoneNumber(string number)
         {
-            Number = number;
+            Value = number;
         }
 
-        public string Number { get; } = default!;
+        public string Value { get; } = default!;
 
-        public static Result<PhoneNumber> Create(string number)
+        public static Result<PhoneNumber, Error> Create(string number)
         {
-            if (string.IsNullOrWhiteSpace(number))
-                return "Number can not be empty!";
-
-            if (!regex.IsMatch(number))
-                return "Invalid phone number format!";
-
+            if (string.IsNullOrWhiteSpace(number) || !regex.IsMatch(number))
+                return Errors.General.ValueIsInvalid("Number");
+                
             return new PhoneNumber(number);
         }
     }
