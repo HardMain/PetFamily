@@ -26,11 +26,11 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             if (emailResult.IsFailure)
                 return emailResult.Error;
 
-            var volunteerByPhone = await _volunteersRepository.GetByPhoneNumber(phoneNumberResult.Value);
+            var volunteerByPhone = await _volunteersRepository.GetByPhoneNumber(phoneNumberResult.Value, cancellationToken);
             if (volunteerByPhone.IsSuccess)
                 return Errors.Volunteer.AlreadyExist();
 
-            var volunteerByEmail = await _volunteersRepository.GetByEmail(emailResult.Value);
+            var volunteerByEmail = await _volunteersRepository.GetByEmail(emailResult.Value, cancellationToken);
             if (volunteerByEmail.IsSuccess)
                 return Errors.Volunteer.AlreadyExist();
 

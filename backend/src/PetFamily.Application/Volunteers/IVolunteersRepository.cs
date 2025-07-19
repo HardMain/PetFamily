@@ -10,8 +10,8 @@ namespace PetFamily.Application.Volunteers
     {
         Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken);
 
-        Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId);
-        Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber number);
-        Task<Result<Volunteer, Error>> GetByEmail(Email email);
+        Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken);
+        Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber number, CancellationToken cancellationToken);
+        Task<Result<Volunteer, Error>> GetByEmail(Email email, CancellationToken cancellationToken);
     }
 }
