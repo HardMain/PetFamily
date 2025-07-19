@@ -5,6 +5,7 @@ using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.ValueObjects;
 using PetFamily.Domain.Volunteers.Entities;
+using PetFamily.Domain.Volunteers.ValueObjects;
 
 namespace PetFamily.Infrastructure.Repositories
 {
@@ -38,11 +39,11 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer;
         }
 
-        public async Task<Result<Volunteer, Error>> GetByPhoneNumber(string phoneNumber)
+        public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
-                .FirstOrDefaultAsync(v => v.Number.Value == phoneNumber);
+                .FirstOrDefaultAsync(v => v.Number.Value == phoneNumber.Value);
 
             if (volunteer == null)
                 return Errors.General.NotFound();
@@ -50,11 +51,11 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer;
         }
 
-        public async Task<Result<Volunteer, Error>> GetByEmail(string email)
+        public async Task<Result<Volunteer, Error>> GetByEmail(Email email)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
-                .FirstOrDefaultAsync(v => v.Email.Value == email);
+                .FirstOrDefaultAsync(v => v.Email.Value == email.Value);
 
             if (volunteer == null)
                 return Errors.General.NotFound();

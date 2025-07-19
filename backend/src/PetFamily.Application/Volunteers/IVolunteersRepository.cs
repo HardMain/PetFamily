@@ -2,6 +2,7 @@
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.ValueObjects;
 using PetFamily.Domain.Volunteers.Entities;
+using PetFamily.Domain.Volunteers.ValueObjects;
 
 namespace PetFamily.Application.Volunteers
 {
@@ -10,7 +11,7 @@ namespace PetFamily.Application.Volunteers
         Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken);
 
         Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId);
-        Task<Result<Volunteer, Error>> GetByPhoneNumber(string number);
-        Task<Result<Volunteer, Error>> GetByEmail(string email);
+        Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber number);
+        Task<Result<Volunteer, Error>> GetByEmail(Email email);
     }
 }
