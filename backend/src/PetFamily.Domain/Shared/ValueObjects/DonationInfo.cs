@@ -1,4 +1,4 @@
-﻿using PetFamily.Domain.Shared.Entities;
+using PetFamily.Domain.Shared.Entities;
 
 namespace PetFamily.Domain.Shared.ValueObjects
 {

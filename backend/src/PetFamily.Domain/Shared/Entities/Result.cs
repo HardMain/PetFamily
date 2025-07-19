@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Domain.Shared.Entities
+namespace PetFamily.Domain.Shared.Entities
 {
     public class Result
     {
@@ -24,6 +24,7 @@
 
         public static implicit operator Result(string error) => new(false, error);
     }
+
     public class Result<TValue> : Result
     {
         private readonly TValue _value;
@@ -42,6 +43,7 @@
         public static implicit operator Result<TValue>(TValue value) => new(value, true, null);
         public static implicit operator Result<TValue>(string? error) => new(default!, false, error);
     }
+    
     public class UnitResult<TError>
     {
         private readonly TError? _error;

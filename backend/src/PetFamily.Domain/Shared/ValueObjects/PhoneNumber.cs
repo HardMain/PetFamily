@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using PetFamily.Domain.Shared.Entities;
 
 namespace PetFamily.Domain.Shared.ValueObjects
@@ -20,7 +20,7 @@ namespace PetFamily.Domain.Shared.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(number) || !regex.IsMatch(number))
                 return Errors.General.ValueIsInvalid("Number");
-
+                
             return new PhoneNumber(number);
         }
     }
