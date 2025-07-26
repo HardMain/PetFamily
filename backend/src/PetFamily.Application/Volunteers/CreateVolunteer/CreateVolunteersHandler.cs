@@ -1,9 +1,9 @@
 ﻿using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.ValueObjects;
-using PetFamily.Domain.Volunteers.Entities;
-using PetFamily.Domain.Volunteers.ValueObjects;
+using PetFamily.Domain.Aggregates.PetManagement.Entities;
+using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer
 {
@@ -16,41 +16,35 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             _volunteersRepository = volunteersRepository;
         }
 
-        public async Task<Result<Guid, Error>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
         {
-            var phoneNumberResult = PhoneNumber.Create(command.PhoneNumber);
-            if (phoneNumberResult.IsFailure)
-                return phoneNumberResult.Error;
-
-            var emailResult = Email.Create(command.Email);
-            if (emailResult.IsFailure)
-                return emailResult.Error;
-
-            var volunteerByPhone = await _volunteersRepository.GetByPhoneNumber(phoneNumberResult.Value, cancellationToken);
+            var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
+           
+            var volunteerByPhone = await _volunteersRepository.GetByPhoneNumber(phoneNumber, cancellationToken);
             if (volunteerByPhone.IsSuccess)
                 return Errors.Volunteer.AlreadyExist();
 
-            var volunteerByEmail = await _volunteersRepository.GetByEmail(emailResult.Value, cancellationToken);
+            var email = Email.Create(command.Email).Value;
+
+            var volunteerByEmail = await _volunteersRepository.GetByEmail(email, cancellationToken);
             if (volunteerByEmail.IsSuccess)
                 return Errors.Volunteer.AlreadyExist();
 
-            var volunteerId = VolunteerId.NewVolunteerId(); 
-
-            var nameResult = FullName.Create(command.FullName.firstName, command.FullName.lastName, command.FullName.middleName);
-            if (nameResult.IsFailure)
-                return nameResult.Error;
+            var name = FullName.Create(command.FullName.firstName, command.FullName.lastName, command.FullName.middleName).Value;
                
             var description = command.Description;
 
             var experienceYears = command.ExperienceYears;
 
+            var volunteerId = VolunteerId.NewVolunteerId(); 
+
             var volunteerResult = Volunteer.Create(
                 volunteerId, 
-                nameResult.Value, 
-                emailResult.Value, 
+                name, 
+                email, 
                 description, 
                 experienceYears, 
-                phoneNumberResult.Value
+                phoneNumber
             );
 
             if (volunteerResult.IsFailure) 

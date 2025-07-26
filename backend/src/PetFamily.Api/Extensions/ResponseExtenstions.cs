@@ -1,18 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Api.Envelops;
-using PetFamily.Domain.Shared.Entities;
+using PetFamily.Api.Envelopes;
 
 namespace PetFamily.Api.Extensions
 {
     public static class ResponseExtenstions
     {
-        public static ActionResult ToResponse(this UnitResult<Error> result)
+        public static ActionResult ToResponse(this Error error)
         {
-            if (result.IsSuccess)
-                return new OkResult();
-
-            var statusCode = result.Error!.Type switch
+            var statusCode = error.Type switch
             {
                 ErrorType.Validation => StatusCodes.Status400BadRequest,
                 ErrorType.NotFound => StatusCodes.Status404NotFound,
@@ -21,33 +17,13 @@ namespace PetFamily.Api.Extensions
                 _ => StatusCodes.Status500InternalServerError
             };
 
-            var envelop = Envelop.Error(result.Error);
+            var responseError = new ResponseError(error.Code, error.Message, null);
+
+            var envelop = Envelope.Error([responseError]);
 
             return new ObjectResult(envelop)
             {
                 StatusCode = statusCode
-            };
-        }
-
-        public static ActionResult<T> ToResponse<T>(this Result<T, Error> result)
-        {
-            if (result.IsSuccess)
-                return new OkObjectResult(Envelop.Ok(result.Value));
-
-            var statusCode = result.Error!.Type switch
-            {
-                ErrorType.Validation => StatusCodes.Status400BadRequest,
-                ErrorType.NotFound => StatusCodes.Status404NotFound,
-                ErrorType.Failure => StatusCodes.Status500InternalServerError,
-                ErrorType.Conflict => StatusCodes.Status409Conflict,
-                _ => StatusCodes.Status500InternalServerError
-            };
-
-            var envelop = Envelop.Error(result.Error);
-
-            return new ObjectResult(envelop)
-            {
-                StatusCode = statusCode 
             };
         }
     }

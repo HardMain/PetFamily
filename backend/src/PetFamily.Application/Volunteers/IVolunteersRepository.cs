@@ -1,8 +1,8 @@
-﻿using PetFamily.Domain.Shared.Entities;
+﻿using PetFamily.Domain.Aggregates.PetManagement.Entities;
+using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.ValueObjects;
-using PetFamily.Domain.Volunteers.Entities;
-using PetFamily.Domain.Volunteers.ValueObjects;
+using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Application.Volunteers
 {
@@ -10,8 +10,8 @@ namespace PetFamily.Application.Volunteers
     {
         Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken);
 
-        Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken);
-        Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber number, CancellationToken cancellationToken);
-        Task<Result<Volunteer, Error>> GetByEmail(Email email, CancellationToken cancellationToken);
+        Task<Result<Volunteer>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken);
+        Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber number, CancellationToken cancellationToken);
+        Task<Result<Volunteer>> GetByEmail(Email email, CancellationToken cancellationToken);
     }
 }

@@ -1,16 +1,15 @@
-﻿using PetFamily.Contracts.DTOs.Pets;
-using PetFamily.Contracts.DTOs.Shared;
+﻿using PetFamily.Contracts.DTOs.Shared;
 using PetFamily.Contracts.DTOs.Volunteers;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer
+namespace PetFamily.Contracts.Requests.Volunteers
 {
     public record CreateVolunteerRequest(
-        FullNameDTO name, 
-        string Email, 
-        string Description, 
+        FullNameDTO FullName,
+        string Email,
+        string Description,
         int ExperienceYears,
         string PhoneNumber,
-        IEnumerable<SocialNetworksDTO>? SocialNetworks,
-        IEnumerable<DonationsInfoDTO>? DonationsInfo
+        IEnumerable<SocialNetworkDTO>? SocialNetworks,
+        IEnumerable<DonationInfoDTO>? DonationsInfo
     );
 }

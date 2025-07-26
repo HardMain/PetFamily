@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Domain.Volunteers.ValueObjects
+namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
 {
     public record Address
     {
@@ -19,7 +19,7 @@ namespace PetFamily.Domain.Volunteers.ValueObjects
         public string City { get; }
         public string Country { get; }
 
-        public static Result<Address, Error> Create(string street, string houseNumber, string city, string country)
+        public static Result<Address> Create(string street, string houseNumber, string city, string country)
         {
             if (string.IsNullOrWhiteSpace(street))
                 return Errors.General.ValueIsInvalid("Street");

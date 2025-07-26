@@ -1,15 +1,13 @@
 using PetFamily.Infrastructure;
 using PetFamily.Application;
+using PetFamily.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services
-    .AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApi(builder.Configuration)
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 

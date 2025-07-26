@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Domain.ValueObjects;
-using PetFamily.Domain.Volunteers.Entities;
 using PetFamily.Domain.Shared.Constants;
+using PetFamily.Domain.Aggregates.PetManagement.Entities;
+using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Infrastructure.Configurations
 {
@@ -17,7 +17,7 @@ namespace PetFamily.Infrastructure.Configurations
 
             builder.Property(v => v.Id)
                 .HasConversion(
-                    id => id.Value, 
+                    id => id.Value,
                     value => VolunteerId.Create(value)
                 )
                 .HasColumnName("id");
@@ -104,5 +104,5 @@ namespace PetFamily.Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
         }
-    } 
+    }
 }

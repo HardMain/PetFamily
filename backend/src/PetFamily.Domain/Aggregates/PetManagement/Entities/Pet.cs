@@ -1,11 +1,11 @@
-﻿using PetFamily.Domain.Aggregates.Species.ValueObjects;
+﻿using PetFamily.Domain.Aggregates.PetManagement.Enums;
+using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Domain.Aggregates.SpeciesManagement.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.Volunteers.Enums;
-using PetFamily.Domain.Volunteers.ValueObjects;
 
-namespace PetFamily.Domain.Volunteers.Entities
+namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 {
     public class Pet : Entity<PetId>
     {
@@ -38,7 +38,7 @@ namespace PetFamily.Domain.Volunteers.Entities
         public IReadOnlyList<DonationInfo> DonationsInfo => _donationInfo;
         public DateTime CreationDate { get; private set; }
 
-        public static Result<Pet, Error> Create(PetId id, string name, string description, PhoneNumber ownerPhone)
+        public static Result<Pet> Create(PetId id, string name, string description, PhoneNumber ownerPhone)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return Errors.General.ValueIsInvalid("Name");

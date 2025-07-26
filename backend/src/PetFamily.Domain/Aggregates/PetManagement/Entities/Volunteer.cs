@@ -1,17 +1,17 @@
-﻿using PetFamily.Domain.ValueObjects;
-using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.Volunteers.ValueObjects;
-using PetFamily.Domain.Volunteers.Enums;
+﻿using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Aggregates.PetManagement.Enums;
+using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Domain.Shared.ValueObjects.Ids;
 
-namespace PetFamily.Domain.Volunteers.Entities
+namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 {
     public class Volunteer : Entity<VolunteerId>
     {
-        private readonly List<SocialNetwork> _socialNetworks = [];
-        private readonly List<DonationInfo> _donationsInfo = [];
         private readonly List<Pet> _pets = [];
+        private readonly List<SocialNetwork> _socialNetworks = [];  //мб надо будет сделать обертку над списком, если запрос не сработает
+        private readonly List<DonationInfo> _donationsInfo = [];    //тоже самое 
 
         private Volunteer(VolunteerId id) : base(id) { }
 
@@ -37,11 +37,11 @@ namespace PetFamily.Domain.Volunteers.Entities
         public int CountPetsNeedHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.need_home);
         public int CountPetsNeedHelp() => _pets.Count(pet => pet.SupportStatus == SupportStatus.need_help);
 
-        public static Result<Volunteer, Error> Create(
-            VolunteerId volunteerId, 
-            FullName name, 
-            Email email, 
-            string description, 
+        public static Result<Volunteer> Create(
+            VolunteerId volunteerId,
+            FullName name,
+            Email email,
+            string description,
             int experienceYears,
             PhoneNumber number)
         {
@@ -50,5 +50,15 @@ namespace PetFamily.Domain.Volunteers.Entities
 
             return new Volunteer(volunteerId, name, email, description, experienceYears, number);
         }
+
+        //public UnitResult<Error> AddDonationsInfo(DonationInfo donation)
+        //{
+        //    if (donation == null)
+        //        return Errors.General.ValueIsInvalid("donations");
+
+        //    _donationsInfo.Add(donation);
+
+        //    return UnitResult<Error>.Success();
+        //}
     }
 }
