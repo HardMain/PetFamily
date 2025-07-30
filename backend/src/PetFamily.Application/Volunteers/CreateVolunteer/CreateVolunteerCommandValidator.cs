@@ -1,29 +1,29 @@
 ﻿using FluentValidation;
 using PetFamily.Application.Validation;
-using PetFamily.Contracts.Requests.Volunteers;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Constants;
 using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer
 {
-    public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerRequest>
+    public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerCommand>
     {
         public CreateVolunteerCommandValidator()
         {
-            RuleFor(v => v.FullName).MustBeValueObjects(fn => FullName.Create(fn.firstName, fn.lastName, fn.middleName));
-            RuleFor(v => v.Email).MustBeValueObjects(Email.Create);
-            RuleFor(v => v.PhoneNumber).MustBeValueObjects(PhoneNumber.Create);
+            RuleFor(v => v.Request.FullName).MustBeValueObjects(fn => FullName.Create(fn.firstName, fn.lastName, fn.middleName));
+            RuleFor(v => v.Request.Email).MustBeValueObjects(Email.Create);
+            RuleFor(v => v.Request.PhoneNumber).MustBeValueObjects(PhoneNumber.Create);
 
-            RuleFor(v => v.Description)
+            RuleFor(v => v.Request.Description)
                 .MaximumLength(Constants.MAX_HIGH_TEXT_LENGTH)
-                .WithError();
+                .WithError(Errors.General.ValueIsInvalid());
 
-            RuleFor(v => v.ExperienceYears)
+            RuleFor(v => v.Request.ExperienceYears)
                 .GreaterThanOrEqualTo(0)
-                .WithError()
+                .WithError(Errors.General.ValueIsInvalid())
                 .LessThanOrEqualTo(100)
-                .WithError();
+                .WithError(Errors.General.ValueIsInvalid());
         }
     }
 }

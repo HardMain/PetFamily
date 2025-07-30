@@ -8,7 +8,7 @@ using PetFamily.Contracts.Requests.Volunteers;
 namespace PetFamily.Api.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
+    [ApiController] 
     public class VolunteersController : ControllerBase
     {
         [HttpPost]
@@ -24,7 +24,9 @@ namespace PetFamily.Api.Controllers
             if (response.IsFailure)
                 return response.Error.ToResponse();
 
-            return Ok(Envelope.Ok(response.Value));
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
         }
     } 
 }

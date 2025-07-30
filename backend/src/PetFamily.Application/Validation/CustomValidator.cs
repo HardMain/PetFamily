@@ -22,10 +22,8 @@ namespace PetFamily.Application.Validation
             });
         }
         public static IRuleBuilderOptions<T, TElement> WithError<T, TElement>(
-            this IRuleBuilderOptions<T, TElement> ruleBuilder)
+            this IRuleBuilderOptions<T, TElement> ruleBuilder, Error error)
         {
-            var error = Errors.General.ValueIsInvalid();
-
             return ruleBuilder.WithMessage(error.Serialize());
         }
     }

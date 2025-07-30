@@ -5,7 +5,7 @@ using PetFamily.Api;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddApi(builder.Configuration)
+    .AddApi()
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 

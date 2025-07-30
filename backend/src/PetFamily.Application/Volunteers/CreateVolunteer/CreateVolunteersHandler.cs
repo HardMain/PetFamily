@@ -4,37 +4,51 @@ using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
+using FluentValidation;
+using PetFamily.Application.Extensions;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer
 {
     public class CreateVolunteersHandler
     {
         private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IValidator<CreateVolunteerCommand> _validator;
 
-        public CreateVolunteersHandler(IVolunteersRepository volunteersRepository)
+        public CreateVolunteersHandler(
+            IVolunteersRepository volunteersRepository,
+            IValidator<CreateVolunteerCommand> validator)
         {
             _volunteersRepository = volunteersRepository;
+            _validator = validator;
         }
 
-        public async Task<Result<Guid>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
         {
-            var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return validationResult.ToErrorList();
+
+            var phoneNumber = PhoneNumber.Create(command.Request.PhoneNumber).Value;
            
             var volunteerByPhone = await _volunteersRepository.GetByPhoneNumber(phoneNumber, cancellationToken);
             if (volunteerByPhone.IsSuccess)
-                return Errors.Volunteer.AlreadyExist();
+                return Errors.Volunteer.AlreadyExist().ToErrorList();
 
-            var email = Email.Create(command.Email).Value;
+            var email = Email.Create(command.Request.Email).Value;
 
             var volunteerByEmail = await _volunteersRepository.GetByEmail(email, cancellationToken);
             if (volunteerByEmail.IsSuccess)
-                return Errors.Volunteer.AlreadyExist();
+                return Errors.Volunteer.AlreadyExist().ToErrorList();
 
-            var name = FullName.Create(command.FullName.firstName, command.FullName.lastName, command.FullName.middleName).Value;
+            var name = FullName.Create(
+                command.Request.FullName.firstName, 
+                command.Request.FullName.lastName, 
+                command.Request.FullName.middleName).Value;
                
-            var description = command.Description;
+            var description = command.Request.Description;
 
-            var experienceYears = command.ExperienceYears;
+            var experienceYears = command.Request.ExperienceYears;
 
             var volunteerId = VolunteerId.NewVolunteerId(); 
 
@@ -48,7 +62,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             );
 
             if (volunteerResult.IsFailure) 
-                return volunteerResult.Error;
+                return volunteerResult.Error.ToErrorList();
 
             await _volunteersRepository.Add(volunteerResult.Value, cancellationToken);
 

@@ -45,4 +45,28 @@ namespace PetFamily.Domain.Shared.Entities
         public static implicit operator Result<TValue>(TValue value) => new(value, true, Error.None);
         public static implicit operator Result<TValue>(Error error) => new(default!, false, error);
     }
+
+    public class Result<TValue, TError>
+    {
+        private readonly TValue _value;
+        private readonly TError _error;
+
+        public Result(TValue value, bool isSuccess, TError error)
+        {
+            _value = value;
+            _error = error;
+            IsSuccess = isSuccess;
+        }
+
+        public bool IsSuccess { get; }
+        public bool IsFailure => !IsSuccess;
+        public TValue Value => IsSuccess ? _value : throw new InvalidOperationException("The value of a failure result can not be accessed.");
+        public TError Error => IsFailure ? _error : throw new InvalidOperationException("The error of a successful result cannot be accessed.");
+
+        public static Result<TValue, TError> Success(TValue value) => new Result<TValue, TError>(value, true, default!);
+        public static Result<TValue, TError> Failure(TError error) => new Result<TValue, TError>(default!, false, error);
+
+        public static implicit operator Result<TValue, TError>(TValue value) => Success(value);
+        public static implicit operator Result<TValue, TError>(TError error) => Failure(error);
+    }
 }
