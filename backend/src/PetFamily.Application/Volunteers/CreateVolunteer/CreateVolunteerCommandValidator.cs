@@ -17,13 +17,13 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
 
             RuleFor(v => v.Request.Description)
                 .MaximumLength(Constants.MAX_HIGH_TEXT_LENGTH)
-                .WithError(Errors.General.ValueIsInvalid());
+                .WithError(Errors.General.ValueIsInvalid("description"));
 
             RuleFor(v => v.Request.ExperienceYears)
                 .GreaterThanOrEqualTo(0)
-                .WithError(Errors.General.ValueIsInvalid())
+                .WithError(Errors.General.ValueIsInvalid("experienceYears"))
                 .LessThanOrEqualTo(100)
-                .WithError(Errors.General.ValueIsInvalid());
+                .WithError(Errors.General.ValueIsInvalid("experienceYears"));
         }
     }
 }

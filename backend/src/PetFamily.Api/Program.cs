@@ -5,9 +5,9 @@ using PetFamily.Api;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddApi()
+    .AddInfrastructure(builder.Configuration)
     .AddApplication()
-    .AddInfrastructure(builder.Configuration);
+    .AddApi();
 
 var app = builder.Build();
 
@@ -15,6 +15,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    await app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();
