@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Domain.Aggregates.Species.ValueObjects
+﻿namespace PetFamily.Domain.Shared.ValueObjects.Ids
 {
     public record SpeciesId
     {

@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Domain.Volunteers.ValueObjects
+namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
 {
     public record FullName
     {
@@ -19,7 +19,7 @@ namespace PetFamily.Domain.Volunteers.ValueObjects
         public string LastName { get; } = default!;
         public string? MiddleName { get; } = default!;
 
-        public static Result<FullName, Error> Create(string firstName, string lastName, string? middleName = null)
+        public static Result<FullName> Create(string firstName, string lastName, string? middleName = null)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 return Errors.General.ValueIsInvalid("FirstName");

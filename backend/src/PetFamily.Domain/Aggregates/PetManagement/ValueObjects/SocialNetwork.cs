@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Domain.Volunteers.ValueObjects
+namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
 {
     public record SocialNetwork
     {
@@ -17,7 +17,7 @@ namespace PetFamily.Domain.Volunteers.ValueObjects
         public string URL { get; } = default!;
         public string Platform { get; } = default!;
 
-        public static Result<SocialNetwork, Error> Create(string url, string platform)
+        public static Result<SocialNetwork> Create(string url, string platform)
         {
             if (string.IsNullOrWhiteSpace(url))
                 return Errors.General.ValueIsInvalid("Url");

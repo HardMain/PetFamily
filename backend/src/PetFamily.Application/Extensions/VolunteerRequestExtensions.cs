@@ -1,4 +1,5 @@
 ﻿using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Contracts.Requests.Volunteers;
 
 namespace PetFamily.Application.Extensions
 {
@@ -6,16 +7,7 @@ namespace PetFamily.Application.Extensions
     {
         public static CreateVolunteerCommand ToCommand(this CreateVolunteerRequest request)
         {
-            return new CreateVolunteerCommand(
-                request.name,
-                request.Email,
-                request.Description,
-                request.ExperienceYears,
-                request.PhoneNumber,
-                request.SocialNetworks ?? [],
-                request.DonationsInfo ?? []
-            );
+            return new CreateVolunteerCommand(request);
         }
-
     }
 }

@@ -1,9 +1,10 @@
-﻿using PetFamily.Domain.Aggregates.Species.ValueObjects;
+﻿using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Entities;
+using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Domain.Aggregates.Species.Entities
 {
-    public class Breed : Shared.Entity<BreedId>
+    public class Breed : Entity<BreedId>
     {
         private Breed(BreedId id) : base(id) { }
 
@@ -17,7 +18,7 @@ namespace PetFamily.Domain.Aggregates.Species.Entities
         public static Result<Breed> Create(BreedId breedId, string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return "Name can not be empty!";
+                return Errors.General.ValueIsInvalid("name");
 
             return new Breed(breedId, name);
         }

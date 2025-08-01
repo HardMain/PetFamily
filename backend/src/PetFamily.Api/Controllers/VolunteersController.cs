@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetFamily.Api.Envelopes;
 using PetFamily.Api.Extensions;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Contracts.Requests.Volunteers;
 
 namespace PetFamily.Api.Controllers
-{ 
+{
     [Route("[controller]")]
-    [ApiController]
+    [ApiController] 
     public class VolunteersController : ControllerBase
     {
         [HttpPost]
@@ -17,9 +19,14 @@ namespace PetFamily.Api.Controllers
         {
             var command = request.ToCommand();
 
-            var result = await handler.Handle(command, cancellationToken);
+            var response = await handler.Handle(command, cancellationToken);
 
-            return result.ToResponse();
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
         }
     } 
 }

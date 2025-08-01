@@ -1,6 +1,7 @@
 ﻿using PetFamily.Domain.Shared.Entities;
+using PetFamily.Domain.Shared.ValueObjects.Ids;
 
-namespace PetFamily.Domain.Aggregates.Species.ValueObjects
+namespace PetFamily.Domain.Aggregates.SpeciesManagement.ValueObjects
 {
     public record SpeciesAndBreed
     {

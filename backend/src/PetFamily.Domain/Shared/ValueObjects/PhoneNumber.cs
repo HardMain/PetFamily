@@ -16,7 +16,7 @@ namespace PetFamily.Domain.Shared.ValueObjects
 
         public string Value { get; } = default!;
 
-        public static Result<PhoneNumber, Error> Create(string number)
+        public static Result<PhoneNumber> Create(string number)
         {
             if (string.IsNullOrWhiteSpace(number) || !regex.IsMatch(number))
                 return Errors.General.ValueIsInvalid("Number");

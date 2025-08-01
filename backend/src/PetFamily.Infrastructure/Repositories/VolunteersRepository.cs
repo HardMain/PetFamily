@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Volunteers;
+using PetFamily.Domain.Aggregates.PetManagement.Entities;
+using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.ValueObjects;
-using PetFamily.Domain.Volunteers.Entities;
-using PetFamily.Domain.Volunteers.ValueObjects;
+using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Infrastructure.Repositories
 {
@@ -15,7 +15,7 @@ namespace PetFamily.Infrastructure.Repositories
 
         public VolunteersRepository(ApplicationDbContext dbContext)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContext; 
         }
 
         public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken)
@@ -27,7 +27,7 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer.Id;
         }
 
-        public async Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken)
+        public async Task<Result<Volunteer>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
@@ -39,7 +39,7 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer;
         }
 
-        public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber, CancellationToken cancellationToken)
+        public async Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber phoneNumber, CancellationToken cancellationToken)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
@@ -51,7 +51,7 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer;
         }
 
-        public async Task<Result<Volunteer, Error>> GetByEmail(Email email, CancellationToken cancellationToken)
+        public async Task<Result<Volunteer>> GetByEmail(Email email, CancellationToken cancellationToken)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)

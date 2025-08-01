@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Domain.ValueObjects
+﻿namespace PetFamily.Domain.Shared.ValueObjects.Ids
 {
     public record VolunteerId
     {
@@ -6,7 +6,7 @@
         {
             Value = value;
         }
-        public Guid Value { get; }  
+        public Guid Value { get; }
 
         public static VolunteerId NewVolunteerId() => new VolunteerId(Guid.NewGuid());
 
