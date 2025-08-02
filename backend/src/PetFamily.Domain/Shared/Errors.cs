@@ -26,6 +26,11 @@ namespace PetFamily.Domain.Shared
 
                 return Error.Conflict("length.is.invalid", $"invalid{label}length");
             }
+
+            public static Error Unexpected(string message)
+            {
+                return Error.Failure("server.internal", message);
+            }
         }
 
         public static class Volunteer

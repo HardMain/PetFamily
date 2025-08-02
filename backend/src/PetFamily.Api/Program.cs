@@ -1,6 +1,9 @@
 using PetFamily.Infrastructure;
 using PetFamily.Application;
 using PetFamily.Api;
+using PetFamily.Api.Middlewares;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,22 @@ builder.Services
 
 var app = builder.Build();
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.Debug()
+    .WriteTo.Seq(builder.Configuration.GetConnectionString("Seq") 
+                 ?? throw new ArgumentNullException("Seq")) 
+    .Enrich.WithThreadId()
+    .Enrich.WithEnvironmentName()
+    .Enrich.WithMachineName() 
+    .Enrich.WithEnvironmentUserName()
+    .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.MVC", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Warning)
+    .CreateLogger();
+
+app.UseExceptionMiddleware();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -18,6 +37,8 @@ if (app.Environment.IsDevelopment())
 
     await app.ApplyMigrations();
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
