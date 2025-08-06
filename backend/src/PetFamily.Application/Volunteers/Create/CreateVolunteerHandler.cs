@@ -8,20 +8,20 @@ using FluentValidation;
 using PetFamily.Application.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer
+namespace PetFamily.Application.Volunteers.Create
 {
-    public class CreateVolunteersHandler
+    public class CreateVolunteerHandler
     {
         private readonly IVolunteersRepository _volunteersRepository;
         private readonly IValidator<CreateVolunteerCommand> _validator;
-        private readonly ILogger<CreateVolunteersHandler> _logger;
+        private readonly ILogger<CreateVolunteerHandler> _logger;
 
-        public CreateVolunteersHandler(
+        public CreateVolunteerHandler(
             IVolunteersRepository volunteersRepository,
             IValidator<CreateVolunteerCommand> validator,
-            ILogger<CreateVolunteersHandler> logger)
+            ILogger<CreateVolunteerHandler> logger)
         {
-            _volunteersRepository = volunteersRepository;
+            _volunteersRepository = volunteersRepository; 
             _validator = validator;
             _logger = logger;
         }
@@ -30,7 +30,6 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             CreateVolunteerCommand command, CancellationToken cancellationToken = default)
         {
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
-
             if (!validationResult.IsValid)
             {
                 _logger.LogWarning("Validation failed: {Errors}", validationResult.ToErrorList());
@@ -39,14 +38,14 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             }
 
             var phoneNumber = PhoneNumber.Create(command.Request.PhoneNumber).Value;
-           
+
             var volunteerByPhone = await _volunteersRepository.GetByPhoneNumber(phoneNumber, cancellationToken);
             if (volunteerByPhone.IsSuccess)
             {
                 _logger.LogWarning(
                     "Volunteer creation failed: Phone number {PhoneNumber} already exists", phoneNumber.Value);
 
-                return Errors.Volunteer.AlreadyExist().ToErrorList();
+                return Errors.Volunteer.Duplicate().ToErrorList();
             }
 
             var email = Email.Create(command.Request.Email).Value;
@@ -57,37 +56,58 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
                 _logger.LogWarning(
                     "Volunteer creation failed: Email {Email} already exists", email.Value);
 
-                return Errors.Volunteer.AlreadyExist().ToErrorList();
+                return Errors.Volunteer.Duplicate().ToErrorList();
             }
 
             var name = FullName.Create(
-                command.Request.FullName.firstName, 
-                command.Request.FullName.lastName, 
+                command.Request.FullName.firstName,
+                command.Request.FullName.lastName,
                 command.Request.FullName.middleName).Value;
-               
+
             var description = command.Request.Description;
 
             var experienceYears = command.Request.ExperienceYears;
 
-            var volunteerId = VolunteerId.NewVolunteerId(); 
+            var volunteerId = VolunteerId.NewVolunteerId();
 
-            var volunteerResult = Volunteer.Create(
-                volunteerId, 
-                name, 
-                email, 
-                description, 
-                experienceYears, 
+            var volunteer = new Volunteer(
+                volunteerId,
+                name,
+                email,
+                description,
+                experienceYears,
                 phoneNumber
             );
 
-            if (volunteerResult.IsFailure) 
-                return volunteerResult.Error.ToErrorList();
+            var donationInfos = command.Request.DonationsInfo?
+                .Select(di => DonationInfo.Create(di.Title, di.Description).Value) ?? [];
 
-            await _volunteersRepository.Add(volunteerResult.Value, cancellationToken);
+            var errorsAddDonationInfos = volunteer.AddDonationsInfo(donationInfos);
+            if (errorsAddDonationInfos.Any())
+            {
+                _logger.LogWarning(
+                    "Failed to add donation infos: {Errors}", errorsAddDonationInfos);
+
+                return errorsAddDonationInfos;
+            }
+
+            var socialNetworks = command.Request.SocialNetworks?
+                .Select(sn => SocialNetwork.Create(sn.URL, sn.Platform).Value) ?? [];
+            
+            var errorsAddSocialNetworks = volunteer.AddSocialNetworks(socialNetworks);
+            if (errorsAddSocialNetworks.Any())
+            {
+                _logger.LogWarning(
+                    "Failed to add social networks: {Errors}", errorsAddSocialNetworks);
+
+                return errorsAddSocialNetworks;
+            }
+
+            var result = await _volunteersRepository.Add(volunteer, cancellationToken);
 
             _logger.LogInformation("Created volunteer with id {volunteerId}", volunteerId);
 
-            return volunteerResult.Value.Id.Value; 
+            return result;
         }
     }
 }
