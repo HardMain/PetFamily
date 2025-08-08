@@ -9,6 +9,7 @@ namespace PetFamily.Application.Volunteers
     public interface IVolunteersRepository
     {
         Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken);
+        Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken);
 
         Task<Result<Volunteer>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken);
         Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber number, CancellationToken cancellationToken);

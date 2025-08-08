@@ -5,7 +5,7 @@ using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Constants;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer
+namespace PetFamily.Application.Volunteers.Create
 {
     public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerCommand>
     {
@@ -24,6 +24,9 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
                 .WithError(Errors.General.ValueIsInvalid("experienceYears"))
                 .LessThanOrEqualTo(100)
                 .WithError(Errors.General.ValueIsInvalid("experienceYears"));
+
+            RuleForEach(v => v.Request.SocialNetworks).MustBeValueObjects(sn => SocialNetwork.Create(sn.URL, sn.Platform));
+            RuleForEach(v => v.Request.DonationsInfo).MustBeValueObjects(di => DonationInfo.Create(di.Title, di.Description));
         }
     }
 }

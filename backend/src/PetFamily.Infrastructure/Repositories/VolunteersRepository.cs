@@ -24,6 +24,13 @@ namespace PetFamily.Infrastructure.Repositories
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
+            return volunteer.Id; 
+        }
+
+        public async Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken)
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
             return volunteer.Id;
         }
 
@@ -31,7 +38,9 @@ namespace PetFamily.Infrastructure.Repositories
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
-                .FirstOrDefaultAsync(v => v.Id == volunteerId);
+                .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
+
+            var entries1 = _dbContext.ChangeTracker.Entries<Volunteer>();
 
             if (volunteer == null)
                 return Errors.General.NotFound(volunteerId.Value);
@@ -43,7 +52,7 @@ namespace PetFamily.Infrastructure.Repositories
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
-                .FirstOrDefaultAsync(v => v.Number.Value == phoneNumber.Value);
+                .FirstOrDefaultAsync(v => v.Number.Value == phoneNumber.Value, cancellationToken);
 
             if (volunteer == null)
                 return Errors.General.NotFound();

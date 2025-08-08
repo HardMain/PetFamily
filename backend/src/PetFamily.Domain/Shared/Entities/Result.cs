@@ -42,8 +42,8 @@ namespace PetFamily.Domain.Shared.Entities
         public static Result<TValue> Success(TValue value) => new Result<TValue>(value, true, Error.None);
         public static new Result<TValue> Failure(Error error) => new Result<TValue>(default!, false, error);
 
-        public static implicit operator Result<TValue>(TValue value) => new(value, true, Error.None);
-        public static implicit operator Result<TValue>(Error error) => new(default!, false, error);
+        public static implicit operator Result<TValue>(TValue value) => Success(value);
+        public static implicit operator Result<TValue>(Error error) => Failure(error);
     }
 
     public class Result<TValue, TError>
