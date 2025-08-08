@@ -1,9 +1,12 @@
-﻿namespace PetFamily.Api
+﻿using Serilog;
+
+namespace PetFamily.Api
 {
     public static class Inject
     {
         public static IServiceCollection AddApi(this IServiceCollection services)
         {
+            services.AddSerilog();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
