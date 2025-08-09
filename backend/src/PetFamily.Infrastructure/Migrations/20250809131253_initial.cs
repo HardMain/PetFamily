@@ -35,6 +35,8 @@ namespace PetFamily.Infrastructure.Migrations
                     description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
                     experience_years = table.Column<int>(type: "integer", maxLength: 100, nullable: false),
                     phone_number = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+                    deletion_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     dontations_info = table.Column<string>(type: "jsonb", nullable: true),
                     socials = table.Column<string>(type: "jsonb", nullable: true)
                 },
@@ -86,6 +88,8 @@ namespace PetFamily.Infrastructure.Migrations
                     is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
                     support_status = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     creation_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+                    deletion_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     donations_info = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>

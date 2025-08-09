@@ -133,6 +133,14 @@ namespace PetFamily.Infrastructure.Configurations
             builder.Property(p => p.CreationDate)
                 .IsRequired()
                 .HasColumnName("creation_date");
+
+            builder.Property(p => p.IsDeleted)
+                .IsRequired()
+                .HasColumnName("is_deleted");
+
+            builder.Property(p => p.DeletionDate)
+                .IsRequired(false)
+                .HasColumnName("deletion_date");
         }
     }
 }

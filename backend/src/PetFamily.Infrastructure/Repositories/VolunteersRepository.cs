@@ -2,7 +2,6 @@
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
@@ -26,9 +25,16 @@ namespace PetFamily.Infrastructure.Repositories
 
             return volunteer.Id; 
         }
-
         public async Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken)
         {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return volunteer.Id;
+        }
+        public async Task<Guid> Delete(Volunteer volunteer, CancellationToken cancellationToken)
+        {
+            _dbContext.Volunteers.Remove(volunteer);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return volunteer.Id;
@@ -47,7 +53,6 @@ namespace PetFamily.Infrastructure.Repositories
 
             return volunteer;
         }
-
         public async Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber phoneNumber, CancellationToken cancellationToken)
         {
             var volunteer = await _dbContext.Volunteers
@@ -59,7 +64,6 @@ namespace PetFamily.Infrastructure.Repositories
 
             return volunteer;
         }
-
         public async Task<Result<Volunteer>> GetByEmail(Email email, CancellationToken cancellationToken)
         {
             var volunteer = await _dbContext.Volunteers
@@ -70,6 +74,12 @@ namespace PetFamily.Infrastructure.Repositories
                 return Errors.General.NotFound();
 
             return volunteer;
+        }
+        public async Task<List<Volunteer>> GetSoftDeletedEarlierThan(DateTime dateTime, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Volunteers
+                .Where(v => v.IsDeleted && v.DeletionDate <= dateTime)
+                .ToListAsync(cancellationToken);
         }
     }
 }

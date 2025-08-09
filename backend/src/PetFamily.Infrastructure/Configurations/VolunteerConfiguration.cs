@@ -103,6 +103,13 @@ namespace PetFamily.Infrastructure.Configurations
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Property(v => v.IsDeleted)
+                .IsRequired()
+                .HasColumnName("is_deleted");
+
+            builder.Property(v => v.DeletionDate)
+                .IsRequired(false)
+                .HasColumnName("deletion_date");
         }
     }
 }
