@@ -1,6 +1,6 @@
 ﻿using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Domain.Shared
+namespace PetFamily.Domain.Shared.Entities
 {
     public static class Errors
     {

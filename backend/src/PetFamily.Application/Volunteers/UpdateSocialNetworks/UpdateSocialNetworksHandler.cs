@@ -58,6 +58,8 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetworks
 
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
 
+            _logger.LogInformation("Updated social networks for volunteer with id {volunteerId}", volunteerId);
+
             return result;
         }
     }

@@ -12,7 +12,7 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250710123148_initial")]
+    [Migration("20250809131253_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -20,53 +20,12 @@ namespace PetFamily.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("ProductVersion", "9.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Entities.Breed", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<Guid>("species_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id")
-                        .HasName("pk_breeds");
-
-                    b.HasIndex("species_id");
-
-                    b.ToTable("breeds", (string)null);
-                });
-
-            modelBuilder.Entity("PetFamily.Domain.Species.Entities.Species", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_species");
-
-                    b.ToTable("species", (string)null);
-                });
-
-            modelBuilder.Entity("PetFamily.Domain.Volunteers.Entities.Pet", b =>
+            modelBuilder.Entity("PetFamily.Domain.Aggregates.PetManagement.Entities.Pet", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -86,6 +45,10 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("creation_date");
 
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deletion_date");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .ValueGeneratedOnUpdateSometimes()
@@ -102,6 +65,10 @@ namespace PetFamily.Infrastructure.Migrations
                     b.Property<double>("HeightCm")
                         .HasColumnType("double precision")
                         .HasColumnName("height_cm");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -138,11 +105,15 @@ namespace PetFamily.Infrastructure.Migrations
                     b.ToTable("pets", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Volunteers.Entities.Volunteer", b =>
+            modelBuilder.Entity("PetFamily.Domain.Aggregates.PetManagement.Entities.Volunteer", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deletion_date");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -156,83 +127,65 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("experience_years");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
                     b.HasKey("Id")
                         .HasName("pk_volunteers");
 
                     b.ToTable("volunteers", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Entities.Breed", b =>
+            modelBuilder.Entity("PetFamily.Domain.Aggregates.Species.Entities.Breed", b =>
                 {
-                    b.HasOne("PetFamily.Domain.Species.Entities.Species", null)
-                        .WithMany("Breeds")
-                        .HasForeignKey("species_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasConstraintName("fk_breeds_species_species_id");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("species_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id")
+                        .HasName("pk_breeds");
+
+                    b.HasIndex("species_id");
+
+                    b.ToTable("breeds", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Volunteers.Entities.Pet", b =>
+            modelBuilder.Entity("PetFamily.Domain.Aggregates.Species.Entities.Species", b =>
                 {
-                    b.HasOne("PetFamily.Domain.Volunteers.Entities.Volunteer", "Volunteer")
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_species");
+
+                    b.ToTable("species", (string)null);
+                });
+
+            modelBuilder.Entity("PetFamily.Domain.Aggregates.PetManagement.Entities.Pet", b =>
+                {
+                    b.HasOne("PetFamily.Domain.Aggregates.PetManagement.Entities.Volunteer", "Volunteer")
                         .WithMany("Pets")
                         .HasForeignKey("volunteer_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");
-
-                    b.OwnsOne("PetFamily.Domain.Species.ValueObjects.SpeciesAndBreed", "SpeciesAndBreed", b1 =>
-                        {
-                            b1.Property<Guid>("PetId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("PetId");
-
-                            b1.ToTable("pets");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PetId");
-
-                            b1.OwnsOne("PetFamily.Domain.Species.ValueObjects.BreedId", "BreedId", b2 =>
-                                {
-                                    b2.Property<Guid>("SpeciesAndBreedPetId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<Guid>("Value")
-                                        .HasColumnType("uuid")
-                                        .HasColumnName("breed_id");
-
-                                    b2.HasKey("SpeciesAndBreedPetId");
-
-                                    b2.ToTable("pets");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("SpeciesAndBreedPetId");
-                                });
-
-                            b1.OwnsOne("PetFamily.Domain.Species.ValueObjects.SpeciesId", "SpeciesId", b2 =>
-                                {
-                                    b2.Property<Guid>("SpeciesAndBreedPetId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<Guid>("Value")
-                                        .HasColumnType("uuid")
-                                        .HasColumnName("species_id");
-
-                                    b2.HasKey("SpeciesAndBreedPetId");
-
-                                    b2.ToTable("pets");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("SpeciesAndBreedPetId");
-                                });
-
-                            b1.Navigation("BreedId")
-                                .IsRequired();
-
-                            b1.Navigation("SpeciesId")
-                                .IsRequired();
-                        });
 
                     b.OwnsMany("PetFamily.Domain.Shared.ValueObjects.DonationInfo", "DonationsInfo", b1 =>
                         {
@@ -271,7 +224,7 @@ namespace PetFamily.Infrastructure.Migrations
                             b1.Property<Guid>("PetId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Number")
+                            b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
@@ -285,7 +238,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasForeignKey("PetId");
                         });
 
-                    b.OwnsOne("PetFamily.Domain.Volunteers.ValueObjects.Address", "Address", b1 =>
+                    b.OwnsOne("PetFamily.Domain.Aggregates.PetManagement.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("PetId")
                                 .HasColumnType("uuid");
@@ -321,6 +274,59 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasForeignKey("PetId");
                         });
 
+                    b.OwnsOne("PetFamily.Domain.Aggregates.SpeciesManagement.ValueObjects.SpeciesAndBreed", "SpeciesAndBreed", b1 =>
+                        {
+                            b1.Property<Guid>("PetId")
+                                .HasColumnType("uuid");
+
+                            b1.HasKey("PetId");
+
+                            b1.ToTable("pets");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetId");
+
+                            b1.OwnsOne("PetFamily.Domain.Shared.ValueObjects.Ids.BreedId", "BreedId", b2 =>
+                                {
+                                    b2.Property<Guid>("SpeciesAndBreedPetId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<Guid>("Value")
+                                        .HasColumnType("uuid")
+                                        .HasColumnName("breed_id");
+
+                                    b2.HasKey("SpeciesAndBreedPetId");
+
+                                    b2.ToTable("pets");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("SpeciesAndBreedPetId");
+                                });
+
+                            b1.OwnsOne("PetFamily.Domain.Shared.ValueObjects.Ids.SpeciesId", "SpeciesId", b2 =>
+                                {
+                                    b2.Property<Guid>("SpeciesAndBreedPetId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<Guid>("Value")
+                                        .HasColumnType("uuid")
+                                        .HasColumnName("species_id");
+
+                                    b2.HasKey("SpeciesAndBreedPetId");
+
+                                    b2.ToTable("pets");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("SpeciesAndBreedPetId");
+                                });
+
+                            b1.Navigation("BreedId")
+                                .IsRequired();
+
+                            b1.Navigation("SpeciesId")
+                                .IsRequired();
+                        });
+
                     b.Navigation("Address")
                         .IsRequired();
 
@@ -335,7 +341,7 @@ namespace PetFamily.Infrastructure.Migrations
                     b.Navigation("Volunteer");
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Volunteers.Entities.Volunteer", b =>
+            modelBuilder.Entity("PetFamily.Domain.Aggregates.PetManagement.Entities.Volunteer", b =>
                 {
                     b.OwnsMany("PetFamily.Domain.Shared.ValueObjects.DonationInfo", "DonationsInfo", b1 =>
                         {
@@ -374,7 +380,7 @@ namespace PetFamily.Infrastructure.Migrations
                             b1.Property<Guid>("VolunteerId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Number")
+                            b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
@@ -388,7 +394,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasForeignKey("VolunteerId");
                         });
 
-                    b.OwnsOne("PetFamily.Domain.Volunteers.ValueObjects.Email", "Email", b1 =>
+                    b.OwnsOne("PetFamily.Domain.Aggregates.PetManagement.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("VolunteerId")
                                 .HasColumnType("uuid");
@@ -407,7 +413,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasForeignKey("VolunteerId");
                         });
 
-                    b.OwnsOne("PetFamily.Domain.Volunteers.ValueObjects.FullName", "Name", b1 =>
+                    b.OwnsOne("PetFamily.Domain.Aggregates.PetManagement.ValueObjects.FullName", "Name", b1 =>
                         {
                             b1.Property<Guid>("VolunteerId")
                                 .HasColumnType("uuid");
@@ -437,7 +443,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasForeignKey("VolunteerId");
                         });
 
-                    b.OwnsMany("PetFamily.Domain.Volunteers.ValueObjects.SocialNetwork", "SocialNetwork", b1 =>
+                    b.OwnsMany("PetFamily.Domain.Aggregates.PetManagement.ValueObjects.SocialNetwork", "SocialNetwork", b1 =>
                         {
                             b1.Property<Guid>("VolunteerId")
                                 .HasColumnType("uuid");
@@ -482,14 +488,24 @@ namespace PetFamily.Infrastructure.Migrations
                     b.Navigation("SocialNetwork");
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Species.Entities.Species", b =>
+            modelBuilder.Entity("PetFamily.Domain.Aggregates.Species.Entities.Breed", b =>
                 {
-                    b.Navigation("Breeds");
+                    b.HasOne("PetFamily.Domain.Aggregates.Species.Entities.Species", null)
+                        .WithMany("Breeds")
+                        .HasForeignKey("species_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_breeds_species_species_id");
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.Volunteers.Entities.Volunteer", b =>
+            modelBuilder.Entity("PetFamily.Domain.Aggregates.PetManagement.Entities.Volunteer", b =>
                 {
                     b.Navigation("Pets");
+                });
+
+            modelBuilder.Entity("PetFamily.Domain.Aggregates.Species.Entities.Species", b =>
+                {
+                    b.Navigation("Breeds");
                 });
 #pragma warning restore 612, 618
         }

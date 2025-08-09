@@ -4,6 +4,7 @@ using PetFamily.Api;
 using PetFamily.Api.Middlewares;
 using Serilog;
 using Serilog.Events;
+using PetFamily.Infrastructure.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication()
     .AddApi();
+
+builder.Services.Configure<SoftDeleteSettings>(
+    builder.Configuration.GetSection("SoftDeleteSettings"));
 
 var app = builder.Build();
 

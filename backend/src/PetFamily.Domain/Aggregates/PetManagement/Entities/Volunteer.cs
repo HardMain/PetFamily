@@ -1,13 +1,13 @@
 ﻿using PetFamily.Domain.Aggregates.PetManagement.Enums;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Entities;
+using PetFamily.Domain.Shared.Interfaces;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 {
-    public class Volunteer : Entity<VolunteerId>
+    public class Volunteer : Entity<VolunteerId>, ISoftDeletable
     {
         private readonly List<Pet> _pets = [];
         private readonly List<SocialNetwork> _socialNetworks = [];
@@ -15,7 +15,12 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
         private Volunteer(VolunteerId id) : base(id) { }
 
-        public Volunteer(VolunteerId volunteerId, FullName name, Email email, string description, int experienceYears, PhoneNumber number) : base(volunteerId)
+        public Volunteer(VolunteerId volunteerId, 
+            FullName name, 
+            Email email, 
+            string description, 
+            int experienceYears, 
+            PhoneNumber number) : base(volunteerId)
         {
             Name = name;
             Email = email;
@@ -32,6 +37,10 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public IReadOnlyList<SocialNetwork> SocialNetwork => _socialNetworks;
         public IReadOnlyList<DonationInfo> DonationsInfo => _donationsInfo;
         public IReadOnlyList<Pet> Pets => _pets;
+
+        public bool IsDeleted { get; private set; }
+
+        public DateTime? DeletionDate { get; private set; }
 
         public int CountPetsWithHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.found_home);
         public int CountPetsNeedHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.need_home);
@@ -101,11 +110,36 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             return AddSocialNetworks(socialNetworks);
         }
 
-        public ErrorList UpdateDonationsInfo(IEnumerable<DonationInfo> donaitionInfos)
+        public ErrorList UpdateDonationsInfo(IEnumerable<DonationInfo> donaitionsInfo)
         {
             _donationsInfo.Clear();
 
-            return AddDonationsInfo(donaitionInfos);
+            return AddDonationsInfo(donaitionsInfo);
+        }
+
+        public virtual void Delete(bool cascade = false)
+        {
+            if (IsDeleted)
+                return;
+
+            IsDeleted = true;
+
+            DeletionDate = DateTime.UtcNow;
+
+            if (cascade)
+                _pets.ForEach(pet => pet.Delete());
+        }
+        public virtual void Restore(bool cascade = false)
+        {
+            if (!IsDeleted)
+                return;
+
+            IsDeleted = false;
+
+            DeletionDate = null;
+
+            if (cascade)
+                _pets.ForEach(pet => pet.Restore());
         }
     }
 }

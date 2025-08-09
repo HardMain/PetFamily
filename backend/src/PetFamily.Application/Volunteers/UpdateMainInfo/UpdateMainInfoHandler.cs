@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
@@ -80,6 +79,8 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
             volunteerResult.Value.UpdateMainInfo(fullName, email, phoneNumber, description, experienceYears);
 
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+
+            _logger.LogInformation("Updated main info for volunteer with id {volunteerId}", volunteerId);
 
             return result;
         }

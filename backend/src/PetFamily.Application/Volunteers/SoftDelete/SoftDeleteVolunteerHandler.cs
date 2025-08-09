@@ -1,35 +1,35 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Application.Extensions;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 
-namespace PetFamily.Application.Volunteers.UpdateDonationsInfo
+namespace PetFamily.Application.Volunteers.SoftDelete
 {
-    public class UpdateDonationsInfoHandler
+    public class SoftDeleteVolunteerHandler
     {
         private readonly IVolunteersRepository _volunteersRepository;
-        private readonly IValidator<UpdateDonationsInfoCommand> _validator;
-        private readonly ILogger<UpdateDonationsInfoHandler> _logger;
+        private readonly IValidator<SoftDeleteVolunteerCommand> _validator;
+        private readonly ILogger<SoftDeleteVolunteerHandler> _logger;
 
-        public UpdateDonationsInfoHandler(
+        public SoftDeleteVolunteerHandler(
             IVolunteersRepository volunteersRepository,
-            IValidator<UpdateDonationsInfoCommand> validator,
-            ILogger<UpdateDonationsInfoHandler> logger)
+            IValidator<SoftDeleteVolunteerCommand> validator,
+            ILogger<SoftDeleteVolunteerHandler> logger)
         {
             _volunteersRepository = volunteersRepository;
             _validator = validator;
             _logger = logger;
         }
-
         public async Task<Result<Guid, ErrorList>> Handle(
-            UpdateDonationsInfoCommand command, CancellationToken cancellationToken = default)
+            SoftDeleteVolunteerCommand command, CancellationToken cancellationToken)
         {
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (!validationResult.IsValid)
             {
-                _logger.LogWarning("Validation failed: {Errors}", validationResult.ToErrorList());
+                _logger.LogWarning(
+                    "Validation failed: {Errors}", validationResult.ToErrorList());
 
                 return validationResult.ToErrorList();
             }
@@ -44,21 +44,11 @@ namespace PetFamily.Application.Volunteers.UpdateDonationsInfo
                 return volunteerResult.Error.ToErrorList();
             }
 
-            var errorsUpdateDonationsInfo = volunteerResult.Value.UpdateDonationsInfo(
-                command.Request.DonationsInfo.Select(
-                    di => DonationInfo.Create(di.Title, di.Description).Value));
-
-            if (errorsUpdateDonationsInfo.Any())
-            {
-                _logger.LogWarning(
-                    "Failed to add donations info: {Errors}", errorsUpdateDonationsInfo);
-
-                return errorsUpdateDonationsInfo;
-            }
+            volunteerResult.Value.Delete(true);
 
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("Updated donations info for volunteer with id {volunteerId}", volunteerId);
+            _logger.LogInformation("Deleted(soft) volunteer with id {volunteerId}", volunteerId);
 
             return result;
         }

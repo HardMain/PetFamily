@@ -1,5 +1,5 @@
 ﻿using PetFamily.Api.Envelopes;
-using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.Entities;
 
 namespace PetFamily.Api.Middlewares
 {
