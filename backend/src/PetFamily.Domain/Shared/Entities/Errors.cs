@@ -17,7 +17,7 @@ namespace PetFamily.Domain.Shared.Entities
             {
                 var forId = id == null ? "" : $" for Id '{id}'";
 
-                return Error.NotFound("record.not.fountd", $"record not found{forId}");
+                return Error.NotFound("record.not.found", $"record not found{forId}");
             }
 
             public static Error ValueIsRequired(string? name = null)

@@ -33,16 +33,16 @@ namespace PetFamily.Infrastructure.services
 
                     var cutoffDate = DateTime.UtcNow.AddDays(_options.Value.RetentionDate * (-1));
 
-                    var softDeletedVolunteers = await repository.GetSoftDeletedEarlierThan(cutoffDate, cancellationToken);
+                    var deletedIds = await repository.DeleteSoftDeletedEarlierThan(cutoffDate, cancellationToken);
 
-                    foreach (var volunteer in softDeletedVolunteers)
-                    {
-                        await repository.Delete(volunteer, cancellationToken);
-
-                        _logger.LogInformation("BackgroundService: Deleted(hard) volunteer with id {volunteerId}", volunteer.Id);
-                    }
+                    if (deletedIds.Any())
+                        _logger.LogInformation(
+                            "BackgroundService: Deleted(hard) volunteers with ids {volunteerIds}", deletedIds);
+                    else
+                        _logger.LogDebug(
+                            "BackgroundService: No volunteers for deletion(hard)");
                 }
-
+                    
                 await Task.Delay(TimeSpan.FromHours(24), cancellationToken);
             }
         }

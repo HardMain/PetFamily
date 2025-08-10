@@ -36,7 +36,7 @@ namespace PetFamily.Application.Volunteers.Restore
             }
             var volunteerId = VolunteerId.Create(command.VolunteerId);
 
-            var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancellationToken);
+            var volunteerResult = await _volunteersRepository.GetByIdIncludingDeleted(volunteerId, cancellationToken);
             if (volunteerResult.IsFailure)
             {
                 _logger.LogWarning("Failed to get volunteer with {volunteerId}", volunteerId);
@@ -44,7 +44,7 @@ namespace PetFamily.Application.Volunteers.Restore
                 return volunteerResult.Error.ToErrorList();
             }
 
-            volunteerResult.Value.Restore();
+            volunteerResult.Value.Restore(true);
 
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
 

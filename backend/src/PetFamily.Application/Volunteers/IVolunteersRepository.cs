@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using PetFamily.Domain.Aggregates.PetManagement.Entities;
+﻿using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -16,6 +15,7 @@ namespace PetFamily.Application.Volunteers
         Task<Result<Volunteer>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken);
         Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber number, CancellationToken cancellationToken);
         Task<Result<Volunteer>> GetByEmail(Email email, CancellationToken cancellationToken);
-        Task<List<Volunteer>> GetSoftDeletedEarlierThan(DateTime dateTime, CancellationToken cancellationToken);
+        Task<IEnumerable<Guid>> DeleteSoftDeletedEarlierThan(DateTime dateTime, CancellationToken cancellationToken);
+        Task<Result<Volunteer>> GetByIdIncludingDeleted(VolunteerId volunteerId, CancellationToken cancellationToken);
     }
 }
