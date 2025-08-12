@@ -31,19 +31,20 @@ namespace PetFamily.Infrastructure.services
                 {
                     var repository = scope.ServiceProvider.GetRequiredService<IVolunteersRepository>();
 
-                    var cutoffDate = DateTime.UtcNow.AddDays(_options.Value.RetentionDate * (-1));
+                    //var cutoffDate = DateTime.UtcNow.AddDays(_options.Value.RetentionDate * (-1));
+                    var cutoffDate = DateTime.UtcNow.AddSeconds(50 * (-1));
 
-                    var deletedIds = await repository.DeleteSoftDeletedEarlierThan(cutoffDate, cancellationToken);
+                    var countDeleted = await repository.DeleteSoftDeletedEarlierThan(cutoffDate, cancellationToken);
 
-                    if (deletedIds.Any())
+                    if (countDeleted > 0)
                         _logger.LogInformation(
-                            "BackgroundService: Deleted(hard) volunteers with ids {volunteerIds}", deletedIds);
+                            "BackgroundService: Deleted(hard) {countDeleted} volunteers", countDeleted);
                     else
                         _logger.LogDebug(
                             "BackgroundService: No volunteers for deletion(hard)");
                 }
                     
-                await Task.Delay(TimeSpan.FromHours(24), cancellationToken);
+                await Task.Delay(TimeSpan.FromSeconds(30)/*TimeSpan.FromHours(24)*/, cancellationToken);
             }
         }
     }

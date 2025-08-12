@@ -15,7 +15,7 @@ namespace PetFamily.Application.Volunteers
         Task<Result<Volunteer>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken);
         Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber number, CancellationToken cancellationToken);
         Task<Result<Volunteer>> GetByEmail(Email email, CancellationToken cancellationToken);
-        Task<IEnumerable<Guid>> DeleteSoftDeletedEarlierThan(DateTime dateTime, CancellationToken cancellationToken);
+        Task<int> DeleteSoftDeletedEarlierThan(DateTime dateTime, CancellationToken cancellationToken);
         Task<Result<Volunteer>> GetByIdIncludingDeleted(VolunteerId volunteerId, CancellationToken cancellationToken);
     }
 }

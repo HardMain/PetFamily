@@ -93,23 +93,13 @@ namespace PetFamily.Infrastructure.Repositories
 
             return volunteer;
         }
-        private async Task<List<Volunteer>> GetSoftDeletedEarlierThan(
+
+        public async Task<int> DeleteSoftDeletedEarlierThan(
             DateTime dateTime, CancellationToken cancellationToken)
         {
             return await _dbContext.Volunteers.IgnoreQueryFilters()
                 .Where(v => v.IsDeleted && v.DeletionDate <= dateTime)
-                .ToListAsync(cancellationToken);
-        }
-        public async Task<IEnumerable<Guid>> DeleteSoftDeletedEarlierThan(
-            DateTime dateTime, CancellationToken cancellationToken)
-        {
-            var volunteers = await GetSoftDeletedEarlierThan(dateTime, cancellationToken);
-
-            _dbContext.Volunteers.RemoveRange(volunteers);
-
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            return volunteers.Select(v => v.Id.Value);
+                .ExecuteDeleteAsync(cancellationToken);
         }
     }
 }
