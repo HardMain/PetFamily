@@ -10,7 +10,8 @@ namespace PetFamily.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Volunteer> builder)
         {
-            builder.ToTable("volunteers");
+            builder.ToTable("volunteers").
+                HasQueryFilter(v => !v.IsDeleted);
 
             builder.HasKey(v => v.Id)
                 .HasName("pk_volunteers");
@@ -103,6 +104,13 @@ namespace PetFamily.Infrastructure.Configurations
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Property(v => v.IsDeleted)
+                .IsRequired()
+                .HasColumnName("is_deleted");
+
+            builder.Property(v => v.DeletionDate)
+                .IsRequired(false)
+                .HasColumnName("deletion_date");
         }
     }
 }

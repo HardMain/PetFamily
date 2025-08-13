@@ -1,13 +1,13 @@
 ﻿using PetFamily.Domain.Aggregates.PetManagement.Enums;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Aggregates.SpeciesManagement.ValueObjects;
-using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Entities;
+using PetFamily.Domain.Shared.Interfaces;
 using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 {
-    public class Pet : Entity<PetId>
+    public class Pet : Entity<PetId>, ISoftDeletable
     {
         private readonly List<DonationInfo> _donationInfo = [];
 
@@ -38,6 +38,10 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public IReadOnlyList<DonationInfo> DonationsInfo => _donationInfo;
         public DateTime CreationDate { get; private set; }
 
+        public bool IsDeleted { get; private set; }
+
+        public DateTime? DeletionDate { get; private set; }
+
         public static Result<Pet> Create(PetId id, string name, string description, PhoneNumber ownerPhone)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -47,6 +51,26 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
                 return Errors.General.ValueIsInvalid("Description");
 
             return new Pet(id, name, description, ownerPhone);
+        }
+
+        public void Delete(bool cascade = false)
+        {
+            if (IsDeleted)
+                return;
+
+            IsDeleted = true;
+
+            DeletionDate = DateTime.UtcNow;
+        }
+
+        public void Restore(bool cascade = false)
+        {
+            if (!IsDeleted)
+                return;
+
+            IsDeleted = false;
+
+            DeletionDate = null;
         }
     }
 }

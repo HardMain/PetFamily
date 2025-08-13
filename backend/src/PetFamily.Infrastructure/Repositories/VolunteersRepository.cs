@@ -2,7 +2,6 @@
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
@@ -18,7 +17,8 @@ namespace PetFamily.Infrastructure.Repositories
             _dbContext = dbContext; 
         }
 
-        public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken)
+        public async Task<Guid> Add(
+            Volunteer volunteer, CancellationToken cancellationToken)
         {
             await _dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
 
@@ -26,21 +26,42 @@ namespace PetFamily.Infrastructure.Repositories
 
             return volunteer.Id; 
         }
-
-        public async Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken)
+        public async Task<Guid> Save(
+            Volunteer volunteer, CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return volunteer.Id;
         }
+        public async Task<Guid> Delete(
+            Volunteer volunteer, CancellationToken cancellationToken)
+        {
+            _dbContext.Volunteers.Remove(volunteer);
 
-        public async Task<Result<Volunteer>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken)
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return volunteer.Id;
+        }
+
+        public async Task<Result<Volunteer>> GetById(
+            VolunteerId volunteerId, CancellationToken cancellationToken)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
                 .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
 
-            var entries1 = _dbContext.ChangeTracker.Entries<Volunteer>();
+            if (volunteer == null)
+                return Errors.General.NotFound(volunteerId.Value);
+
+            return volunteer;
+        }
+        public async Task<Result<Volunteer>> GetByIdIncludingDeleted(
+            VolunteerId volunteerId, CancellationToken cancellationToken)
+        {
+            var volunteer = await _dbContext.Volunteers
+                .IgnoreQueryFilters()
+                .Include(v => v.Pets)
+                .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
 
             if (volunteer == null)
                 return Errors.General.NotFound(volunteerId.Value);
@@ -48,7 +69,8 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer;
         }
 
-        public async Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber phoneNumber, CancellationToken cancellationToken)
+        public async Task<Result<Volunteer>> GetByPhoneNumber(
+            PhoneNumber phoneNumber, CancellationToken cancellationToken)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
@@ -59,8 +81,8 @@ namespace PetFamily.Infrastructure.Repositories
 
             return volunteer;
         }
-
-        public async Task<Result<Volunteer>> GetByEmail(Email email, CancellationToken cancellationToken)
+        public async Task<Result<Volunteer>> GetByEmail(
+            Email email, CancellationToken cancellationToken)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
@@ -70,6 +92,14 @@ namespace PetFamily.Infrastructure.Repositories
                 return Errors.General.NotFound();
 
             return volunteer;
+        }
+
+        public async Task<int> DeleteSoftDeletedEarlierThan(
+            DateTime dateTime, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Volunteers.IgnoreQueryFilters()
+                .Where(v => v.IsDeleted && v.DeletionDate <= dateTime)
+                .ExecuteDeleteAsync(cancellationToken);
         }
     }
 }

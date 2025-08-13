@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Volunteers;
+using PetFamily.Infrastructure.Configurations;
 using PetFamily.Infrastructure.Repositories;
+using PetFamily.Infrastructure.services;
 
 namespace PetFamily.Infrastructure
 {
@@ -12,6 +14,10 @@ namespace PetFamily.Infrastructure
             services.AddScoped(_ => new ApplicationDbContext(configuration.GetConnectionString("Database")!));
 
             services.AddScoped<IVolunteersRepository, VolunteersRepository>();
+
+            services.AddHostedService<SoftDeleteCleanupService>();
+
+            services.Configure<SoftDeleteSettings>(configuration.GetSection("SoftDeleteSettings"));
 
             return services;
         }
