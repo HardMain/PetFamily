@@ -1,5 +1,7 @@
-﻿using PetFamily.Domain.Aggregates.PetManagement.Enums;
+﻿using System.Security;
+using PetFamily.Domain.Aggregates.PetManagement.Enums;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Domain.Aggregates.PetManagement.ValueObjects.PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.Interfaces;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -46,6 +48,87 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public int CountPetsNeedHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.need_home);
         public int CountPetsNeedHelp() => _pets.Count(pet => pet.SupportStatus == SupportStatus.need_help);
 
+        public Result<Pet> AddPet(Pet pet)
+        {
+            var serialNumberResult = SerialNumber.Create(_pets.Count() + 1);
+            if (serialNumberResult.IsFailure)
+                return serialNumberResult.Error;
+
+            pet.SetSerialNumber(serialNumberResult.Value);
+
+            _pets.Add(pet);
+
+            return Result<Pet>.Success(pet);
+        }
+        public Result<Pet> DeletePet(Pet pet)
+        {
+            var serialNumber = pet.SerialNumber.Value;
+
+            foreach (var petItem in _pets)
+            {
+                if (petItem.SerialNumber.Value > serialNumber)
+                {
+                    var newSerialResult = SerialNumber.Create(petItem.SerialNumber.Value - 1);
+                    if (newSerialResult.IsFailure)
+                        return newSerialResult.Error;
+
+                    petItem.SetSerialNumber(newSerialResult.Value);
+                }
+            }
+
+            _pets.Remove(pet);
+
+            return Result<Pet>.Success(pet);
+        }
+        public Result<Pet> MovePet(Pet pet, SerialNumber newSerialNumber)
+        {
+            var newSerialNumberValue = newSerialNumber.Value;
+            var currentSerialNumberValue = pet.SerialNumber.Value;
+
+            if (newSerialNumberValue < 1 || newSerialNumberValue > _pets.Count)
+                return Errors.General.ValueIsInvalid("serial number");
+
+            if (newSerialNumberValue == currentSerialNumberValue)
+                return Result<Pet>.Success(pet);
+
+            if (newSerialNumber.Value > currentSerialNumberValue)
+            {
+                foreach (var petItem in _pets)
+                {
+                    if (petItem.SerialNumber.Value > currentSerialNumberValue &&
+                    petItem.SerialNumber.Value <= newSerialNumberValue)
+                    {
+                        var serialNumberResult = SerialNumber.Create(petItem.SerialNumber.Value - 1);
+
+                        if (serialNumberResult.IsFailure)
+                            return serialNumberResult.Error;
+
+                        petItem.SetSerialNumber(serialNumberResult.Value);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var petItem in _pets)
+                {
+                    if (petItem.SerialNumber.Value < currentSerialNumberValue &&
+                    petItem.SerialNumber.Value >= newSerialNumberValue)
+                    {
+                        var serialNumberResult = SerialNumber.Create(petItem.SerialNumber.Value + 1);
+
+                        if (serialNumberResult.IsFailure)
+                            return serialNumberResult.Error;
+
+                        petItem.SetSerialNumber(serialNumberResult.Value);
+                    }
+                }
+            }    
+
+            pet.SetSerialNumber(newSerialNumber);
+            
+            return Result<Pet>.Success(pet);
+        }
+
         private Result<SocialNetwork> AddSocialNetwork(SocialNetwork socialNetwork)
         {
             if (_socialNetworks.Any(sn => sn.URL == socialNetwork.URL))
@@ -55,7 +138,6 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             return Result<SocialNetwork>.Success(socialNetwork);
         }
-
         public ErrorList AddSocialNetworks(IEnumerable<SocialNetwork> socialNetworks)
         {
             var errors = new List<Error>();
@@ -79,7 +161,6 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             return Result<DonationInfo>.Success(donationInfo);
         }
-
         public ErrorList AddDonationsInfo(IEnumerable<DonationInfo> donations)
         {
             var errors = new List<Error>();
@@ -102,20 +183,20 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             Description = description;
             ExperienceYears = experienceYears;
         }
-
         public ErrorList UpdateSocialNetworks(IEnumerable<SocialNetwork> socialNetworks)
         {
             _socialNetworks.Clear();
 
             return AddSocialNetworks(socialNetworks);
         }
-
         public ErrorList UpdateDonationsInfo(IEnumerable<DonationInfo> donaitionsInfo)
         {
             _donationsInfo.Clear();
 
             return AddDonationsInfo(donaitionsInfo);
         }
+
+        public Result<Pet> GetPetById(PetId petId) => _pets.First(p => p.Id == petId);
 
         public virtual void Delete(bool cascade = false)
         {

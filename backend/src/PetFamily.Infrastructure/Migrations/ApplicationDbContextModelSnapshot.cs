@@ -271,6 +271,23 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasForeignKey("PetId");
                         });
 
+                    b.OwnsOne("PetFamily.Domain.Aggregates.PetManagement.ValueObjects.PetFamily.Domain.Aggregates.PetManagement.ValueObjects.SerialNumber", "SerialNumber", b1 =>
+                        {
+                            b1.Property<Guid>("PetId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("integer")
+                                .HasColumnName("serial_number");
+
+                            b1.HasKey("PetId");
+
+                            b1.ToTable("pets");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetId");
+                        });
+
                     b.OwnsOne("PetFamily.Domain.Aggregates.SpeciesManagement.ValueObjects.SpeciesAndBreed", "SpeciesAndBreed", b1 =>
                         {
                             b1.Property<Guid>("PetId")
@@ -330,6 +347,9 @@ namespace PetFamily.Infrastructure.Migrations
                     b.Navigation("DonationsInfo");
 
                     b.Navigation("OwnerPhone")
+                        .IsRequired();
+
+                    b.Navigation("SerialNumber")
                         .IsRequired();
 
                     b.Navigation("SpeciesAndBreed")

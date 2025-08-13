@@ -97,6 +97,13 @@ namespace PetFamily.Infrastructure.Configurations
                     .HasColumnName("owner_phone");
             });
 
+            builder.OwnsOne(p => p.SerialNumber, sn =>
+            {
+                sn.Property(sn => sn.Value)
+                    .IsRequired()
+                    .HasColumnName("serial_number");
+            });
+
             builder.Property(p => p.isCastrated)
                 .IsRequired()
                 .HasColumnName("is_castrated");

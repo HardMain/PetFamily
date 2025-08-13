@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
 {

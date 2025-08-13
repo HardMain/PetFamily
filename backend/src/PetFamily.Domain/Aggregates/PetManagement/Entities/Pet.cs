@@ -1,5 +1,6 @@
 ﻿using PetFamily.Domain.Aggregates.PetManagement.Enums;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Domain.Aggregates.PetManagement.ValueObjects.PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Aggregates.SpeciesManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.Interfaces;
@@ -13,7 +14,11 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
         private Pet(PetId id) : base(id) { }
 
-        private Pet(PetId id, string name, string description, PhoneNumber ownerPhone) : base(id)
+        private Pet(
+            PetId id, 
+            string name, 
+            string description, 
+            PhoneNumber ownerPhone) : base(id)
         {
             Name = name;
             Description = description;
@@ -31,6 +36,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public double WeightKg { get; private set; }
         public double HeightCm { get; private set; }
         public PhoneNumber OwnerPhone { get; private set; } = default!;
+        public SerialNumber SerialNumber { get; private set; } = default!;
         public bool isCastrated { get; private set; }
         public DateTime BirthDate { get; private set; } = default!;
         public bool isVaccinated { get; private set; }
@@ -52,6 +58,9 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             return new Pet(id, name, description, ownerPhone);
         }
+
+        public void SetSerialNumber(SerialNumber serialNumber) =>
+            SerialNumber = serialNumber;
 
         public void Delete(bool cascade = false)
         {
