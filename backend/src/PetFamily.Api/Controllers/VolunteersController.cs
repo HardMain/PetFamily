@@ -128,7 +128,7 @@ namespace PetFamily.Api.Controllers
             return Ok(envelope);
         }
 
-        [HttpDelete("{id:guid}/restore")]
+        [HttpPut("{id:guid}/restore")]
         public async Task<ActionResult<Guid>> Restore(
             [FromRoute] Guid id,
             [FromServices] RestoreVolunteerHandler handler,
