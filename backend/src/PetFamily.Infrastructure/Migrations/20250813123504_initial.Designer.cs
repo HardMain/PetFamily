@@ -12,11 +12,7 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:backend/src/PetFamily.Infrastructure/Migrations/20250812133802_initial.Designer.cs
-    [Migration("20250812133802_initial")]
-========
-    [Migration("20250811191353_initial")]
->>>>>>>> c9c2014 (Add xUnitTests and move pet):backend/src/PetFamily.Infrastructure/Migrations/20250811191353_initial.Designer.cs
+    [Migration("20250813123504_initial")]
     partial class initial
     {
         /// <inheritdoc />

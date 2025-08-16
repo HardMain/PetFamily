@@ -1,7 +1,9 @@
 ﻿using PetFamily.Application.Volunteers.Create;
+using PetFamily.Application.Volunteers.PetsOperations.AddPets;
 using PetFamily.Application.Volunteers.UpdateDonationsInfo;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateSocialNetworks;
+using PetFamily.Contracts.DTOs.Shared;
 using PetFamily.Contracts.Requests.Volunteers;
 
 namespace PetFamily.Application.Extensions
@@ -24,5 +26,9 @@ namespace PetFamily.Application.Extensions
         {
             return new UpdateDonationsInfoCommand(id, request);
         }
+        //public static AddPetCommand ToCommand(this AddPetRequest request, FileMetadataDTO fileMetadataDTO)
+        //{
+        //    return new AddPetCommand(request, fileMetadataDTO);
+        //}
     }
 }

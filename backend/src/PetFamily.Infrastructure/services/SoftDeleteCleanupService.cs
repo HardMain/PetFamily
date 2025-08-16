@@ -3,19 +3,19 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PetFamily.Application.Volunteers;
-using PetFamily.Infrastructure.Configurations;
+using PetFamily.Infrastructure.Options;
 
-namespace PetFamily.Infrastructure.services
+namespace PetFamily.Infrastructure.Services
 {
     public class SoftDeleteCleanupService : BackgroundService
     {
         private readonly IServiceProvider _services;
-        private readonly IOptions<SoftDeleteSettings> _options;
+        private readonly IOptions<SoftDeleteOptions> _options;
         private readonly ILogger<SoftDeleteCleanupService> _logger;
 
         public SoftDeleteCleanupService(
             IServiceProvider services,
-            IOptions<SoftDeleteSettings> options,
+            IOptions<SoftDeleteOptions> options,
             ILogger<SoftDeleteCleanupService> logger)
         {
             _services = services;
@@ -31,8 +31,8 @@ namespace PetFamily.Infrastructure.services
                 {
                     var repository = scope.ServiceProvider.GetRequiredService<IVolunteersRepository>();
 
-                    //var cutoffDate = DateTime.UtcNow.AddDays(_options.Value.RetentionDate * (-1));
-                    var cutoffDate = DateTime.UtcNow.AddSeconds(50 * (-1));
+                    var cutoffDate = DateTime.UtcNow.AddDays(_options.Value.RetentionDate * (-1));
+                    //var cutoffDate = DateTime.UtcNow.AddSeconds(50 * (-1));
 
                     var countDeleted = await repository.DeleteSoftDeletedEarlierThan(cutoffDate, cancellationToken);
 
@@ -44,7 +44,7 @@ namespace PetFamily.Infrastructure.services
                             "BackgroundService: No volunteers for deletion(hard)");
                 }
                     
-                await Task.Delay(TimeSpan.FromSeconds(30)/*TimeSpan.FromHours(24)*/, cancellationToken);
+                await Task.Delay(/*TimeSpan.FromSeconds(30)*/TimeSpan.FromHours(24), cancellationToken);
             }
         }
     }
