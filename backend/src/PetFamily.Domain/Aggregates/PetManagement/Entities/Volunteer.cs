@@ -1,5 +1,4 @@
-﻿using System.Security;
-using PetFamily.Domain.Aggregates.PetManagement.Enums;
+﻿using PetFamily.Domain.Aggregates.PetManagement.Enums;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects.PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
@@ -41,7 +40,6 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public IReadOnlyList<Pet> Pets => _pets;
 
         public bool IsDeleted { get; private set; }
-
         public DateTime? DeletionDate { get; private set; }
 
         public int CountPetsWithHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.found_home);
@@ -60,6 +58,18 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             return Result<Pet>.Success(pet);
         }
+        //public void AddFileToPet(PetId petId, PetFile file)
+        //{
+        //    var pet = _pets.First(pet => pet.Id == petId);
+
+        //    pet.AddFile(file);
+        //}
+        //public void DeleteFileFromPet(PetId petId, PetFile file)
+        //{
+        //    var pet = _pets.First(pet => pet.Id == petId);
+
+        //    pet.DeleteFile(file);
+        //}
         public Result<Pet> DeletePet(Pet pet)
         {
             var serialNumber = pet.SerialNumber.Value;

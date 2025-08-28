@@ -24,5 +24,10 @@ namespace PetFamily.Domain.Aggregates.Species.Entities
 
             return new Species(speciesId, name);
         }
+
+        public void AddBreed(Breed breed)
+        {
+            _breeds.Add(breed);
+        }
     }
 }

@@ -98,7 +98,7 @@ namespace PetFamily.Infrastructure.Configurations
             });
 
             builder.HasMany(v => v.Pets)
-                .WithOne(p => p.Volunteer)
+                .WithOne()
                 .HasForeignKey("volunteer_id")
                 .HasConstraintName("fk_pets_volunteers_volunteer_id")
                 .IsRequired()
