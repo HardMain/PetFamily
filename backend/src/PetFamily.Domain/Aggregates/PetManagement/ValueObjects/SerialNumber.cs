@@ -7,6 +7,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
     {
         public record SerialNumber
         {
+            public static SerialNumber None = new(0);
             public static SerialNumber First = new(1);
 
             private SerialNumber(int value)
@@ -18,7 +19,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
 
             public static Result<SerialNumber> Create(int number)
             {
-                if (number <= 0)
+                if (number < 0)
                     return Errors.General.ValueIsInvalid("serial number");
 
                 return new SerialNumber(number);

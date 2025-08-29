@@ -31,6 +31,11 @@ namespace PetFamily.Domain.Shared.Entities
             {
                 return Error.Failure("server.internal", message);
             }
+
+            public static Error FailedToSave()
+            {
+                return Error.Failure("data.save.failed", "failed to save data in database");
+            }
         }
 
         public static class Volunteer
@@ -54,6 +59,26 @@ namespace PetFamily.Domain.Shared.Entities
             public static Error Duplicate()
             {
                 return Error.Validation("record.already.exist", $"donation information already exist");
+            }
+        }
+
+        public static class SpeciesAndBreed
+        {
+            public static Error NotFound(Guid? speciesId = null, Guid? breedId = null)
+            {
+                var forIds = speciesId == null ? "" :
+                             breedId == null ? "" :
+                             $" for speciesId {speciesId} and breedId {breedId}";
+
+                return Error.NotFound("record.not.found", $"record not found{forIds}");
+            }
+        }
+
+        public static class PetFile
+        {
+            public static Error FileIsEmpty()
+            {
+                return Error.Validation("length.is.invalid", $"file is empty");
             }
         }
     }

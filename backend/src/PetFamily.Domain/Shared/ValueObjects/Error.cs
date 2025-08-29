@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using PetFamily.Domain.Shared.Entities;
 
 namespace PetFamily.Domain.Shared.ValueObjects
 {
@@ -47,7 +48,6 @@ namespace PetFamily.Domain.Shared.ValueObjects
 
             return new Error(parts[0], parts[1], type);
         }
-
         public ErrorList ToErrorList() => new([this]);
     }
 

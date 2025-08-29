@@ -1,10 +1,13 @@
 using FluentAssertions;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
+using PetFamily.Domain.Aggregates.PetManagement.Enums;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects.PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Domain.Aggregates.SpeciesManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
+using PetFile = PetFamily.Domain.Aggregates.PetManagement.ValueObjects.PetFile;
 
 namespace PetFamily.UnitTests
 {
@@ -12,22 +15,53 @@ namespace PetFamily.UnitTests
     {
         private Volunteer CreateVolunteerWithPets(int petsCount)
         {
-            var name = FullName.Create("first", "last", "middle").Value;
+            var volunteerId = VolunteerId.NewVolunteerId();
+            var volunteerName = FullName.Create("first", "last", "middle").Value;
             var email = Email.Create("email@gmail.com").Value;
-            var description = "description";
             var experienceYears = 10;
             var numberPhone = PhoneNumber.Create("+799999999999").Value;
+            var description = "description";
 
-            var volunteer = new Volunteer(VolunteerId.NewVolunteerId(), name, email, description, experienceYears, numberPhone);
+            var volunteer = new Volunteer(volunteerId, volunteerName, email, description, experienceYears, numberPhone);
 
-            var pets = Enumerable
-                .Range(1, petsCount)
-                .Select(_ => Pet.Create(PetId.NewPetId(), "name", description, numberPhone).Value);
-
-            foreach (var pet in pets)
-                volunteer.AddPet(pet);
+            for (int i = 0; i < petsCount; i++)
+                volunteer.AddPet(CreatePet());
 
             return volunteer;
+        }
+        private Pet CreatePet()
+        {
+            var petId = PetId.NewPetId();
+            var petName = "name";
+            var color = "color";
+            var numberPhone = PhoneNumber.Create("+799999999999").Value;
+            var description = "description";
+            var healthInformation = "healthInformation";
+            var address = Address.Create("street", "houseNumber", "city", "country").Value;
+            var speciesAndBreed = SpeciesAndBreed.Create(SpeciesId.NewSpeciesId(), BreedId.NewBreedId()).Value;
+            var weightKg = 0.1;
+            var heightCm = 0.1;
+            var isCastrated = false;
+            var isVaccinated = false;
+            var birthDate = DateTime.Now;
+            var supportStatus = SupportStatus.found_home;
+            var filesList = new List<PetFile>();
+
+            return Pet.Create(
+                petId,
+                petName,
+                description,
+                speciesAndBreed,
+                color,
+                healthInformation,
+                address,
+                weightKg,
+                heightCm,
+                numberPhone,
+                isCastrated,
+                isVaccinated,
+                birthDate,
+                supportStatus).Value;
         }
 
         [Fact]
@@ -35,16 +69,13 @@ namespace PetFamily.UnitTests
         {
             // arrange
             var volunteer = CreateVolunteerWithPets(0);
-
-            var number = PhoneNumber.Create("+79999999999").Value;
-            var petId = PetId.NewPetId();
-            var pet = Pet.Create(petId, "name", "description", number).Value;
+            var pet = CreatePet();
 
             // act
             var result = volunteer.AddPet(pet);
 
             // assert
-            var addedPetResult = volunteer.GetPetById(petId);
+            var addedPetResult = volunteer.GetPetById(pet.Id);
 
             addedPetResult.IsSuccess.Should().BeTrue();
             result.IsSuccess.Should().BeTrue();
@@ -59,16 +90,13 @@ namespace PetFamily.UnitTests
             const int petsCount = 5;
 
             var volunteer = CreateVolunteerWithPets(petsCount);
-
-            var petId = PetId.NewPetId();
-            var number = PhoneNumber.Create("+79999999999").Value;
-            var petToAdd = Pet.Create(petId, "name", "description", number).Value;
+            var petToAdd = CreatePet();
 
             // act
             var result = volunteer.AddPet(petToAdd);
 
             // assert
-            var addedPetResult = volunteer.GetPetById(petId);
+            var addedPetResult = volunteer.GetPetById(petToAdd.Id);
 
             var serialNumber = SerialNumber.Create(petsCount + 1);
 
@@ -90,7 +118,7 @@ namespace PetFamily.UnitTests
             var petToDelete = pets[0];
 
             // act
-            var result = volunteer.DeletePet(petToDelete);
+            var result = volunteer.HardDeletePet(petToDelete);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -113,7 +141,7 @@ namespace PetFamily.UnitTests
             var petToDelete = pets[4];
 
             // act
-            var result = volunteer.DeletePet(petToDelete);
+            var result = volunteer.HardDeletePet(petToDelete);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -136,7 +164,7 @@ namespace PetFamily.UnitTests
             var petToDelete = pets[2];
 
             // act
-            var result = volunteer.DeletePet(petToDelete);
+            var result = volunteer.HardDeletePet(petToDelete);
 
             // assert
             result.IsSuccess.Should().BeTrue();

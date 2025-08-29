@@ -48,7 +48,6 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)")
                         .HasColumnName("description");
@@ -177,7 +176,7 @@ namespace PetFamily.Infrastructure.Migrations
 
             modelBuilder.Entity("PetFamily.Domain.Aggregates.PetManagement.Entities.Pet", b =>
                 {
-                    b.HasOne("PetFamily.Domain.Aggregates.PetManagement.Entities.Volunteer", "Volunteer")
+                    b.HasOne("PetFamily.Domain.Aggregates.PetManagement.Entities.Volunteer", null)
                         .WithMany("Pets")
                         .HasForeignKey("volunteer_id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -195,16 +194,13 @@ namespace PetFamily.Infrastructure.Migrations
 
                             b1.Property<string>("Description")
                                 .IsRequired()
-                                .ValueGeneratedOnUpdateSometimes()
                                 .HasMaxLength(2000)
-                                .HasColumnType("character varying(2000)")
-                                .HasColumnName("description");
+                                .HasColumnType("character varying(2000)");
 
                             b1.Property<string>("Title")
                                 .IsRequired()
                                 .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("title");
+                                .HasColumnType("character varying(100)");
 
                             b1.HasKey("PetId", "__synthesizedOrdinal");
 
@@ -288,6 +284,49 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasForeignKey("PetId");
                         });
 
+                    b.OwnsMany("PetFamily.Domain.Aggregates.PetManagement.ValueObjects.PetFile", "Files", b1 =>
+                        {
+                            b1.Property<Guid>("PetId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.HasKey("PetId", "__synthesizedOrdinal");
+
+                            b1.ToTable("pets");
+
+                            b1.ToJson("files");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetId");
+
+                            b1.OwnsOne("PetFamily.Domain.Aggregates.PetManagement.ValueObjects.FilePath", "PathToStorage", b2 =>
+                                {
+                                    b2.Property<Guid>("PetFilePetId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<int>("PetFile__synthesizedOrdinal")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("Path")
+                                        .IsRequired()
+                                        .HasMaxLength(2000)
+                                        .HasColumnType("character varying(2000)");
+
+                                    b2.HasKey("PetFilePetId", "PetFile__synthesizedOrdinal");
+
+                                    b2.ToTable("pets");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("PetFilePetId", "PetFile__synthesizedOrdinal");
+                                });
+
+                            b1.Navigation("PathToStorage")
+                                .IsRequired();
+                        });
+
                     b.OwnsOne("PetFamily.Domain.Aggregates.SpeciesManagement.ValueObjects.SpeciesAndBreed", "SpeciesAndBreed", b1 =>
                         {
                             b1.Property<Guid>("PetId")
@@ -346,6 +385,8 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Navigation("DonationsInfo");
 
+                    b.Navigation("Files");
+
                     b.Navigation("OwnerPhone")
                         .IsRequired();
 
@@ -354,8 +395,6 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Navigation("SpeciesAndBreed")
                         .IsRequired();
-
-                    b.Navigation("Volunteer");
                 });
 
             modelBuilder.Entity("PetFamily.Domain.Aggregates.PetManagement.Entities.Volunteer", b =>

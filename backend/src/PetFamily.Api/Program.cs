@@ -30,6 +30,7 @@ Log.Logger = new LoggerConfiguration()
 
 app.UseExceptionMiddleware();
 
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

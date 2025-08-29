@@ -1,10 +1,11 @@
-﻿using PetFamily.Application.Volunteers.Create;
-using PetFamily.Application.Volunteers.PetsOperations.AddPets;
-using PetFamily.Application.Volunteers.UpdateDonationsInfo;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateSocialNetworks;
-using PetFamily.Contracts.DTOs.Shared;
+﻿using PetFamily.Application.VolunteersOperations.Create;
+using PetFamily.Application.VolunteersOperations.PetsOperations.Add;
+using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.DeletePetFiles;
+using PetFamily.Application.VolunteersOperations.UpdateDonationsInfo;
+using PetFamily.Application.VolunteersOperations.UpdateMainInfo;
+using PetFamily.Application.VolunteersOperations.UpdateSocialNetworks;
 using PetFamily.Contracts.Requests.Volunteers;
+using PetFamily.Contracts.Requests.Volunteers.Pets;
 
 namespace PetFamily.Application.Extensions
 {
@@ -26,9 +27,13 @@ namespace PetFamily.Application.Extensions
         {
             return new UpdateDonationsInfoCommand(id, request);
         }
-        //public static AddPetCommand ToCommand(this AddPetRequest request, FileMetadataDTO fileMetadataDTO)
-        //{
-        //    return new AddPetCommand(request, fileMetadataDTO);
-        //}
+        public static DeletePetFilesCommand ToCommand(this DeletePetFilesRequest request, Guid volunteerId, Guid petId)
+        {
+            return new DeletePetFilesCommand(volunteerId, petId, request);
+        }
+        public static AddPetCommand ToCommand(this AddPetRequest request, Guid volunteerId)
+        {
+            return new AddPetCommand(volunteerId, request);
+        }
     }
 }

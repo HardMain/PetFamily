@@ -4,7 +4,7 @@
     {
         public bool IsDeleted { get; }
         public DateTime? DeletionDate { get; }
-        public void Delete(bool cascade = false);
+        public void SoftDelete(bool cascade = false);
         public void Restore(bool cascade = false);
     }
 }
