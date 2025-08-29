@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Providers;
+using PetFamily.Contracts.DTOs.Volunteers.Pets;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -9,19 +10,24 @@ using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Application.VolunteersOperations.PetsOperations.Delete
 {
-    public class DeletePetHandler
+    public class HardDeletePetHandler
     {
+        const string BUCKET_NAME = "files";
+
         private readonly IValidator<DeletePetCommand> _validator;
-        private readonly ILogger<DeletePetHandler> _logger;
+        private readonly ILogger<HardDeletePetHandler> _logger;
+        private readonly IFileProvider _fileProvider;
         private readonly IVolunteersRepository _volunteersRepository;
 
-        public DeletePetHandler(
+        public HardDeletePetHandler(
             IValidator<DeletePetCommand> validator,
-            ILogger<DeletePetHandler> logger,
+            ILogger<HardDeletePetHandler> logger,
+            IFileProvider fileProvider,
             IVolunteersRepository volunteersRepository)
         {
             _validator = validator;
             _logger = logger;
+            _fileProvider = fileProvider;
             _volunteersRepository = volunteersRepository;
         }
 
@@ -62,7 +68,30 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.Delete
                 return petResult.Error.ToErrorList();
             }
 
-            var deletedPetResult = volunteerResult.Value.DeletePet(petResult.Value);
+            var petFilesResult = volunteerResult.Value.GetPetFiles(petId);
+            if (petFilesResult.IsFailure)
+            {
+                _logger.LogWarning(
+                    "Failed to get pet files {PetId}: {Errors}",
+                    petId,
+                    petFilesResult.Error);
+
+                return petFilesResult.Error.ToErrorList();
+            }
+
+            var filesStorageDelete = petFilesResult.Value
+                .Select(obj => new FileStorageDeleteDTO(obj.PathToStorage.Path, BUCKET_NAME));
+
+            var deleteFilesFromMinioResult = await _fileProvider.DeleteFiles(filesStorageDelete, cancellationToken);
+            if (deleteFilesFromMinioResult.IsFailure)
+            {
+                _logger.LogWarning("Failed to delete pet files from MinIO: {Errors}",
+                    deleteFilesFromMinioResult.Error);
+
+                return deleteFilesFromMinioResult.Error;
+            }
+
+            var deletedPetResult = volunteerResult.Value.HardDeletePet(petResult.Value);
             if (deletedPetResult.IsFailure)
             {
                 _logger.LogWarning(

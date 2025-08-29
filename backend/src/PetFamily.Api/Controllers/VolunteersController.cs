@@ -4,13 +4,13 @@ using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.VolunteersOperations.Create;
-using PetFamily.Application.VolunteersOperations.HardDelete;
+using PetFamily.Application.VolunteersOperations.Delete;
 using PetFamily.Application.VolunteersOperations.PetsOperations.Add;
 using PetFamily.Application.VolunteersOperations.PetsOperations.Delete;
 using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.AddPetFiles;
 using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.DeletePetFiles;
+using PetFamily.Application.VolunteersOperations.PetsOperations.Restore;
 using PetFamily.Application.VolunteersOperations.Restore;
-using PetFamily.Application.VolunteersOperations.SoftDelete;
 using PetFamily.Application.VolunteersOperations.UpdateDonationsInfo;
 using PetFamily.Application.VolunteersOperations.UpdateMainInfo;
 using PetFamily.Application.VolunteersOperations.UpdateSocialNetworks;
@@ -100,6 +100,24 @@ namespace PetFamily.Api.Controllers
             return Ok(envelope);
         }
 
+        [HttpPut("{id:guid}/soft")]
+        public async Task<ActionResult> SoftDelete(
+            [FromRoute] Guid id,
+            [FromServices] SoftDeleteVolunteerHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new DeleteVolunteerCommand(id);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
         [HttpPut("{id:guid}/restore")]
         public async Task<ActionResult> Restore(
             [FromRoute] Guid id,
@@ -118,31 +136,13 @@ namespace PetFamily.Api.Controllers
             return Ok(envelope);
         }
 
-        [HttpDelete("{id:guid}/soft")]
-        public async Task<ActionResult> SoftDelete(
-            [FromRoute] Guid id,
-            [FromServices] SoftDeleteVolunteerHandler handler,
-            CancellationToken cancellationToken)
-        {
-            var command = new SoftDeleteVolunteerCommand(id);
-
-            var response = await handler.Handle(command, cancellationToken);
-
-            if (response.IsFailure)
-                return response.Error.ToResponse();
-
-            var envelope = Envelope.Ok(response.Value);
-
-            return Ok(envelope);
-        }
-
         [HttpDelete("{id:guid}/hard")]
         public async Task<ActionResult> HardDelete(
             [FromRoute] Guid id,
             [FromServices] HardDeleteVolunteerHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new HardDeleteVolunteerCommand(id);
+            var command = new DeleteVolunteerCommand(id);
 
             var response = await handler.Handle(command, cancellationToken);
 
@@ -198,11 +198,49 @@ namespace PetFamily.Api.Controllers
             return Ok(envelope);
         }
 
-        [HttpDelete("{volunteerId:guid}/pet/{petId:guid}")]
-        public async Task<ActionResult> DeletePet(
+        [HttpPut("{volunteerId:guid}/pet/{petId:guid}/soft")]
+        public async Task<ActionResult> SoftDeletePet(
             [FromRoute] Guid volunteerId,
             [FromRoute] Guid petId,
-            [FromServices] DeletePetHandler handler,
+            [FromServices] SoftDeletePetHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new DeletePetCommand(volunteerId, petId);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpPut("{volunteerId:guid}/pet/{petId:guid}/restore")]
+        public async Task<ActionResult> Restore(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] RestorePetHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new RestorePetCommand(volunteerId, petId);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/hard")]
+        public async Task<ActionResult> HardDeletePet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] HardDeletePetHandler handler,
             CancellationToken cancellationToken)
         {
             var command = new DeletePetCommand(volunteerId, petId);

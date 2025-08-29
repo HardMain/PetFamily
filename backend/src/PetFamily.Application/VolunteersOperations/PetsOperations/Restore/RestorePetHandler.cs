@@ -4,18 +4,20 @@ using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Application.Extensions;
+using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Application.VolunteersOperations.PetsOperations.Restore;
 
 namespace PetFamily.Application.VolunteersOperations.Restore
 {
-    public class RestoreVolunteerHandler
+    public class RestorePetHandler
     {
         private readonly ILogger<RestoreVolunteerHandler> _logger;
-        private readonly IValidator<RestoreVolunteerCommand> _validator;
+        private readonly IValidator<RestorePetCommand> _validator;
         private readonly IVolunteersRepository _volunteersRepository;
 
-        public RestoreVolunteerHandler(
+        public RestorePetHandler(
             ILogger<RestoreVolunteerHandler> logger,
-            IValidator<RestoreVolunteerCommand> validator,
+            IValidator<RestorePetCommand> validator,
             IVolunteersRepository repository)
         {
             _logger = logger;
@@ -24,7 +26,7 @@ namespace PetFamily.Application.VolunteersOperations.Restore
         }
 
         public async Task<Result<Guid, ErrorList>> Handle(
-            RestoreVolunteerCommand command, CancellationToken cancellationToken)
+            RestorePetCommand command, CancellationToken cancellationToken)
         {
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (!validationResult.IsValid)
@@ -40,11 +42,23 @@ namespace PetFamily.Application.VolunteersOperations.Restore
             if (volunteerResult.IsFailure)
             {
                 _logger.LogWarning("Failed to get volunteer with {volunteerId}", volunteerId);
-
                 return volunteerResult.Error.ToErrorList();
             }
 
-            volunteerResult.Value.Restore(true);
+            var petId = PetId.Create(command.PetId);
+
+            var petResult = volunteerResult.Value.GetPetById(petId);
+            if (petResult.IsFailure)
+            {
+                _logger.LogWarning(
+                    "Failed to get pet {PetId}: {Errors}",
+                    petId,
+                    petResult.Error);
+
+                return petResult.Error.ToErrorList();
+            }
+
+            volunteerResult.Value.RestorePet(petResult.Value, true);
 
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (result.IsFailure)

@@ -118,7 +118,7 @@ namespace PetFamily.UnitTests
             var petToDelete = pets[0];
 
             // act
-            var result = volunteer.DeletePet(petToDelete);
+            var result = volunteer.HardDeletePet(petToDelete);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -141,7 +141,7 @@ namespace PetFamily.UnitTests
             var petToDelete = pets[4];
 
             // act
-            var result = volunteer.DeletePet(petToDelete);
+            var result = volunteer.HardDeletePet(petToDelete);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -164,7 +164,7 @@ namespace PetFamily.UnitTests
             var petToDelete = pets[2];
 
             // act
-            var result = volunteer.DeletePet(petToDelete);
+            var result = volunteer.HardDeletePet(petToDelete);
 
             // assert
             result.IsSuccess.Should().BeTrue();

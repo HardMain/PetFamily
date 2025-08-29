@@ -1,31 +1,37 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Extensions;
+using PetFamily.Application.Providers;
+using PetFamily.Contracts.DTOs.Volunteers.Pets;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 
-namespace PetFamily.Application.VolunteersOperations.HardDelete
+namespace PetFamily.Application.VolunteersOperations.Delete
 {
     public class HardDeleteVolunteerHandler
     {
+        const string BUCKET_NAME = "files";
+
         private readonly ILogger<HardDeleteVolunteerHandler> _logger;
-        private readonly IValidator<HardDeleteVolunteerCommand> _validator;
+        private readonly IValidator<DeleteVolunteerCommand> _validator;
+        private readonly IFileProvider _fileProvider;
         private readonly IVolunteersRepository _volunteersRepository;
 
         public HardDeleteVolunteerHandler(
             ILogger<HardDeleteVolunteerHandler> logger,
-            IValidator<HardDeleteVolunteerCommand> validator,
+            IValidator<DeleteVolunteerCommand> validator,
+            IFileProvider fileProvider,
             IVolunteersRepository repository)
         {
             _logger = logger;
             _validator = validator;
+            _fileProvider = fileProvider;
             _volunteersRepository = repository;
         }
 
         public async Task<Result<Guid, ErrorList>> Handle(
-            HardDeleteVolunteerCommand command, CancellationToken cancellationToken)
+            DeleteVolunteerCommand command, CancellationToken cancellationToken)
         {
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (!validationResult.IsValid)
@@ -44,6 +50,20 @@ namespace PetFamily.Application.VolunteersOperations.HardDelete
                 _logger.LogWarning("Failed to get volunteer {volunteerId}", volunteerId);
 
                 return volunteerResult.Error.ToErrorList();
+            }
+
+            var AllPetsFiles = volunteerResult.Value.GetAllPetsFiles();
+
+            var filesStorageDelete = AllPetsFiles
+                .Select(obj => new FileStorageDeleteDTO(obj.PathToStorage.Path, BUCKET_NAME));
+
+            var deleteFilesFromMinioResult = await _fileProvider.DeleteFiles(filesStorageDelete, cancellationToken);
+            if (deleteFilesFromMinioResult.IsFailure)
+            {
+                _logger.LogWarning("Failed to delete pet files from MinIO: {Errors}",
+                    deleteFilesFromMinioResult.Error);
+
+                return deleteFilesFromMinioResult.Error;
             }
 
             var result = await _volunteersRepository.Delete(volunteerResult.Value, cancellationToken);

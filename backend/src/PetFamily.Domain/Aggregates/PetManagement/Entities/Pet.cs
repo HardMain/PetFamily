@@ -65,9 +65,9 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public IReadOnlyList<PetFile> Files => _files;
 
         public SerialNumber SerialNumber { get; private set; } = default!;
-        public bool IsDeleted { get; private set; }
         public DateTime CreationDate { get; private set; }
         public DateTime? DeletionDate { get; private set; }
+        public bool IsDeleted { get; private set; }
 
         public static Result<Pet> Create(
             PetId id,
@@ -108,38 +108,11 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
                 supportStatus);
         }
 
-        private void AddFile(PetFile file)
+        public void AddFile(PetFile file)
         {
             _files.Add(file);
         }
-        public void AddFiles(IEnumerable<PetFile> files)
-        {
-            foreach (var file in files)
-                AddFile(file);
-        }
-        private Result<DonationInfo> AddDonationInfo(DonationInfo donationInfo)
-        {
-            if (_donationsInfo.Any(di => di == donationInfo))
-                return Errors.DonationInfo.Duplicate();
-
-            _donationsInfo.Add(donationInfo);
-
-            return Result<DonationInfo>.Success(donationInfo);
-        }
-        public ErrorList AddDonationsInfo(IEnumerable<DonationInfo> donations)
-        {
-            var errors = new List<Error>();
-
-            foreach (var donation in donations)
-            {
-                var result = AddDonationInfo(donation);
-                if (result.IsFailure)
-                    errors.Add(result.Error);
-            }
-
-            return new ErrorList(errors);
-        }
-        private Result DeleteFile(PetFile file)
+        public Result DeleteFile(PetFile file)
         {
             var isSuccess = _files.Remove(file);
 
@@ -151,22 +124,20 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             return Result.Success();
         }
-        public Result<IReadOnlyList<PetFile>> DeleteFiles(IEnumerable<PetFile> files)
+        public Result<DonationInfo> AddDonationInfo(DonationInfo donationInfo)
         {
-            foreach(var file in files)
-            {
-                var result = DeleteFile(file);
-                if (result.IsFailure)
-                    return result.Error;
-            }
+            if (_donationsInfo.Any(di => di == donationInfo))
+                return Errors.DonationInfo.Duplicate();
 
-            return files.ToList();
+            _donationsInfo.Add(donationInfo);
+
+            return Result<DonationInfo>.Success(donationInfo);
         }
 
         public void SetSerialNumber(SerialNumber serialNumber) =>
             SerialNumber = serialNumber;
 
-        public void Delete(bool cascade = false)
+        public void SoftDelete(bool cascade = false)
         {
             if (IsDeleted)
                 return;
@@ -175,7 +146,6 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             DeletionDate = DateTime.UtcNow;
         }
-
         public void Restore(bool cascade = false)
         {
             if (!IsDeleted)

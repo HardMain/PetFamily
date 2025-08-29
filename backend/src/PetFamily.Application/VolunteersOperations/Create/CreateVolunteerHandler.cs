@@ -78,16 +78,16 @@ namespace PetFamily.Application.VolunteersOperations.Create
                 phoneNumber
             );
 
-            var donationInfos = command.Request.DonationsInfo?
+            var donationsInfo = command.Request.DonationsInfo?
                 .Select(di => DonationInfo.Create(di.Title, di.Description).Value) ?? [];
 
-            var errorsAddDonationInfos = volunteer.AddDonationsInfo(donationInfos);
-            if (errorsAddDonationInfos.Any())
+            var errorsAddDonationsInfo = volunteer.AddDonationsInfo(donationsInfo);
+            if (errorsAddDonationsInfo.Any())
             {
                 _logger.LogWarning(
-                    "Failed to add donation infos: {Errors}", errorsAddDonationInfos);
+                    "Failed to add donations info to volunteer: {Errors}", errorsAddDonationsInfo);
 
-                return errorsAddDonationInfos;
+                return errorsAddDonationsInfo;
             }
 
             var socialNetworks = command.Request.SocialNetworks?

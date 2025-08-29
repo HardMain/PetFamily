@@ -5,17 +5,17 @@ using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 
-namespace PetFamily.Application.VolunteersOperations.SoftDelete
+namespace PetFamily.Application.VolunteersOperations.Delete
 {
     public class SoftDeleteVolunteerHandler
     {
         private readonly IVolunteersRepository _volunteersRepository;
-        private readonly IValidator<SoftDeleteVolunteerCommand> _validator;
+        private readonly IValidator<DeleteVolunteerCommand> _validator;
         private readonly ILogger<SoftDeleteVolunteerHandler> _logger;
 
         public SoftDeleteVolunteerHandler(
             IVolunteersRepository volunteersRepository,
-            IValidator<SoftDeleteVolunteerCommand> validator,
+            IValidator<DeleteVolunteerCommand> validator,
             ILogger<SoftDeleteVolunteerHandler> logger)
         {
             _volunteersRepository = volunteersRepository;
@@ -23,7 +23,7 @@ namespace PetFamily.Application.VolunteersOperations.SoftDelete
             _logger = logger;
         }
         public async Task<Result<Guid, ErrorList>> Handle(
-            SoftDeleteVolunteerCommand command, CancellationToken cancellationToken)
+            DeleteVolunteerCommand command, CancellationToken cancellationToken)
         {
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (!validationResult.IsValid)
@@ -44,7 +44,7 @@ namespace PetFamily.Application.VolunteersOperations.SoftDelete
                 return volunteerResult.Error.ToErrorList();
             }
 
-            volunteerResult.Value.Delete(true);
+            volunteerResult.Value.SoftDelete(true);
 
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (result.IsFailure)

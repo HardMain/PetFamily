@@ -2,11 +2,11 @@
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Shared.Entities;
 
-namespace PetFamily.Application.VolunteersOperations.HardDelete
+namespace PetFamily.Application.VolunteersOperations.Delete
 {
-    public class HardDeleteVolunteerCommandValidator : AbstractValidator<HardDeleteVolunteerCommand>
+    public class DeleteVolunteerCommandValidator : AbstractValidator<DeleteVolunteerCommand>
     {
-        public HardDeleteVolunteerCommandValidator()
+        public DeleteVolunteerCommandValidator()
         {
             RuleFor(v => v.VolunteerId)
                 .NotEmpty()

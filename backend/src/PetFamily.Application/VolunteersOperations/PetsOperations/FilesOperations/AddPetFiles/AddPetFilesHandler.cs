@@ -94,7 +94,15 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperati
                 return result.Error;
             }
 
-            petResult.Value.AddFiles(petFiles);
+            var addedFilesResult = volunteerResult.Value.AddFilesToPet(petId, petFiles);
+            if (addedFilesResult.IsFailure)
+            {
+                _logger.LogWarning("Failed to add files to pet {PetId}: {Errors}",
+                    petId,
+                    addedFilesResult.Error);
+
+                return addedFilesResult.Error.ToErrorList();
+            }
 
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)

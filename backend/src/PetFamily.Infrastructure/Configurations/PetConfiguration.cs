@@ -10,7 +10,8 @@ namespace PetFamily.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Pet> builder)
         {
-            builder.ToTable("pets");
+            builder.ToTable("pets")
+                .HasQueryFilter(v => !v.IsDeleted);
 
             builder.HasKey(p => p.Id)
                 .HasName("pk_pets");

@@ -74,7 +74,7 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperati
 
             var petFiles = filePathsResult.Select(f => new PetFile(f.Value));
 
-            var deleteFilesResult = petResult.Value.DeleteFiles(petFiles);
+            var deleteFilesResult = volunteerResult.Value.DeleteFilesFromPet(petId, petFiles);
             if (deleteFilesResult.IsFailure)
             {
                 _logger.LogWarning("Failed to delete pet files: {Errors}",

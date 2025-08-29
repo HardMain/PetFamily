@@ -122,16 +122,16 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.Add
                 return petResult.Error.ToErrorList();
             }
 
-            var donationInfos = command.Request.DonationsInfo?
+            var donationsInfo = command.Request.DonationsInfo?
                 .Select(di => DonationInfo.Create(di.Title, di.Description).Value) ?? [];
 
-            var errorsAddDonationInfos = petResult.Value.AddDonationsInfo(donationInfos);
-            if (errorsAddDonationInfos.Any())
+            var errorsAddDonationsInfo = volunteerResult.Value.AddDonationsInfoToPet(petId, donationsInfo);
+            if (errorsAddDonationsInfo.Any())
             {
                 _logger.LogWarning(
-                    "Failed to add donation infos: {Errors}", errorsAddDonationInfos);
+                    "Failed to add donations info to pet: {Errors}", errorsAddDonationsInfo);
 
-                return errorsAddDonationInfos;
+                return errorsAddDonationsInfo;
             }
 
             await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
