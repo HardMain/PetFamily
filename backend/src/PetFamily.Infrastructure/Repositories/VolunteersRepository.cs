@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Volunteers;
+using PetFamily.Application.VolunteersOperations;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
@@ -17,46 +17,56 @@ namespace PetFamily.Infrastructure.Repositories
             _dbContext = dbContext; 
         }
 
-        public async Task<Guid> Add(
-            Volunteer volunteer, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Add(
+            Volunteer volunteer, CancellationToken cancellationToken = default)
         {
             await _dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            var saveResult = await Save(volunteer, cancellationToken);
+            if (saveResult.IsFailure)
+                return saveResult.Error;
 
-            return volunteer.Id; 
+            return volunteer.Id.Value; 
         }
-        public async Task<Guid> Save(
-            Volunteer volunteer, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Save(
+            Volunteer volunteer, CancellationToken cancellationToken = default)
         {
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            return volunteer.Id;
+            try
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                return volunteer.Id.Value;
+            }
+            catch
+            {
+                return Errors.General.FailedToSave();
+            }
         }
-        public async Task<Guid> Delete(
-            Volunteer volunteer, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Delete(
+            Volunteer volunteer, CancellationToken cancellationToken = default)
         {
             _dbContext.Volunteers.Remove(volunteer);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            var saveResult = await Save(volunteer, cancellationToken);
+            if (saveResult.IsFailure)
+                return saveResult.Error;
 
-            return volunteer.Id;
+            return volunteer.Id.Value;
         }
 
         public async Task<Result<Volunteer>> GetById(
-            VolunteerId volunteerId, CancellationToken cancellationToken)
+            VolunteerId volunteerId, CancellationToken cancellationToken = default)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
                 .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
 
             if (volunteer == null)
-                return Errors.General.NotFound(volunteerId.Value);
+                return Errors.General.NotFound(volunteerId);
 
             return volunteer;
         }
-        public async Task<Result<Volunteer>> GetByIdIncludingDeleted(
-            VolunteerId volunteerId, CancellationToken cancellationToken)
+        public async Task<Result<Volunteer>> GetByIdIncludingSoftDeleted(
+            VolunteerId volunteerId, CancellationToken cancellationToken = default)
         {
             var volunteer = await _dbContext.Volunteers
                 .IgnoreQueryFilters()
@@ -70,7 +80,7 @@ namespace PetFamily.Infrastructure.Repositories
         }
 
         public async Task<Result<Volunteer>> GetByPhoneNumber(
-            PhoneNumber phoneNumber, CancellationToken cancellationToken)
+            PhoneNumber phoneNumber, CancellationToken cancellationToken = default)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
@@ -82,7 +92,7 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer;
         }
         public async Task<Result<Volunteer>> GetByEmail(
-            Email email, CancellationToken cancellationToken)
+            Email email, CancellationToken cancellationToken = default)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
@@ -95,7 +105,7 @@ namespace PetFamily.Infrastructure.Repositories
         }
 
         public async Task<int> DeleteSoftDeletedEarlierThan(
-            DateTime dateTime, CancellationToken cancellationToken)
+            DateTime dateTime, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Volunteers.IgnoreQueryFilters()
                 .Where(v => v.IsDeleted && v.DeletionDate <= dateTime)

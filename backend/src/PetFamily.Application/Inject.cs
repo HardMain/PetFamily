@@ -1,15 +1,17 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Volunteers.Create;
-using PetFamily.Application.Volunteers.HardDelete;
-using PetFamily.Application.Volunteers.PetsOperations.AddPets;
-using PetFamily.Application.Volunteers.PetsOperations.DeletePets;
-using PetFamily.Application.Volunteers.PetsOperations.GetPets;
-using PetFamily.Application.Volunteers.Restore;
-using PetFamily.Application.Volunteers.SoftDelete;
-using PetFamily.Application.Volunteers.UpdateDonationsInfo;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateSocialNetworks;
+using PetFamily.Application.SpeciesOperations.BreedsOperations.Add;
+using PetFamily.Application.SpeciesOperations.Create;
+using PetFamily.Application.VolunteersOperations.Create;
+using PetFamily.Application.VolunteersOperations.Delete;
+using PetFamily.Application.VolunteersOperations.PetsOperations.Add;
+using PetFamily.Application.VolunteersOperations.PetsOperations.Delete;
+using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.AddPetFiles;
+using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.DeletePetFiles;
+using PetFamily.Application.VolunteersOperations.Restore;
+using PetFamily.Application.VolunteersOperations.UpdateDonationsInfo;
+using PetFamily.Application.VolunteersOperations.UpdateMainInfo;
+using PetFamily.Application.VolunteersOperations.UpdateSocialNetworks;
 
 namespace PetFamily.Application
 {
@@ -25,8 +27,15 @@ namespace PetFamily.Application
             services.AddScoped<HardDeleteVolunteerHandler>();
             services.AddScoped<RestoreVolunteerHandler>();
             services.AddScoped<AddPetHandler>();
-            services.AddScoped<DeletePetHandler>();
-            services.AddScoped<GetPetHandler>();
+            services.AddScoped<AddPetFilesHandler>();
+            services.AddScoped<DeletePetFilesHandler>();
+            services.AddScoped<HardDeletePetHandler>();
+            services.AddScoped<SoftDeletePetHandler>();
+            services.AddScoped<RestorePetHandler>();
+            //services.AddScoped<GetPetHandler>();
+
+            services.AddScoped<CreateSpeciesHandler>();
+            services.AddScoped<AddBreedHandler>();
 
             services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 

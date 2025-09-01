@@ -29,7 +29,7 @@ namespace PetFamily.Api.Extensions
             }
 
             var distinctErrorTypes = errors
-                .Select(x => x.Type)
+                .Select(e => e.Type)
                 .Distinct()
                 .ToList();
 

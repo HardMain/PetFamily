@@ -2,7 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetFamily.Application.Providers;
-using PetFamily.Application.Volunteers;
+using PetFamily.Application.SpeciesOperations;
+using PetFamily.Application.VolunteersOperations;
 using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
 using PetFamily.Infrastructure.Repositories;
@@ -18,6 +19,7 @@ namespace PetFamily.Infrastructure
             services.AddScoped(_ => new ApplicationDbContext(configuration.GetConnectionString("Database")!));
 
             services.AddScoped<IVolunteersRepository, VolunteersRepository>();
+            services.AddScoped<ISpeciesRepository, SpeciesRepository>();
 
             services.AddHostedService<SoftDeleteCleanupService>();
 

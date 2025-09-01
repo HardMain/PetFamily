@@ -10,7 +10,8 @@ namespace PetFamily.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Pet> builder)
         {
-            builder.ToTable("pets");
+            builder.ToTable("pets")
+                .HasQueryFilter(v => !v.IsDeleted);
 
             builder.HasKey(p => p.Id)
                 .HasName("pk_pets");
@@ -21,7 +22,7 @@ namespace PetFamily.Infrastructure.Configurations
                     value => PetId.Create(value)
                 )
                 .HasColumnName("id");
-             
+
             builder.Property(p => p.Name)
                 .IsRequired()
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
@@ -128,15 +129,25 @@ namespace PetFamily.Infrastructure.Configurations
 
                 db.Property(d => d.Title)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("title");
+                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
 
                 db.Property(d => d.Description)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH)
-                    .HasColumnName("description");
+                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
             });
-                
+
+            builder.OwnsMany(p => p.Files, pfb =>
+            {
+                pfb.ToJson("files");
+
+                pfb.OwnsOne(pf => pf.PathToStorage, fpb =>
+                {
+                    fpb.Property(fp => fp.Path)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
+                });
+            });
+
             builder.Property(p => p.CreationDate)
                 .IsRequired()
                 .HasColumnName("creation_date");
