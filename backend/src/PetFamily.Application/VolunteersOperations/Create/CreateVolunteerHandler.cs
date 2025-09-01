@@ -110,7 +110,7 @@ namespace PetFamily.Application.VolunteersOperations.Create
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Created volunteer {volunteerId}", volunteerId);
+            _logger.LogInformation("Volunteer {volunteerId} created", volunteerId);
 
             return result.Value;
         }

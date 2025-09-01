@@ -68,7 +68,7 @@ namespace PetFamily.Application.VolunteersOperations.Restore
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Restored volunteer with id {volunteerId}", volunteerId);
+            _logger.LogInformation("Pet {PetId} restored", petId);
 
             return result.Value;
         }

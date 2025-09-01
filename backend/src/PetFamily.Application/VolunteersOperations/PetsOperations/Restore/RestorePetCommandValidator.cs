@@ -10,11 +10,11 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.Restore
         {
             RuleFor(v => v.VolunteerId)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsRequired("volunteerId"));
 
             RuleFor(v => v.PetId)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsRequired("petId"));
         }
     }
 }

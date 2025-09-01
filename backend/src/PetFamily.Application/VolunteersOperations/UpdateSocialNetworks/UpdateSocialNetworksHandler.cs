@@ -62,7 +62,7 @@ namespace PetFamily.Application.VolunteersOperations.UpdateSocialNetworks
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Updated social networks for volunteer with id {volunteerId}", volunteerId);
+            _logger.LogInformation("Social networks updated for volunteer {volunteerId}", volunteerId);
 
             return result.Value;
         }

@@ -2,11 +2,11 @@
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Shared.Entities;
 
-namespace PetFamily.Application.VolunteersOperations.PetsOperations.Delete
+namespace PetFamily.Application.VolunteersOperations.PetsOperations.Move
 {
-    public class DeletePetCommandValidator : AbstractValidator<DeletePetCommand>
+    public class MovePetCommandValidator : AbstractValidator<MovePetCommand>
     {
-        public DeletePetCommandValidator()
+        public MovePetCommandValidator()
         {
             RuleFor(p => p.VolunteerId)
                 .NotEmpty()
@@ -15,6 +15,10 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.Delete
             RuleFor(p => p.PetId)
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired("petId"));
+
+            RuleFor(p => p.Request.newPosition)
+                .GreaterThanOrEqualTo(1)
+                .WithError(Errors.General.ValueIsInvalid("newPosition"));
         }
     }
 }

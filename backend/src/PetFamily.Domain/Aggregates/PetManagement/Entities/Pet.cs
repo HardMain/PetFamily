@@ -64,7 +64,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public IReadOnlyList<DonationInfo> DonationsInfo => _donationsInfo;
         public IReadOnlyList<PetFile> Files => _files;
 
-        public SerialNumber SerialNumber { get; private set; } = default!;
+        public Position Position { get; private set; } = default!;
         public DateTime CreationDate { get; private set; }
         public DateTime? DeletionDate { get; private set; }
         public bool IsDeleted { get; private set; }
@@ -134,8 +134,8 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             return Result<DonationInfo>.Success(donationInfo);
         }
 
-        public void SetSerialNumber(SerialNumber serialNumber) =>
-            SerialNumber = serialNumber;
+        public void SetPosition(Position position) =>
+            Position = position;
 
         public void SoftDelete(bool cascade = false)
         {

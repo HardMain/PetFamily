@@ -9,6 +9,7 @@ using PetFamily.Application.VolunteersOperations.PetsOperations.Add;
 using PetFamily.Application.VolunteersOperations.PetsOperations.Delete;
 using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.AddPetFiles;
 using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.DeletePetFiles;
+using PetFamily.Application.VolunteersOperations.PetsOperations.Move;
 using PetFamily.Application.VolunteersOperations.PetsOperations.Restore;
 using PetFamily.Application.VolunteersOperations.Restore;
 using PetFamily.Application.VolunteersOperations.UpdateDonationsInfo;
@@ -225,6 +226,26 @@ namespace PetFamily.Api.Controllers
             CancellationToken cancellationToken)
         {
             var command = new RestorePetCommand(volunteerId, petId);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpPut("{volunteerId:guid}/pet/{petId:guid}/position")]
+        public async Task<ActionResult> MovePet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromBody] MovePetRequest request,
+            [FromServices] MovePetHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = request.ToCommand(volunteerId, petId);
 
             var response = await handler.Handle(command, cancellationToken);
 

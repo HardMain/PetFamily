@@ -59,7 +59,7 @@ namespace PetFamily.Application.SpeciesOperations.BreedsOperations.Add
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogWarning("Breed to added {BreedId}", result.Value);
+            _logger.LogWarning("Breed {BreedId} added", result.Value);
 
             return result.Value;
         }

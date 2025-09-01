@@ -5,24 +5,24 @@ namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
 
     namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
     {
-        public record SerialNumber
+        public record Position
         {
-            public static SerialNumber None = new(0);
-            public static SerialNumber First = new(1);
+            public static Position None = new(0);
+            public static Position First = new(1);
 
-            private SerialNumber(int value)
+            private Position(int value)
             {
                 Value = value;
             }
 
             public int Value { get; }
 
-            public static Result<SerialNumber> Create(int number)
+            public static Result<Position> Create(int number)
             {
                 if (number < 0)
                     return Errors.General.ValueIsInvalid("serial number");
 
-                return new SerialNumber(number);
+                return new Position(number);
             }
         }
     }

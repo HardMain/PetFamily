@@ -138,7 +138,7 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.Add
 
             var result = petResult.Value.Id.Value;
 
-            _logger.LogInformation("Pet {PetId} to added", result);
+            _logger.LogInformation("Pet {PetId} added", result);
 
             return result;
         }

@@ -1,6 +1,7 @@
 ﻿using PetFamily.Application.VolunteersOperations.Create;
 using PetFamily.Application.VolunteersOperations.PetsOperations.Add;
 using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.DeletePetFiles;
+using PetFamily.Application.VolunteersOperations.PetsOperations.Move;
 using PetFamily.Application.VolunteersOperations.UpdateDonationsInfo;
 using PetFamily.Application.VolunteersOperations.UpdateMainInfo;
 using PetFamily.Application.VolunteersOperations.UpdateSocialNetworks;
@@ -34,6 +35,10 @@ namespace PetFamily.Application.Extensions
         public static AddPetCommand ToCommand(this AddPetRequest request, Guid volunteerId)
         {
             return new AddPetCommand(volunteerId, request);
+        }
+        public static MovePetCommand ToCommand(this MovePetRequest request, Guid volunteerId, Guid petId)
+        {
+            return new MovePetCommand(volunteerId, petId, request);
         }
     }
 }

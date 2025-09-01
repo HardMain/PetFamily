@@ -74,7 +74,7 @@ namespace PetFamily.Application.VolunteersOperations.Delete
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Deleted(hard) volunteer {volunteerId}", volunteerId);
+            _logger.LogInformation("Volunteer {volunteerId} deleted(hard)", volunteerId);
 
             return result.Value;
         }

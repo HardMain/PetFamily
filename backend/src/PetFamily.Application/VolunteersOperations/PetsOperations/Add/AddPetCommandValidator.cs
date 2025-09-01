@@ -13,7 +13,7 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.Add
         {
             RuleFor(p => p.VolunteerId)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsRequired("volunteerId"));
 
             RuleFor(v => v.Request.Name)
                 .NotEmpty()
@@ -28,15 +28,15 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.Add
 
             RuleFor(p => p.Request.SpeciesAndBreed)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsRequired("speciesAndBreed"));
 
             RuleFor(p => p.Request.SpeciesAndBreed.SpeciesId)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsRequired("speciesId"));
 
             RuleFor(p => p.Request.SpeciesAndBreed.BreedId)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsRequired("breedId"));
 
             RuleFor(v => v.Request.Color)
                 .NotEmpty()
