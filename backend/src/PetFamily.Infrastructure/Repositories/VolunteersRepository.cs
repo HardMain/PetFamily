@@ -36,7 +36,7 @@ namespace PetFamily.Infrastructure.Repositories
                 await _dbContext.SaveChangesAsync(cancellationToken);
                 return volunteer.Id.Value;
             }
-            catch (Exception)
+            catch
             {
                 return Errors.General.FailedToSave();
             }

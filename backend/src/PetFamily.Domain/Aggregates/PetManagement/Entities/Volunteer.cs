@@ -74,9 +74,11 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
                 }
             }
 
+            _pets.Remove(pet);
+
             return Result<Pet>.Success(pet);
         }
-        public Result<Pet> SoftDeletePet(Pet pet)
+        public Result<Pet> SoftDeletePet(Pet pet, bool cascade = false)
         {
             if (pet.IsDeleted)
                 return Result<Pet>.Success(pet);
@@ -96,7 +98,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             }
 
             pet.SetSerialNumber(SerialNumber.None);
-            pet.SoftDelete();
+            pet.SoftDelete(cascade);
 
             return Result<Pet>.Success(pet);
         }
@@ -110,7 +112,6 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
                 return serialNumberResult.Error;
 
             pet.SetSerialNumber(serialNumberResult.Value);
-
             pet.Restore(cascade);
 
             return Result.Success();
@@ -324,7 +325,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             DeletionDate = DateTime.UtcNow;
 
             if (cascade)
-                _pets.ForEach(pet => pet.SoftDelete());
+                _pets.ForEach(pet => SoftDeletePet(pet, cascade));
         }
         public void Restore(bool cascade = false)
         {
@@ -336,7 +337,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             DeletionDate = null;
 
             if (cascade)
-                _pets.ForEach(pet => pet.Restore());
+                _pets.ForEach(pet => RestorePet(pet, cascade));
         }
     }
 }

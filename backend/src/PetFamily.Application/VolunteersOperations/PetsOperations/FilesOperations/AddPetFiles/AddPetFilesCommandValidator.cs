@@ -22,7 +22,7 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperati
                 .WithError(Errors.General.ValueIsInvalid("petFiles"));
 
             RuleForEach(pf => pf.Files)
-                .Must(f => f.Content?.Length > 0)
+                .Must(f => f.Content.Length > 0)
                 .WithError(Errors.PetFile.FileIsEmpty());
 
             RuleForEach(pf => pf.Files)
