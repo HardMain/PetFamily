@@ -1,13 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
+using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 using PetFamily.Application.SpeciesOperations;
 using PetFamily.Application.VolunteersOperations;
+using PetFamily.Contracts.DTOs.Volunteers.Pets;
+using PetFamily.Infrastructure.BackgroundServices;
+using PetFamily.Infrastructure.MessageQueues;
 using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
 using PetFamily.Infrastructure.Repositories;
-using PetFamily.Infrastructure.Services;
 
 namespace PetFamily.Infrastructure
 {
@@ -24,6 +27,9 @@ namespace PetFamily.Infrastructure
             services.AddHostedService<SoftDeleteCleanupService>();
 
             services.Configure<SoftDeleteOptions>(configuration.GetSection("SoftDeleteSettings"));
+
+            services.AddHostedService<FilesCleanupBackgroundService>();
+            services.AddSingleton<IMessageQueue<IEnumerable<FileStorageDeleteDTO>>, InMemoryMessageQueue<IEnumerable<FileStorageDeleteDTO>>>();
 
             services.AddMinio(configuration);
 
