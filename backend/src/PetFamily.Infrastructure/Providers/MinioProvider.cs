@@ -131,7 +131,7 @@ namespace PetFamily.Infrastructure.Providers
             CancellationToken cancellationToken)
         {
             await semaphoreSlim.WaitAsync();
-
+             
             try
             {
                 var removeObjectArgs = new RemoveObjectArgs()

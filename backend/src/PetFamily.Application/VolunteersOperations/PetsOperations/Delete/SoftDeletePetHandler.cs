@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Providers;
-using PetFamily.Contracts.DTOs.Volunteers.Pets;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -12,8 +11,6 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.Delete
 {
     public class SoftDeletePetHandler
     {
-        const string BUCKET_NAME = "files";
-
         private readonly IValidator<DeletePetCommand> _validator;
         private readonly ILogger<HardDeletePetHandler> _logger;
         private readonly IFileProvider _fileProvider;

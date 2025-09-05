@@ -10,7 +10,7 @@ namespace PetFamily.Application.VolunteersOperations.Delete
         {
             RuleFor(v => v.VolunteerId)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsRequired("volunteerId"));
         }
     }
 }

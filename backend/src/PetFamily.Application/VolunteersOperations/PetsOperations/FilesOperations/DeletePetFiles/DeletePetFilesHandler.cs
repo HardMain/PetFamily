@@ -103,7 +103,7 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperati
                 return result.Error;
             }
 
-            _logger.LogInformation("Files deleted: {deletedFiles}", result.Value);
+            _logger.LogInformation("Files deleted: {DeletedFiles}", result.Value);
 
             return result;
         }

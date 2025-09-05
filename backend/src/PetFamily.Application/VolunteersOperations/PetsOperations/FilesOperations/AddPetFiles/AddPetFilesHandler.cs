@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Extensions;
+using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 using PetFamily.Contracts.DTOs.Volunteers.Pets;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
@@ -19,17 +20,20 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperati
         private readonly IValidator<AddPetFilesCommand> _validator;
         private readonly IFileProvider _fileProvider;
         private readonly IVolunteersRepository _volunteersRepository;
+        private readonly IMessageQueue<IEnumerable<FileStorageDeleteDTO>> _messageQueue;
 
         public AddPetFilesHandler(
             ILogger<AddPetFilesHandler> logger,
             IValidator<AddPetFilesCommand> validator,
             IFileProvider fileProvider,
-            IVolunteersRepository volunteersRepository)
+            IVolunteersRepository volunteersRepository,
+            IMessageQueue<IEnumerable<FileStorageDeleteDTO>> messageQueue)
         {
             _logger = logger;
             _validator = validator;
             _fileProvider = fileProvider;
             _volunteersRepository = volunteersRepository;
+            _messageQueue = messageQueue;
         }
 
         public async Task<Result<IReadOnlyList<string>, ErrorList>> Handle(
@@ -88,6 +92,10 @@ namespace PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperati
             var result = await _fileProvider.UploadFiles(filesStorageUpload, cancellationToken);
             if (result.IsFailure)
             {
+                var filesStorageDelete = pathListResult.Value.Select(path => new FileStorageDeleteDTO(path.Path, BUCKET_NAME));
+
+                await _messageQueue.WriteAsync(filesStorageDelete, cancellationToken);
+
                 _logger.LogWarning("Failed to upload files: {Errors}",
                     result.Error);
 

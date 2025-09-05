@@ -80,7 +80,7 @@ namespace PetFamily.UnitTests
             addedPetResult.IsSuccess.Should().BeTrue();
             result.IsSuccess.Should().BeTrue();
             addedPetResult.Value.Id.Should().Be(pet.Id);
-            addedPetResult.Value.SerialNumber.Should().Be(SerialNumber.First);
+            addedPetResult.Value.Position.Should().Be(Position.First);
         }
 
         [Fact]
@@ -98,12 +98,12 @@ namespace PetFamily.UnitTests
             // assert
             var addedPetResult = volunteer.GetPetById(petToAdd.Id);
 
-            var serialNumber = SerialNumber.Create(petsCount + 1);
+            var targetPosition = Position.Create(petsCount + 1).Value;
 
             result.IsSuccess.Should().BeTrue();
             addedPetResult.IsSuccess.Should().BeTrue();
             addedPetResult.Value.Id.Should().Be(petToAdd.Id);
-            addedPetResult.Value.SerialNumber.Should().Be(serialNumber.Value);
+            addedPetResult.Value.Position.Should().Be(targetPosition.Value);
         }
 
         [Fact]
@@ -123,10 +123,10 @@ namespace PetFamily.UnitTests
             // assert
             result.IsSuccess.Should().BeTrue();
             pets.Count().Should().Be(petsCount - 1);
-            pets[0].SerialNumber.Value.Should().Be(1);
-            pets[1].SerialNumber.Value.Should().Be(2);
-            pets[2].SerialNumber.Value.Should().Be(3);
-            pets[3].SerialNumber.Value.Should().Be(4);
+            pets[0].Position.Value.Should().Be(1);
+            pets[1].Position.Value.Should().Be(2);
+            pets[2].Position.Value.Should().Be(3);
+            pets[3].Position.Value.Should().Be(4);
         }
 
         [Fact]
@@ -146,10 +146,10 @@ namespace PetFamily.UnitTests
             // assert
             result.IsSuccess.Should().BeTrue();
             pets.Count().Should().Be(petsCount - 1);
-            pets[0].SerialNumber.Value.Should().Be(1);
-            pets[1].SerialNumber.Value.Should().Be(2);
-            pets[2].SerialNumber.Value.Should().Be(3);
-            pets[3].SerialNumber.Value.Should().Be(4);
+            pets[0].Position.Value.Should().Be(1);
+            pets[1].Position.Value.Should().Be(2);
+            pets[2].Position.Value.Should().Be(3);
+            pets[3].Position.Value.Should().Be(4);
         }
 
         [Fact]
@@ -169,10 +169,10 @@ namespace PetFamily.UnitTests
             // assert
             result.IsSuccess.Should().BeTrue();
             pets.Count().Should().Be(petsCount - 1);
-            pets[0].SerialNumber.Value.Should().Be(1);
-            pets[1].SerialNumber.Value.Should().Be(2);
-            pets[2].SerialNumber.Value.Should().Be(3);
-            pets[3].SerialNumber.Value.Should().Be(4);
+            pets[0].Position.Value.Should().Be(1);
+            pets[1].Position.Value.Should().Be(2);
+            pets[2].Position.Value.Should().Be(3);
+            pets[3].Position.Value.Should().Be(4);
         }
 
         [Fact]
@@ -187,15 +187,15 @@ namespace PetFamily.UnitTests
             var petToMove = pets[4];
 
             // act
-            var result = volunteer.MovePet(petToMove, SerialNumber.First);
+            var result = volunteer.MovePet(petToMove, Position.First);
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            pets[0].SerialNumber.Value.Should().Be(2);
-            pets[1].SerialNumber.Value.Should().Be(3);
-            pets[2].SerialNumber.Value.Should().Be(4);
-            pets[3].SerialNumber.Value.Should().Be(5);
-            pets[4].SerialNumber.Value.Should().Be(1);
+            pets[0].Position.Value.Should().Be(2);
+            pets[1].Position.Value.Should().Be(3);
+            pets[2].Position.Value.Should().Be(4);
+            pets[3].Position.Value.Should().Be(5);
+            pets[4].Position.Value.Should().Be(1);
         }
 
         [Fact]
@@ -208,18 +208,18 @@ namespace PetFamily.UnitTests
             var pets = volunteer.Pets;
 
             var petToMove = pets[0];
-            var serialNumberToMove = SerialNumber.Create(petsCount).Value;
+            var positionToMove = Position.Create(petsCount).Value;
 
             // act
-            var result = volunteer.MovePet(petToMove, serialNumberToMove);
+            var result = volunteer.MovePet(petToMove, positionToMove);
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            pets[0].SerialNumber.Value.Should().Be(5);
-            pets[1].SerialNumber.Value.Should().Be(1);
-            pets[2].SerialNumber.Value.Should().Be(2);
-            pets[3].SerialNumber.Value.Should().Be(3);
-            pets[4].SerialNumber.Value.Should().Be(4);
+            pets[0].Position.Value.Should().Be(5);
+            pets[1].Position.Value.Should().Be(1);
+            pets[2].Position.Value.Should().Be(2);
+            pets[3].Position.Value.Should().Be(3);
+            pets[4].Position.Value.Should().Be(4);
         }
 
         [Fact]
@@ -232,18 +232,18 @@ namespace PetFamily.UnitTests
             var pets = volunteer.Pets;
 
             var petToMove = pets[1];
-            var serialNumberToMove = SerialNumber.Create(3).Value;
+            var positionToMove = Position.Create(3).Value;
 
             // act
-            var result = volunteer.MovePet(petToMove, serialNumberToMove);
+            var result = volunteer.MovePet(petToMove, positionToMove);
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            pets[0].SerialNumber.Value.Should().Be(1);
-            pets[1].SerialNumber.Value.Should().Be(3);
-            pets[2].SerialNumber.Value.Should().Be(2);
-            pets[3].SerialNumber.Value.Should().Be(4);
-            pets[4].SerialNumber.Value.Should().Be(5);
+            pets[0].Position.Value.Should().Be(1);
+            pets[1].Position.Value.Should().Be(3);
+            pets[2].Position.Value.Should().Be(2);
+            pets[3].Position.Value.Should().Be(4);
+            pets[4].Position.Value.Should().Be(5);
         }
 
         [Fact]
@@ -256,22 +256,22 @@ namespace PetFamily.UnitTests
             var pets = volunteer.Pets;
 
             var petToMove = pets[2];
-            var serialNumberToMove = SerialNumber.Create(3).Value;
+            var positionToMove = Position.Create(3).Value;
 
             // act
-            var result = volunteer.MovePet(petToMove, serialNumberToMove);
+            var result = volunteer.MovePet(petToMove, positionToMove);
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            pets[0].SerialNumber.Value.Should().Be(1);
-            pets[1].SerialNumber.Value.Should().Be(2);
-            pets[2].SerialNumber.Value.Should().Be(3);
-            pets[3].SerialNumber.Value.Should().Be(4);
-            pets[4].SerialNumber.Value.Should().Be(5);
+            pets[0].Position.Value.Should().Be(1);
+            pets[1].Position.Value.Should().Be(2);
+            pets[2].Position.Value.Should().Be(3);
+            pets[3].Position.Value.Should().Be(4);
+            pets[4].Position.Value.Should().Be(5);
         }
 
         [Fact]
-        public void MovePet_WithSerialNumberOutOfRange_ReturnsFailureResult()
+        public void MovePet_WithPositionOutOfRange_ReturnsFailureResult()
         {
             // arrange
             const int petsCount = 5;
@@ -280,14 +280,14 @@ namespace PetFamily.UnitTests
             var pets = volunteer.Pets;
 
             var petToMove = pets[0];
-            var serialNumberToMove = SerialNumber.Create(6).Value;
+            var positionToMove = Position.Create(6).Value;
 
             // act
-            var result = volunteer.MovePet(petToMove, serialNumberToMove);
+            var result = volunteer.MovePet(petToMove, positionToMove);
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().Be(Errors.General.ValueIsInvalid("serial number"));
+            result.Error.Should().Be(Errors.General.ValueIsInvalid("position"));
         }
     }
 }

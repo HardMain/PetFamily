@@ -98,11 +98,11 @@ namespace PetFamily.Infrastructure.Configurations
                     .HasColumnName("owner_phone");
             });
 
-            builder.OwnsOne(p => p.SerialNumber, sn =>
+            builder.OwnsOne(p => p.Position, sn =>
             {
                 sn.Property(sn => sn.Value)
                     .IsRequired()
-                    .HasColumnName("serial_number");
+                    .HasColumnName("position");
             });
 
             builder.Property(p => p.isCastrated)

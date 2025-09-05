@@ -86,7 +86,7 @@ namespace PetFamily.Application.VolunteersOperations.UpdateMainInfo
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Updated main info for volunteer with id {volunteerId}", volunteerId);
+            _logger.LogInformation("Main info updated for volunteer {volunteerId}", volunteerId);
 
             return result.Value;
         }

@@ -48,7 +48,7 @@ namespace PetFamily.Application.SpeciesOperations.Create
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogWarning("Species to added {SpeciesId}", speciesId);
+            _logger.LogWarning("Species {SpeciesId} added", speciesId);
 
             return result.Value;
         }

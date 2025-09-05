@@ -48,11 +48,11 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
         public Result<Pet> AddPet(Pet pet)
         {
-            var serialNumberResult = SerialNumber.Create(_pets.Count() + 1);
-            if (serialNumberResult.IsFailure)
-                return serialNumberResult.Error;
+            var positionResult = Position.Create(_pets.Count() + 1);
+            if (positionResult.IsFailure)
+                return positionResult.Error;
 
-            pet.SetSerialNumber(serialNumberResult.Value);
+            pet.SetPosition(positionResult.Value);
 
             _pets.Add(pet);
 
@@ -60,17 +60,17 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         }
         public Result<Pet> HardDeletePet(Pet pet)
         {
-            var serialNumber = pet.SerialNumber.Value;
+            var currentPosition = pet.Position.Value;
 
             foreach (var petItem in _pets)
             {
-                if (petItem.SerialNumber.Value > serialNumber)
+                if (petItem.Position.Value > currentPosition)
                 {
-                    var newSerialResult = SerialNumber.Create(petItem.SerialNumber.Value - 1);
-                    if (newSerialResult.IsFailure)
-                        return newSerialResult.Error;
+                    var newPositionResult = Position.Create(petItem.Position.Value - 1);
+                    if (newPositionResult.IsFailure)
+                        return newPositionResult.Error;
 
-                    petItem.SetSerialNumber(newSerialResult.Value);
+                    petItem.SetPosition(newPositionResult.Value);
                 }
             }
 
@@ -83,21 +83,21 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             if (pet.IsDeleted)
                 return Result<Pet>.Success(pet);
 
-            var serialNumber = pet.SerialNumber.Value;
+            var currentPosition = pet.Position.Value;
 
             foreach (var petItem in _pets)
             {
-                if (petItem.SerialNumber.Value > serialNumber)
+                if (petItem.Position.Value > currentPosition)
                 {
-                    var newSerialResult = SerialNumber.Create(petItem.SerialNumber.Value - 1);
-                    if (newSerialResult.IsFailure)
-                        return newSerialResult.Error;
+                    var newPositionResult = Position.Create(petItem.Position.Value - 1);
+                    if (newPositionResult.IsFailure)
+                        return newPositionResult.Error;
 
-                    petItem.SetSerialNumber(newSerialResult.Value);
+                    petItem.SetPosition(newPositionResult.Value);
                 }
             }
 
-            pet.SetSerialNumber(SerialNumber.None);
+            pet.SetPosition(Position.None);
             pet.SoftDelete(cascade);
 
             return Result<Pet>.Success(pet);
@@ -107,39 +107,42 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             if (!pet.IsDeleted)
                 return Result<Pet>.Success(pet);
 
-            var serialNumberResult = SerialNumber.Create(_pets.Count(p => !p.IsDeleted) + 1);
-            if (serialNumberResult.IsFailure)
-                return serialNumberResult.Error;
+            var positionResult = Position.Create(_pets.Count(p => !p.IsDeleted) + 1);
+            if (positionResult.IsFailure)
+                return positionResult.Error;
 
-            pet.SetSerialNumber(serialNumberResult.Value);
+            pet.SetPosition(positionResult.Value);
             pet.Restore(cascade);
 
             return Result.Success();
         }
-        public Result<Pet> MovePet(Pet pet, SerialNumber newSerialNumber)
+        public Result<Pet> MovePet(Pet pet, Position newPosition)
         {
-            var newSerialNumberValue = newSerialNumber.Value;
-            var currentSerialNumberValue = pet.SerialNumber.Value;
+            var newPositionValue = newPosition.Value;
+            var currentPositionValue = pet.Position.Value;
 
-            if (newSerialNumberValue < 1 || newSerialNumberValue > _pets.Count)
-                return Errors.General.ValueIsInvalid("serial number");
+            if (newPositionValue < 1)
+                return Errors.General.ValueIsInvalid("position");
 
-            if (newSerialNumberValue == currentSerialNumberValue)
+            if (newPositionValue == currentPositionValue)
                 return Result<Pet>.Success(pet);
 
-            if (newSerialNumber.Value > currentSerialNumberValue)
+            if (newPositionValue > _pets.Count)
+                newPositionValue = _pets.Count;
+
+            if (newPositionValue > currentPositionValue)
             {
                 foreach (var petItem in _pets)
                 {
-                    if (petItem.SerialNumber.Value > currentSerialNumberValue &&
-                    petItem.SerialNumber.Value <= newSerialNumberValue)
+                    if (petItem.Position.Value > currentPositionValue &&
+                        petItem.Position.Value <= newPositionValue)
                     {
-                        var serialNumberResult = SerialNumber.Create(petItem.SerialNumber.Value - 1);
+                        var PositionResult = Position.Create(petItem.Position.Value - 1);
 
-                        if (serialNumberResult.IsFailure)
-                            return serialNumberResult.Error;
+                        if (PositionResult.IsFailure)
+                            return PositionResult.Error;
 
-                        petItem.SetSerialNumber(serialNumberResult.Value);
+                        petItem.SetPosition(PositionResult.Value);
                     }
                 }
             }
@@ -147,20 +150,20 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             {
                 foreach (var petItem in _pets)
                 {
-                    if (petItem.SerialNumber.Value < currentSerialNumberValue &&
-                    petItem.SerialNumber.Value >= newSerialNumberValue)
+                    if (petItem.Position.Value < currentPositionValue &&
+                        petItem.Position.Value >= newPositionValue)
                     {
-                        var serialNumberResult = SerialNumber.Create(petItem.SerialNumber.Value + 1);
+                        var PositionResult = Position.Create(petItem.Position.Value + 1);
 
-                        if (serialNumberResult.IsFailure)
-                            return serialNumberResult.Error;
+                        if (PositionResult.IsFailure)
+                            return PositionResult.Error;
 
-                        petItem.SetSerialNumber(serialNumberResult.Value);
+                        petItem.SetPosition(PositionResult.Value);
                     }
                 }
-            }    
+            }
 
-            pet.SetSerialNumber(newSerialNumber);
+            pet.SetPosition(Position.Create(newPositionValue).Value);
             
             return Result<Pet>.Success(pet);
         }

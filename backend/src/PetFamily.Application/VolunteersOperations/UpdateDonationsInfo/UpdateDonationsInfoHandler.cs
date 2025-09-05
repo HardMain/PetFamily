@@ -64,7 +64,7 @@ namespace PetFamily.Application.VolunteersOperations.UpdateDonationsInfo
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Updated donations info for volunteer with id {volunteerId}", volunteerId);
+            _logger.LogInformation("Donations info updated for volunteer {volunteerId}", volunteerId);
 
             return result.Value;
         }
