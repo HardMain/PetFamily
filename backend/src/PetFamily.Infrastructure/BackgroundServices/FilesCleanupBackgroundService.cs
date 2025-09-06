@@ -30,11 +30,7 @@ namespace PetFamily.Infrastructure.BackgroundServices
         {
             _logger.LogInformation("FilesCleanupBackgroundService is starting");
 
-            await using var scope = _scopeFactory.CreateAsyncScope();
-
-            var fileProvider = scope.ServiceProvider.GetRequiredService<IFileProvider>();
-
-            while (stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
                 var fileSToDelete = await _messageQueue.ReadAsync(stoppingToken);
 

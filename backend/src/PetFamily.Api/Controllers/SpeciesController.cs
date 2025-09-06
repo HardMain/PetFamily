@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Envelopes;
 using PetFamily.Api.Extensions;
-using PetFamily.Application.Extensions;
 using PetFamily.Application.SpeciesOperations.BreedsOperations.Add;
 using PetFamily.Application.SpeciesOperations.Create;
 using PetFamily.Contracts.Requests.Species;
@@ -19,7 +18,7 @@ namespace PetFamily.Api.Controllers
             [FromBody] CreateSpeciesRequest request,
             CancellationToken cancellationToken)
         {
-            var command = request.ToCommand();
+            var command = new CreateSpeciesCommand(request);
 
             var response = await handler.Handle(command, cancellationToken);
 
@@ -38,7 +37,7 @@ namespace PetFamily.Api.Controllers
             [FromServices] AddBreedHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = request.ToCommand(id);
+            var command = new AddBreedCommand(id, request);
 
             var response = await handler.Handle(command, cancellationToken);
 

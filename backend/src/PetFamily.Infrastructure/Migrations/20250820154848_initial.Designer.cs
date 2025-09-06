@@ -11,7 +11,7 @@ using PetFamily.Infrastructure;
 
 namespace PetFamily.Infrastructure.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(WriteDbContext))]
     [Migration("20250820154848_initial")]
     partial class initial
     {

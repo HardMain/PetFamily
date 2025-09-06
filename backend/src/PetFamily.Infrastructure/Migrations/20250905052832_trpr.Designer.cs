@@ -12,8 +12,8 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20250901185016_change_serialNumber_to_newPosition")]
-    partial class change_serialNumber_to_newPosition
+    [Migration("20250905052832_trpr")]
+    partial class trpr
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -19,7 +19,7 @@ namespace PetFamily.Infrastructure
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped(_ => new ApplicationDbContext(configuration.GetConnectionString("Database")!));
+            services.AddScoped(_ => new WriteDbContext(configuration.GetConnectionString("Database")!));
 
             services.AddScoped<IVolunteersRepository, VolunteersRepository>();
             services.AddScoped<ISpeciesRepository, SpeciesRepository>();
@@ -49,7 +49,7 @@ namespace PetFamily.Infrastructure
                 options.WithSSL(minioOptions.WithSSL);
             });
 
-            services.AddScoped<IFileProvider, MinioProvider>();
+            services.AddSingleton<IFileProvider, MinioProvider>();
             
             return services;
         }
