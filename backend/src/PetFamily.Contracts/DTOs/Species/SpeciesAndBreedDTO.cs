@@ -1,4 +1,4 @@
 ﻿namespace PetFamily.Contracts.DTOs.Species
 {
-    public record SpeciesAndBreedDTO(Guid SpeciesId, Guid BreedId);
+    public record SpeciesAndBreedDto(Guid SpeciesId, Guid BreedId);
 }

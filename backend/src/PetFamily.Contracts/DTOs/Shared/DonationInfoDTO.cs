@@ -1,4 +1,4 @@
 ﻿namespace PetFamily.Contracts.DTOs.Shared
 {
-    public record DonationInfoDTO(string Title, string Description);
+    public record DonationInfoDto(string Title, string Description);
 }

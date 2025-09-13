@@ -1,18 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.VolunteersOperations;
+using PetFamily.Application.VolunteersManagement;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Repositories
 {
     public class VolunteersRepository : IVolunteersRepository
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly WriteDbContext _dbContext;
 
-        public VolunteersRepository(ApplicationDbContext dbContext)
+        public VolunteersRepository(WriteDbContext dbContext)
         {
             _dbContext = dbContext; 
         }
@@ -30,7 +31,7 @@ namespace PetFamily.Infrastructure.Repositories
         }
         public async Task<Result<Guid>> Save(
             Volunteer volunteer, CancellationToken cancellationToken = default)
-        {
+        { 
             try
             {
                 await _dbContext.SaveChangesAsync(cancellationToken);

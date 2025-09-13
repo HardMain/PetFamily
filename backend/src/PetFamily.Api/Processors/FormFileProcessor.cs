@@ -4,24 +4,24 @@ namespace PetFamily.Api.Processors
 {
     public class FormFileProcessor : IAsyncDisposable
     {
-        private readonly List<FileFormDTO> _fileDTOs = [];
+        private readonly List<FileFormDto> _fileDtos = [];
 
-        public List<FileFormDTO> Process(IFormFileCollection files)
+        public List<FileFormDto> Process(IFormFileCollection files)
         {
             foreach (var file in files)
             {
                 var stream = file.OpenReadStream();
-                var fileDTO = new FileFormDTO(stream, file.FileName);
+                var fileDto = new FileFormDto(stream, file.FileName);
 
-                _fileDTOs.Add(fileDTO);
+                _fileDtos.Add(fileDto);
             }
 
-            return _fileDTOs;
+            return _fileDtos;
         }
 
         public async ValueTask DisposeAsync()
         {
-            foreach(var file in _fileDTOs)
+            foreach(var file in _fileDtos)
             {
                 await file.Content.DisposeAsync();
             }

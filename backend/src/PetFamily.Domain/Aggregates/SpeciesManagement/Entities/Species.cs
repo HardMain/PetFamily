@@ -1,4 +1,5 @@
-﻿using PetFamily.Domain.Shared.Entities;
+﻿using System.Net.Http.Headers;
+using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Domain.Aggregates.Species.Entities
@@ -25,9 +26,11 @@ namespace PetFamily.Domain.Aggregates.Species.Entities
             return new Species(speciesId, name);
         }
 
-        public void AddBreed(Breed breed)
+        public Breed AddBreed(Breed breed)
         {
             _breeds.Add(breed);
+
+            return breed;
         }
     }
 }

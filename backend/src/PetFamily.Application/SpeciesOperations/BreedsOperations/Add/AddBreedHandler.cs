@@ -5,10 +5,11 @@ using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Application.Extensions;
+using PetFamily.Application.Abstractions;
 
 namespace PetFamily.Application.SpeciesOperations.BreedsOperations.Add
 {
-    public class AddBreedHandler
+    public class AddBreedHandler : ICommandHandler<Guid, AddBreedCommand>
     {
         private readonly ISpeciesRepository _speciesRepository;
         private readonly IValidator<AddBreedCommand> _validator;
@@ -49,19 +50,19 @@ namespace PetFamily.Application.SpeciesOperations.BreedsOperations.Add
             var breedId = BreedId.NewBreedId();
             var breed = Breed.Create(breedId, name).Value;
 
-            speciesResult.Value.AddBreed(breed);
+            var result = speciesResult.Value.AddBreed(breed).Id.Value;
 
-            var result = await _speciesRepository.Save(speciesResult.Value, cancellationToken);
-            if (result.IsFailure)
+            var SaveResult = await _speciesRepository.Save(speciesResult.Value, cancellationToken);
+            if (SaveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", result.Error);
+                _logger.LogInformation("Failed to save data: {Errors}", SaveResult.Error);
 
-                return result.Error.ToErrorList();
+                return SaveResult.Error.ToErrorList();
             }
 
-            _logger.LogWarning("Breed {BreedId} added", result.Value);
+            _logger.LogWarning("Breed {BreedId} added", result);
 
-            return result.Value;
+            return result;
         }
     }
 }

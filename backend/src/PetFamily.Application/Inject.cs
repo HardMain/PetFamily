@@ -1,18 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.SpeciesOperations.BreedsOperations.Add;
-using PetFamily.Application.SpeciesOperations.Create;
-using PetFamily.Application.VolunteersOperations.Create;
-using PetFamily.Application.VolunteersOperations.Delete;
-using PetFamily.Application.VolunteersOperations.PetsOperations.Add;
-using PetFamily.Application.VolunteersOperations.PetsOperations.Delete;
-using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.AddPetFiles;
-using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.DeletePetFiles;
-using PetFamily.Application.VolunteersOperations.PetsOperations.Move;
-using PetFamily.Application.VolunteersOperations.Restore;
-using PetFamily.Application.VolunteersOperations.UpdateDonationsInfo;
-using PetFamily.Application.VolunteersOperations.UpdateMainInfo;
-using PetFamily.Application.VolunteersOperations.UpdateSocialNetworks;
+using PetFamily.Application.Abstractions;
 
 namespace PetFamily.Application
 {
@@ -20,26 +8,32 @@ namespace PetFamily.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<CreateVolunteerHandler>();
-            services.AddScoped<UpdateMainInfoHandler>();
-            services.AddScoped<UpdateDonationsInfoHandler>();
-            services.AddScoped<UpdateSocialNetworksHandler>();
-            services.AddScoped<SoftDeleteVolunteerHandler>();
-            services.AddScoped<HardDeleteVolunteerHandler>();
-            services.AddScoped<RestoreVolunteerHandler>();
-            services.AddScoped<AddPetHandler>();
-            services.AddScoped<AddPetFilesHandler>();
-            services.AddScoped<DeletePetFilesHandler>();
-            services.AddScoped<HardDeletePetHandler>();
-            services.AddScoped<SoftDeletePetHandler>();
-            services.AddScoped<RestorePetHandler>();
-            services.AddScoped<MovePetHandler>();
-            //services.AddScoped<GetPetHandler>();
+            services
+                .AddCommands()
+                .AddQueries()
+                .AddValidatorsFromAssembly(typeof(Inject).Assembly);
 
-            services.AddScoped<CreateSpeciesHandler>();
-            services.AddScoped<AddBreedHandler>();
+            return services;
+        }
 
-            services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
+        public static IServiceCollection AddCommands(this IServiceCollection services)
+        {
+            services.Scan(scan => scan.FromAssemblies(typeof(Inject).Assembly)
+                .AddClasses(classes =>
+                    classes.AssignableToAny(typeof(ICommandHandler<>), typeof(ICommandHandler<,>)))
+                .AsSelfWithInterfaces()
+                .WithScopedLifetime());
+
+            return services;
+        }
+
+        public static IServiceCollection AddQueries(this IServiceCollection services)
+        {
+            services.Scan(scan => scan.FromAssemblies(typeof(Inject).Assembly)
+                .AddClasses(classes =>
+                    classes.AssignableTo(typeof(IQueryHandler<,>)))
+                .AsSelfWithInterfaces()
+                .WithScopedLifetime());
 
             return services;
         }

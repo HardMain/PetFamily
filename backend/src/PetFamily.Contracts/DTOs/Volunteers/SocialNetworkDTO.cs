@@ -1,4 +1,4 @@
 ﻿namespace PetFamily.Contracts.DTOs.Volunteers
 {
-    public record SocialNetworkDTO(string URL, string Platform);
+    public record SocialNetworkDto(string URL, string Platform);
 }

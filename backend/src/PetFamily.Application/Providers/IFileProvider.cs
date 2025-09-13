@@ -7,9 +7,9 @@ namespace PetFamily.Application.Providers
     public interface IFileProvider
     {
         public Task<Result<IReadOnlyList<string>, ErrorList>> UploadFiles(
-            IEnumerable<FileStorageUploadDTO> filesData, CancellationToken cancellationToken = default);
+            IEnumerable<FileStorageUploadDto> filesData, CancellationToken cancellationToken = default);
         public Task<Result<IReadOnlyList<string>, ErrorList>> DeleteFiles(
-            IEnumerable<FileStorageDeleteDTO> filesData, CancellationToken cancellationToken = default);
+            IEnumerable<FileStorageDeleteDto> filesData, CancellationToken cancellationToken = default);
         //public Task<Result<string>> GetFiles(FileMetadataDTO filesData, CancellationToken cancellationToken = default);
     }
 }

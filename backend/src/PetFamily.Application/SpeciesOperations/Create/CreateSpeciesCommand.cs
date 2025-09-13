@@ -1,6 +1,8 @@
-﻿using PetFamily.Contracts.Requests.Species;
+﻿using PetFamily.Application.Abstractions;
+using PetFamily.Contracts.Requests.Species;
 
 namespace PetFamily.Application.SpeciesOperations.Create
 {
-    public record CreateSpeciesCommand(CreateSpeciesRequest Request);
+    public record CreateSpeciesCommand(
+        CreateSpeciesRequest Request) : ICommand;
 }

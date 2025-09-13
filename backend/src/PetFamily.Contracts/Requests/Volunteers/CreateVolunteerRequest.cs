@@ -4,12 +4,12 @@ using PetFamily.Contracts.DTOs.Volunteers;
 namespace PetFamily.Contracts.Requests.Volunteers
 {
     public record CreateVolunteerRequest(
-        FullNameDTO FullName,
+        FullNameDto FullName,
         string Email,
         string Description,
         int ExperienceYears,
         string PhoneNumber,
-        IEnumerable<SocialNetworkDTO>? SocialNetworks,
-        IEnumerable<DonationInfoDTO>? DonationsInfo
+        IEnumerable<SocialNetworkDto>? SocialNetworks,
+        IEnumerable<DonationInfoDto>? DonationsInfo
     );
 }

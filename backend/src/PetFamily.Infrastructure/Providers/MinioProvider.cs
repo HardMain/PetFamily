@@ -24,7 +24,7 @@ namespace PetFamily.Infrastructure.Providers
         }
 
         public async Task<Result<IReadOnlyList<string>, ErrorList>> UploadFiles(
-            IEnumerable<FileStorageUploadDTO> filesData, CancellationToken cancellationToken = default)
+            IEnumerable<FileStorageUploadDto> filesData, CancellationToken cancellationToken = default)
         {
             var semaphoreSlim = new SemaphoreSlim(MAX_DEGREE_OF_PARALLELISM);
 
@@ -59,7 +59,7 @@ namespace PetFamily.Infrastructure.Providers
         }
 
         public async Task<Result<IReadOnlyList<string>, ErrorList>> DeleteFiles
-            (IEnumerable<FileStorageDeleteDTO> filesData, CancellationToken cancellationToken = default)
+            (IEnumerable<FileStorageDeleteDto> filesData, CancellationToken cancellationToken = default)
         {
             var semaphoreSlim = new SemaphoreSlim(MAX_DEGREE_OF_PARALLELISM);
 
@@ -92,7 +92,7 @@ namespace PetFamily.Infrastructure.Providers
         }
 
         private async Task<Result<string>> PutObject(
-            FileStorageUploadDTO fileStorageUpload,
+            FileStorageUploadDto fileStorageUpload,
             SemaphoreSlim semaphoreSlim,
             CancellationToken cancellationToken)
         {
@@ -126,7 +126,7 @@ namespace PetFamily.Infrastructure.Providers
         }
 
         private async Task<Result<string>> RemoveObject(
-            FileStorageDeleteDTO fileStorageDelete,
+            FileStorageDeleteDto fileStorageDelete,
             SemaphoreSlim semaphoreSlim,
             CancellationToken cancellationToken)
         {
@@ -161,7 +161,7 @@ namespace PetFamily.Infrastructure.Providers
         }
 
         private async Task IfBucketNotExistCreateBucket(
-            IEnumerable<FileStorageUploadDTO> filesData,
+            IEnumerable<FileStorageUploadDto> filesData,
             CancellationToken cancellationToken = default)
         {
             HashSet<string> bucketNames = filesData.Select(f => f.BucketName).ToHashSet();

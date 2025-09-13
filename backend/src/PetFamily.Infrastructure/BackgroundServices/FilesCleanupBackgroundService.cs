@@ -11,12 +11,12 @@ namespace PetFamily.Infrastructure.BackgroundServices
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<FilesCleanupBackgroundService> _logger;
-        private readonly IMessageQueue<IEnumerable<FileStorageDeleteDTO>> _messageQueue;
+        private readonly IMessageQueue<IEnumerable<FileStorageDeleteDto>> _messageQueue;
         private readonly IFileProvider _fileProvider;
 
         public FilesCleanupBackgroundService(
             ILogger<FilesCleanupBackgroundService> logger, 
-            IMessageQueue<IEnumerable<FileStorageDeleteDTO>> messageQueue,
+            IMessageQueue<IEnumerable<FileStorageDeleteDto>> messageQueue,
             IFileProvider fileProvider,
             IServiceScopeFactory scopeFactory)
         {
@@ -30,11 +30,7 @@ namespace PetFamily.Infrastructure.BackgroundServices
         {
             _logger.LogInformation("FilesCleanupBackgroundService is starting");
 
-            await using var scope = _scopeFactory.CreateAsyncScope();
-
-            var fileProvider = scope.ServiceProvider.GetRequiredService<IFileProvider>();
-
-            while (stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
                 var fileSToDelete = await _messageQueue.ReadAsync(stoppingToken);
 
