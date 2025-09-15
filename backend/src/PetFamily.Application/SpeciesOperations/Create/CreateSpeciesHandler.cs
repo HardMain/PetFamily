@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Aggregates.Species.Entities;
 using PetFamily.Domain.Shared.Entities;
@@ -8,7 +9,7 @@ using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Application.SpeciesOperations.Create
 {
-    public class CreateSpeciesHandler
+    public class CreateSpeciesHandler : ICommandHandler<Guid, CreateSpeciesCommand>
     {
         private readonly ISpeciesRepository _speciesRepository;
         private readonly IValidator<CreateSpeciesCommand> _validator;

@@ -1,4 +1,4 @@
 ﻿namespace PetFamily.Contracts.DTOs.Volunteers
 {
-    public record FullNameDTO(string firstName, string lastName, string? middleName = null);
+    public record FullNameDto(string FirstName, string LastName, string? MiddleName = null);
 }

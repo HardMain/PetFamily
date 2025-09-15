@@ -1,4 +1,4 @@
 ﻿namespace PetFamily.Contracts.DTOs.Volunteers.Pets
 {
-    public record FileStorageUploadDTO(Stream Content, string ObjectName, string BucketName);
+    public record FileStorageUploadDto(Stream Content, string ObjectName, string BucketName);
 }

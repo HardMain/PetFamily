@@ -1,4 +1,4 @@
 ﻿namespace PetFamily.Contracts.DTOs.Volunteers.Pets
 {
-    public record FileStorageDeleteDTO(string ObjectName, string BucketName);
+    public record FileStorageDeleteDto(string ObjectName, string BucketName);
 }

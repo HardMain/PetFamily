@@ -3,5 +3,5 @@
 namespace PetFamily.Contracts.Requests.Volunteers
 {
     public record UpdateSocialNetworksRequest(
-        IEnumerable<SocialNetworkDTO> SocialNetworks);
+        IEnumerable<SocialNetworkDto> SocialNetworks);
 }

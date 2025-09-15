@@ -6,10 +6,10 @@ namespace PetFamily.Contracts.Requests.Volunteers.Pets
     public record AddPetRequest(
         string Name,
         string Description,
-        SpeciesAndBreedDTO SpeciesAndBreed,
+        SpeciesAndBreedDto SpeciesAndBreed,
         string Color,
         string HealthInformation,
-        AddressDTO Address,
+        AddressDto Address,
         double WeightKg,
         double HeightCm,
         string NumberPhone,
@@ -17,5 +17,5 @@ namespace PetFamily.Contracts.Requests.Volunteers.Pets
         DateTime BirthDate,
         bool isVaccinated,
         string SupportStatus,
-        IEnumerable<DonationInfoDTO>? DonationsInfo);
+        IEnumerable<DonationInfoDto>? DonationsInfo);
 }

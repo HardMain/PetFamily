@@ -3,7 +3,7 @@
 namespace PetFamily.Contracts.Requests.Volunteers
 {
     public record UpdateMainInfoRequest(
-        FullNameDTO FullName, 
+        FullNameDto FullName, 
         string Email, 
         string PhoneNumber, 
         string Description, 

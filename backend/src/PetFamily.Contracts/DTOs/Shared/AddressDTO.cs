@@ -1,4 +1,4 @@
 ﻿namespace PetFamily.Contracts.DTOs.Shared
 {
-    public record AddressDTO(string Street, string HouseNumber, string City, string Country);
+    public record AddressDto(string Street, string HouseNumber, string City, string Country);
 }

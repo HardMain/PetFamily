@@ -35,7 +35,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public string Description { get; private set; } = default!;
         public int ExperienceYears { get; private set; }
         public PhoneNumber Number { get; private set; } = default!;
-        public IReadOnlyList<SocialNetwork> SocialNetwork => _socialNetworks;
+        public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
         public IReadOnlyList<DonationInfo> DonationsInfo => _donationsInfo;
         public IReadOnlyList<Pet> Pets => _pets;
 

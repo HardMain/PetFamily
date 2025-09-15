@@ -4,9 +4,10 @@ using Minio;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 using PetFamily.Application.SpeciesOperations;
-using PetFamily.Application.VolunteersOperations;
+using PetFamily.Application.VolunteersManagement;
 using PetFamily.Contracts.DTOs.Volunteers.Pets;
 using PetFamily.Infrastructure.BackgroundServices;
+using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.MessageQueues;
 using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
@@ -19,19 +20,31 @@ namespace PetFamily.Infrastructure
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped(_ => new ApplicationDbContext(configuration.GetConnectionString("Database")!));
+            services
+                .AddDbContexts(configuration)
+                .AddRepositories()
+                .AddMinio(configuration)
+                .AddMessageQueues()
+                .AddOptions(configuration)
+                .AddHostedServices();
 
+            return services;
+        }
+
+        private static IServiceCollection AddDbContexts(
+            this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<WriteDbContext>();
+            services.AddScoped<IReadDbContext, ReadDbContext>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddRepositories(
+            this IServiceCollection services)
+        {
             services.AddScoped<IVolunteersRepository, VolunteersRepository>();
             services.AddScoped<ISpeciesRepository, SpeciesRepository>();
-
-            services.AddHostedService<SoftDeleteCleanupService>();
-
-            services.Configure<SoftDeleteOptions>(configuration.GetSection("SoftDeleteSettings"));
-
-            services.AddHostedService<FilesCleanupBackgroundService>();
-            services.AddSingleton<IMessageQueue<IEnumerable<FileStorageDeleteDTO>>, InMemoryMessageQueue<IEnumerable<FileStorageDeleteDTO>>>();
-
-            services.AddMinio(configuration);
 
             return services;
         }
@@ -49,9 +62,37 @@ namespace PetFamily.Infrastructure
                 options.WithSSL(minioOptions.WithSSL);
             });
 
-            services.AddScoped<IFileProvider, MinioProvider>();
-            
+            services.AddSingleton<IFileProvider, MinioProvider>();
+
             return services;
+        }
+
+        private static IServiceCollection AddMessageQueues(
+            this IServiceCollection services)
+        {
+            services.AddSingleton<IMessageQueue<IEnumerable<FileStorageDeleteDto>>, 
+                InMemoryMessageQueue<IEnumerable<FileStorageDeleteDto>>>();
+
+            return services;
+
+        }
+
+        private static IServiceCollection AddOptions(
+            this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<SoftDeleteOptions>(configuration.GetSection("SoftDeleteSettings"));
+
+            return services;
+        }
+
+        private static IServiceCollection AddHostedServices(
+            this IServiceCollection services)
+        {
+            services.AddHostedService<SoftDeleteCleanupService>();
+            services.AddHostedService<FilesCleanupBackgroundService>();
+
+            return services;
+
         }
     }
 }

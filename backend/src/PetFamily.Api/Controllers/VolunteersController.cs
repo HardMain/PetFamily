@@ -2,19 +2,20 @@
 using PetFamily.Api.Envelopes;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
-using PetFamily.Application.Extensions;
-using PetFamily.Application.VolunteersOperations.Create;
-using PetFamily.Application.VolunteersOperations.Delete;
-using PetFamily.Application.VolunteersOperations.PetsOperations.Add;
-using PetFamily.Application.VolunteersOperations.PetsOperations.Delete;
-using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.AddPetFiles;
-using PetFamily.Application.VolunteersOperations.PetsOperations.FilesOperations.DeletePetFiles;
-using PetFamily.Application.VolunteersOperations.PetsOperations.Move;
-using PetFamily.Application.VolunteersOperations.PetsOperations.Restore;
-using PetFamily.Application.VolunteersOperations.Restore;
-using PetFamily.Application.VolunteersOperations.UpdateDonationsInfo;
-using PetFamily.Application.VolunteersOperations.UpdateMainInfo;
-using PetFamily.Application.VolunteersOperations.UpdateSocialNetworks;
+using PetFamily.Application.VolunteersManagement.Commands.Create;
+using PetFamily.Application.VolunteersManagement.Commands.Delete;
+using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.Add;
+using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.Delete;
+using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.FilesOperations.AddPetFiles;
+using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.FilesOperations.DeletePetFiles;
+using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.Move;
+using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.Restore;
+using PetFamily.Application.VolunteersManagement.Commands.Restore;
+using PetFamily.Application.VolunteersManagement.Commands.UpdateDonationsInfo;
+using PetFamily.Application.VolunteersManagement.Commands.UpdateMainInfo;
+using PetFamily.Application.VolunteersManagement.Commands.UpdateSocialNetworks;
+using PetFamily.Application.VolunteersManagement.Queries.GetFilteredVolunteersWithPagination;
+using PetFamily.Application.VolunteersManagement.Queries.GetVolunteerById;
 using PetFamily.Contracts.Requests.Volunteers;
 using PetFamily.Contracts.Requests.Volunteers.Pets;
 
@@ -32,10 +33,44 @@ namespace PetFamily.Api.Controllers
             [FromBody] CreateVolunteerRequest request,
             CancellationToken cancellationToken)
         {
-            var command = request.ToCommand();
+            var command = new CreateVolunteerCommand(request);
 
             var response = await handler.Handle(command, cancellationToken);
 
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetFilteredVolunteers(
+            [FromServices] GetFilteredVolunteersWithPaginationHandler handler,
+            [FromQuery] GetFilteredVolunteersWithPaginationRequest request,
+            CancellationToken cancellationToken)
+        {
+            var query = new GetFilteredVolunteersWithPaginationQuery(request);
+
+            var response = await handler.Handle(query, cancellationToken);
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult> GetVolunteerById(
+            [FromServices] GetVolunteerByIdHandler handler,
+            [FromRoute] Guid id,
+            CancellationToken cancellationToken)
+        {
+            var query = new GetVolunteerByIdQuery(id);
+
+            var response = await handler.Handle(query, cancellationToken);
             if (response.IsFailure)
                 return response.Error.ToResponse();
 
@@ -51,7 +86,7 @@ namespace PetFamily.Api.Controllers
             [FromBody] UpdateMainInfoRequest request,
             CancellationToken cancellationToken)
         {
-            var command = request.ToCommand(id);
+            var command = new UpdateMainInfoCommand(id, request);
 
             var response = await handler.Handle(command, cancellationToken);
 
@@ -70,7 +105,7 @@ namespace PetFamily.Api.Controllers
             [FromBody] UpdateSocialNetworksRequest request,
             CancellationToken cancellationToken)
         {
-            var command = request.ToCommand(id);
+            var command = new UpdateSocialNetworksCommand(id, request);
 
             var response = await handler.Handle(command, cancellationToken);
 
@@ -89,7 +124,7 @@ namespace PetFamily.Api.Controllers
             [FromBody] UpdateDonationsInfoRequest request,
             CancellationToken cancellationToken)
         {
-            var command = request.ToCommand(id);
+            var command = new UpdateDonationsInfoCommand(id, request);
 
             var response = await handler.Handle(command, cancellationToken);
 
@@ -164,7 +199,7 @@ namespace PetFamily.Api.Controllers
             [FromServices] AddPetHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = request.ToCommand(id);
+            var command = new AddPetCommand(id, request);
 
             var response = await handler.Handle(command, cancellationToken);
 
@@ -185,9 +220,9 @@ namespace PetFamily.Api.Controllers
             CancellationToken cancellationToken)
         {
             await using var fileProcessor = new FormFileProcessor();
-            var filesFormDTO = fileProcessor.Process(fileCollection);
+            var filesFormDto = fileProcessor.Process(fileCollection);
 
-            var command = new AddPetFilesCommand(volunteerId, petId, filesFormDTO);
+            var command = new AddPetFilesCommand(volunteerId, petId, filesFormDto);
 
             var response = await handler.Handle(command, cancellationToken);
 
@@ -245,7 +280,7 @@ namespace PetFamily.Api.Controllers
             [FromServices] MovePetHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = request.ToCommand(volunteerId, petId);
+            var command = new MovePetCommand(volunteerId, petId, request);
 
             var response = await handler.Handle(command, cancellationToken);
 
@@ -284,7 +319,7 @@ namespace PetFamily.Api.Controllers
             [FromServices] DeletePetFilesHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = request.ToCommand(volunteerId, petId);
+            var command = new DeletePetFilesCommand(volunteerId, petId, request);
 
             var response = await handler.Handle(command, cancellationToken);
 
