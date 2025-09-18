@@ -1,10 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Envelopes;
 using PetFamily.Api.Extensions;
-using PetFamily.Application.SpeciesOperations.BreedsOperations.Add;
-using PetFamily.Application.SpeciesOperations.Create;
+using PetFamily.Application.SpeciesManagement.BreedsOperations.Commands.Add;
+using PetFamily.Application.SpeciesManagement.BreedsOperations.Commands.Delete;
+using PetFamily.Application.SpeciesManagement.BreedsOperations.Queries.GetBreedsBySpeciesIdWIthPagination;
+using PetFamily.Application.SpeciesManagement.Commands.Create;
+using PetFamily.Application.SpeciesManagement.Commands.Delete;
+using PetFamily.Application.SpeciesManagement.Queries.GetFilteredSpeciesWIthPagination;
+using PetFamily.Application.VolunteersManagement.Queries.GetFilteredVolunteersWithPagination;
 using PetFamily.Contracts.Requests.Species;
 using PetFamily.Contracts.Requests.Species.Breeds;
+using PetFamily.Contracts.Requests.Volunteers;
 
 namespace PetFamily.Api.Controllers
 {
@@ -30,14 +36,89 @@ namespace PetFamily.Api.Controllers
             return Ok(envelope);
         }
 
-        [HttpPost("{id:guid}/breed")]
-        public async Task<ActionResult> AddBreed(
+        [HttpGet]
+        public async Task<ActionResult> GetFilteredSpecies(
+            [FromServices] GetFilteredSpeciesWithPaginationHandler handler,
+            [FromQuery] GetFilteredSpeciesWithPaginationRequest request,
+            CancellationToken cancellationToken)
+        {
+            var query = new GetFilteredSpeciesWithPaginationQuery(request);
+
+            var response = await handler.Handle(query, cancellationToken);
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
+            [FromServices] DeleteSpeciesHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new DeleteSpeciesCommand(id);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        
+        // ---------------------- breed ---------------------------
+        
+        [HttpPost("{speciesId:guid}/breed")]
+        public async Task<ActionResult> AddBreed(
+            [FromRoute] Guid speciesId,
             [FromBody] AddBreedRequest request,
             [FromServices] AddBreedHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new AddBreedCommand(id, request);
+            var command = new AddBreedCommand(speciesId, request);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpGet("{speciesId:guid}/breeds")]
+        public async Task<ActionResult> GetBreedsBySpeciesId(
+            [FromRoute] Guid speciesId,
+            [FromServices] GetBreedsBySpeciesIdWithPaginationHandler handler,
+            [FromQuery] GetBreedsBySpeciesIdWithPaginationRequest request,
+            CancellationToken cancellationToken)
+        {
+            var query = new GetBreedsBySpeciesIdWithPaginationQuery(speciesId, request);
+
+            var response = await handler.Handle(query, cancellationToken);
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpDelete("{speciesId:guid}/breed/{breedId:guid}")]
+        public async Task<ActionResult> DeleteBreed(
+            [FromRoute] Guid speciesId,
+            [FromRoute] Guid breedId,
+            [FromServices] DeleteBreedHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new DeleteBreedCommand(speciesId, breedId);
 
             var response = await handler.Handle(command, cancellationToken);
 

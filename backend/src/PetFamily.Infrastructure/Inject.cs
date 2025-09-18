@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
-using PetFamily.Application.SpeciesOperations;
+using PetFamily.Application.SpeciesManagement;
 using PetFamily.Application.VolunteersManagement;
 using PetFamily.Contracts.DTOs.Volunteers.Pets;
 using PetFamily.Infrastructure.BackgroundServices;

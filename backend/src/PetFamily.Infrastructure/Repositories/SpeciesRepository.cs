@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.SpeciesOperations;
+using PetFamily.Application.SpeciesManagement;
 using PetFamily.Domain.Aggregates.Species.Entities;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
@@ -27,7 +27,19 @@ namespace PetFamily.Infrastructure.Repositories
 
             return species.Id.Value;
         }
-        
+
+        public async Task<Result<Guid>> Delete(
+            Species species, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Species.Remove(species);
+
+            var saveResult = await Save(species, cancellationToken);
+            if (saveResult.IsFailure)
+                return saveResult.Error;
+
+            return species.Id.Value;
+        }
+
         public async Task<Result<Species>> GetById(
             SpeciesId speciesId, CancellationToken cancellationToken = default)
         {

@@ -14,17 +14,28 @@ namespace PetFamily.Infrastructure.Configurations.Read
 
             builder.HasKey(p => p.Id);
 
+            builder.Property(v => v.Id)
+                .HasColumnName("id");
+
             builder.OwnsOne(p => p.SpeciesAndBreed, sabB =>
             {
-                sabB.Property(sab => sab.SpeciesId);
-                sabB.Property(sab => sab.BreedId);
+                sabB.Property(sab => sab.SpeciesId)
+                    .HasColumnName("species_id");
+
+                sabB.Property(sab => sab.BreedId)
+                    .HasColumnName("breed_id");
             });
 
             builder.OwnsOne(p => p.Address, addrB =>
             {
-                addrB.Property(addr => addr.City);
-                addrB.Property(addr => addr.Street);
-                addrB.Property(addr => addr.Country);
+                addrB.Property(addr => addr.City)
+                    .HasColumnName("city");
+
+                addrB.Property(addr => addr.Street)
+                    .HasColumnName("street");
+
+                addrB.Property(addr => addr.Country)
+                    .HasColumnName("country");
             });
 
             builder.Property(p => p.Files)

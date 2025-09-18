@@ -9,7 +9,6 @@ namespace PetFamily.Infrastructure.BackgroundServices
 {
     public class FilesCleanupBackgroundService : BackgroundService
     {
-        private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<FilesCleanupBackgroundService> _logger;
         private readonly IMessageQueue<IEnumerable<FileStorageDeleteDto>> _messageQueue;
         private readonly IFileProvider _fileProvider;
@@ -23,7 +22,6 @@ namespace PetFamily.Infrastructure.BackgroundServices
             _logger = logger;
             _messageQueue = messageQueue;
             _fileProvider = fileProvider;
-            _scopeFactory = scopeFactory;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

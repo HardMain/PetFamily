@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.Species.Entities;
-using static CSharpFunctionalExtensions.Result;
 
 namespace PetFamily.Infrastructure.DbContexts
 {
