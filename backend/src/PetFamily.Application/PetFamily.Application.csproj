@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="SpeciesOperations\BreedsOperations\Delete\" />
-    <Folder Include="SpeciesOperations\Delete\" />
+    <Folder Include="VolunteersManagement\PetsOperations\Queries\" />
   </ItemGroup>
 
 </Project>

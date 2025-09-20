@@ -1,8 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Models;
-using PetFamily.Contracts.DTOs.Volunteers;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PetFamily.Application.Extensions
 {

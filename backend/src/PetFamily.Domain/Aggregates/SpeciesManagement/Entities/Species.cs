@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using PetFamily.Domain.Shared.Entities;
+﻿using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 
 namespace PetFamily.Domain.Aggregates.Species.Entities
@@ -32,5 +31,14 @@ namespace PetFamily.Domain.Aggregates.Species.Entities
 
             return breed;
         }
+
+        public Breed DeleteBreed(Breed breed)
+        {
+            _breeds.Remove(breed);
+
+            return breed;
+        }
+
+        public Result<Breed> GetBreedById(BreedId breedId) => _breeds.First(b => b.Id == breedId);
     }
 }

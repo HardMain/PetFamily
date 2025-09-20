@@ -4,16 +4,16 @@ using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
 using PetFamily.Application.VolunteersManagement.Commands.Create;
 using PetFamily.Application.VolunteersManagement.Commands.Delete;
-using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.Add;
-using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.Delete;
-using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.FilesOperations.AddPetFiles;
-using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.FilesOperations.DeletePetFiles;
-using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.Move;
-using PetFamily.Application.VolunteersManagement.Commands.PetsOperations.Restore;
 using PetFamily.Application.VolunteersManagement.Commands.Restore;
 using PetFamily.Application.VolunteersManagement.Commands.UpdateDonationsInfo;
 using PetFamily.Application.VolunteersManagement.Commands.UpdateMainInfo;
 using PetFamily.Application.VolunteersManagement.Commands.UpdateSocialNetworks;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Delete;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.FilesOperations.AddPetFiles;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.FilesOperations.DeletePetFiles;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Move;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Restore;
 using PetFamily.Application.VolunteersManagement.Queries.GetFilteredVolunteersWithPagination;
 using PetFamily.Application.VolunteersManagement.Queries.GetVolunteerById;
 using PetFamily.Contracts.Requests.Volunteers;
@@ -192,14 +192,14 @@ namespace PetFamily.Api.Controllers
 
         // ----------- Pet -------------
 
-        [HttpPost("{id:guid}/pet")]
+        [HttpPost("{volunteerId:guid}/pet")]
         public async Task<ActionResult> AddPet(
-            [FromRoute] Guid id,
+            [FromRoute] Guid volunteerId,
             [FromBody] AddPetRequest request,
             [FromServices] AddPetHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new AddPetCommand(id, request);
+            var command = new AddPetCommand(volunteerId, request);
 
             var response = await handler.Handle(command, cancellationToken);
 

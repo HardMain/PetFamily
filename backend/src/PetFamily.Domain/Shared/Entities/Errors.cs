@@ -1,4 +1,5 @@
-﻿using PetFamily.Domain.Shared.ValueObjects;
+﻿using System.Xml.Linq;
+using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Shared.Entities
 {
@@ -64,6 +65,20 @@ namespace PetFamily.Domain.Shared.Entities
 
         public static class SpeciesAndBreed
         {
+            public static Error BreedInUse(Guid? breedId)
+            {
+                var forId = breedId == null ? "" : $" for Id '{breedId}'"; ;
+
+                return Error.Failure("breed.in.use", $"breed in use{forId}");
+            }
+
+            public static Error SpeciesInUse(Guid? breedId)
+            {
+                var forId = breedId == null ? "" : $" for Id '{breedId}'"; ;
+
+                return Error.Failure("species.in.use", $"species in use{forId}");
+            }
+
             public static Error NotFound(Guid? speciesId = null, Guid? breedId = null)
             {
                 var forIds = speciesId == null ? "" :
