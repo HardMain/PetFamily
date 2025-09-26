@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Serilog;
 
 namespace PetFamily.Api
 {
@@ -7,7 +9,14 @@ namespace PetFamily.Api
         public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSerilog();
-            services.AddControllers();
+
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(
+                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                });
+
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 

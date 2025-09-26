@@ -13,11 +13,14 @@ namespace PetFamily.Application.VolunteersManagement.Commands.Create
         {
             RuleFor(v => v.Request.FullName)
                 .MustBeValueObjects(fn => FullName.Create(fn.FirstName, fn.LastName, fn.MiddleName));
-            RuleFor(v => v.Request.Email).MustBeValueObjects(Email.Create);
-            RuleFor(v => v.Request.PhoneNumber).MustBeValueObjects(PhoneNumber.Create);
+            RuleFor(v => v.Request.Email)
+                .MustBeValueObjects(Email.Create);
+            RuleFor(v => v.Request.PhoneNumber)
+                .MustBeValueObjects(PhoneNumber.Create);
 
             RuleFor(v => v.Request.Description)
                 .NotEmpty()
+                .WithError(Errors.General.ValueIsRequired("description"))
                 .MaximumLength(Constants.MAX_HIGH_TEXT_LENGTH)
                 .WithError(Errors.General.ValueIsInvalid("description"));
 
@@ -27,8 +30,21 @@ namespace PetFamily.Application.VolunteersManagement.Commands.Create
                 .LessThanOrEqualTo(100)
                 .WithError(Errors.General.ValueIsInvalid("experienceYears"));
 
-            RuleForEach(v => v.Request.SocialNetworks).MustBeValueObjects(sn => SocialNetwork.Create(sn.URL, sn.Platform));
-            RuleForEach(v => v.Request.DonationsInfo).MustBeValueObjects(di => DonationInfo.Create(di.Title, di.Description));
+            When(p => p.Request.SocialNetworks != null, () =>
+            {
+                RuleFor(p => p.Request.SocialNetworks!)
+                    .MustBeVoCollection(
+                    s => SocialNetwork.Create(s.URL, s.Platform),
+                    ss => ListSocialNetwork.Create(ss));
+            });
+
+            When(p => p.Request.DonationsInfo != null, () =>
+            {
+                RuleFor(p => p.Request.DonationsInfo!)
+                    .MustBeVoCollection(
+                    d => DonationInfo.Create(d.Title, d.Description),
+                    ds => ListDonationInfo.Create(ds));
+            });
         }
     }
 }

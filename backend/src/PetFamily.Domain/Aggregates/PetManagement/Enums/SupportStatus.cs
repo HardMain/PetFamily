@@ -2,8 +2,9 @@
 {
     public enum SupportStatus
     {
-        need_help,
-        need_home,
-        found_home
+        Unknown,
+        NeedHelp,
+        NeedHome,
+        FoundHome
     }
 }

@@ -44,7 +44,7 @@ namespace PetFamily.UnitTests
             var isCastrated = false;
             var isVaccinated = false;
             var birthDate = DateTime.Now;
-            var supportStatus = SupportStatus.found_home;
+            var supportStatus = SupportStatus.FoundHome;
             var filesList = new List<PetFile>();
 
             return Pet.Create(

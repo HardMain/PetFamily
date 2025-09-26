@@ -13,8 +13,10 @@ namespace PetFamily.Application.VolunteersManagement.Commands.UpdateDonationsInf
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired());
 
-            RuleForEach(di => di.Request.DonationsInfo)
-                .MustBeValueObjects(di => DonationInfo.Create(di.Title, di.Description));
+            RuleFor(p => p.Request.DonationsInfo!)
+                    .MustBeVoCollection(
+                    d => DonationInfo.Create(d.Title, d.Description),
+                    ds => ListDonationInfo.Create(ds));
         }
     }
 }

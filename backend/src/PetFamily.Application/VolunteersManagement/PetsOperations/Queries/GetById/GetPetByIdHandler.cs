@@ -8,17 +8,17 @@ using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Infrastructure.DbContexts;
 
-namespace PetFamily.Application.VolunteersManagement.Queries.GetVolunteerById
+namespace PetFamily.Application.VolunteersManagement.PetsOperations.Queries.GetById
 {
-    public class GetVolunteerByIdHandler : IQueryHandler<VolunteerReadDto, GetVolunteerByIdQuery>
+    public class GetPetByIdHandler : IQueryHandler<PetReadDto, GetPetByIdQuery>
     {
         private readonly IReadDbContext _readDbContext;
-        private readonly ILogger<GetVolunteerByIdHandler> _logger;
-        private readonly IValidator<GetVolunteerByIdQuery> _validator;
+        private readonly ILogger<GetPetByIdHandler> _logger;
+        private readonly IValidator<GetPetByIdQuery> _validator;
 
-        public GetVolunteerByIdHandler(
-            IValidator<GetVolunteerByIdQuery> validator, 
-            ILogger<GetVolunteerByIdHandler> logger, 
+        public GetPetByIdHandler(
+            IValidator<GetPetByIdQuery> validator,
+            ILogger<GetPetByIdHandler> logger,
             IReadDbContext readDbContext)
         {
             _validator = validator;
@@ -26,8 +26,8 @@ namespace PetFamily.Application.VolunteersManagement.Queries.GetVolunteerById
             _readDbContext = readDbContext;
         }
 
-        public async Task<Result<VolunteerReadDto, ErrorList>> Handle(
-            GetVolunteerByIdQuery query, 
+        public async Task<Result<PetReadDto, ErrorList>> Handle(
+            GetPetByIdQuery query,
             CancellationToken cancellationToken = default)
         {
             var validationResult = await _validator.ValidateAsync(query, cancellationToken);
@@ -38,15 +38,15 @@ namespace PetFamily.Application.VolunteersManagement.Queries.GetVolunteerById
                 return validationResult.ToErrorList();
             }
 
-            var volunteer = await _readDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == query.Id, cancellationToken);
-            if (volunteer == null)
+            var pet = await _readDbContext.Pets.FirstOrDefaultAsync(p => p.Id == query.Id, cancellationToken);
+            if (pet == null)
             {
-                _logger.LogWarning("Failed to get volunteer {volunteerId}", query.Id);
+                _logger.LogWarning("Failed to get pet {PetId}", query.Id);
 
                 return Errors.General.NotFound(query.Id).ToErrorList();
             }
 
-            return volunteer;
+            return pet;
         }
     }
 }

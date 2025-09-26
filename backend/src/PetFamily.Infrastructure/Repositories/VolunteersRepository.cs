@@ -29,6 +29,7 @@ namespace PetFamily.Infrastructure.Repositories
 
             return volunteer.Id.Value; 
         }
+
         public async Task<Result<Guid>> Save(
             Volunteer volunteer, CancellationToken cancellationToken = default)
         { 
@@ -42,6 +43,7 @@ namespace PetFamily.Infrastructure.Repositories
                 return Errors.General.FailedToSave();
             }
         }
+
         public async Task<Result<Guid>> Delete(
             Volunteer volunteer, CancellationToken cancellationToken = default)
         {
@@ -92,6 +94,7 @@ namespace PetFamily.Infrastructure.Repositories
 
             return volunteer;
         }
+
         public async Task<Result<Volunteer>> GetByEmail(
             Email email, CancellationToken cancellationToken = default)
         {

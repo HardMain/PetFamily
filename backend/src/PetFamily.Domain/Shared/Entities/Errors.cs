@@ -95,6 +95,13 @@ namespace PetFamily.Domain.Shared.Entities
             {
                 return Error.Validation("length.is.invalid", $"file is empty");
             }
+
+            public static Error NotFound(string? name)
+            {
+                var label = name == null ? " " : " " + name + " ";
+
+                return Error.NotFound("file.not.found", $"file{label}not found");
+            }
         }
     }
 }

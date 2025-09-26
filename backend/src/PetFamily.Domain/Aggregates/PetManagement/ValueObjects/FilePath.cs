@@ -12,7 +12,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
             ".mp4",
             ".avi",
             ".mkv",
-            "mov"
+            ".mov"
         };
 
         private FilePath(string path)
@@ -21,7 +21,6 @@ namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
         }
 
         public string Path { get; }
-
 
         public static Result<FilePath> Create(Guid path, string extension)
         {
@@ -32,6 +31,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
 
             return new FilePath(fullPath);
         }
+
         public static Result<FilePath> Create(string fullPath)
         {
             var extension = System.IO.Path.GetExtension(fullPath);

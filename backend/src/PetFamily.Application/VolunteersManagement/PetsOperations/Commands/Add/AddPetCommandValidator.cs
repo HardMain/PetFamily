@@ -15,7 +15,7 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired("volunteerId"));
 
-            RuleFor(v => v.Request.Name)
+            RuleFor(p => p.Request.Name)
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired("name"))
                 .MaximumLength(Constants.MAX_MEDIUM_TEXT_LENGTH)
@@ -24,7 +24,8 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add
             RuleFor(p => p.Request.Address)
                 .MustBeValueObjects(adr => Address.Create(adr.Street, adr.HouseNumber, adr.City, adr.Country));
 
-            RuleFor(p => p.Request.NumberPhone).MustBeValueObjects(PhoneNumber.Create);
+            RuleFor(p => p.Request.OwnerPhone)
+                .MustBeValueObjects(PhoneNumber.Create);
 
             RuleFor(p => p.Request.SpeciesAndBreed)
                 .NotEmpty()
@@ -38,42 +39,49 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired("breedId"));
 
-            RuleFor(v => v.Request.Color)
+            RuleFor(p => p.Request.Color)
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired("color"))
                 .MaximumLength(Constants.MAX_LOW_TEXT_LENGTH)
                 .WithError(Errors.General.ValueIsInvalid("color"));
 
-            RuleFor(v => v.Request.Description)
+            RuleFor(p => p.Request.Description)
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired("description"))
                 .MaximumLength(Constants.MAX_HIGH_TEXT_LENGTH)
                 .WithError(Errors.General.ValueIsInvalid("description"));
 
-            RuleFor(v => v.Request.HealthInformation)
+            RuleFor(p => p.Request.HealthInformation)
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired("healthInformation"))
                 .MaximumLength(Constants.MAX_HIGH_TEXT_LENGTH)
                 .WithError(Errors.General.ValueIsInvalid("healthInformation"));
 
-            RuleFor(v => v.Request.SupportStatus)
+            RuleFor(p => p.Request.SupportStatus)
                 .NotEmpty()
-                .MaximumLength(Constants.MAX_LOW_TEXT_LENGTH)
-                .WithError(Errors.General.ValueIsInvalid("supportStatus"));
+                .WithError(Errors.General.ValueIsRequired("supportStatus"));
 
-            RuleFor(v => v.Request.BirthDate)
+            RuleFor(p => p.Request.BirthDate)
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired("birthDate"))
                 .LessThanOrEqualTo(DateTime.UtcNow)
                 .WithError(Errors.General.ValueIsInvalid("birthDate"));
 
-            RuleFor(v => v.Request.WeightKg)
+            RuleFor(p => p.Request.WeightKg)
                 .GreaterThanOrEqualTo(0)
                 .WithError(Errors.General.ValueIsInvalid("weightKg"));
 
-            RuleFor(v => v.Request.HeightCm)
+            RuleFor(p => p.Request.HeightCm)
                 .GreaterThanOrEqualTo(0)
                 .WithError(Errors.General.ValueIsInvalid("heightCm"));
+
+            When(p => p.Request.DonationsInfo != null, () =>
+            {
+                RuleFor(p => p.Request.DonationsInfo!)
+                    .MustBeVoCollection(
+                    d => DonationInfo.Create(d.Title, d.Description),
+                    ds => ListDonationInfo.Create(ds));
+            });
         }
     }
 }

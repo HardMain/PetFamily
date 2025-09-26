@@ -7,10 +7,8 @@ using PetFamily.Application.SpeciesManagement.BreedsOperations.Queries.GetBreeds
 using PetFamily.Application.SpeciesManagement.Commands.Create;
 using PetFamily.Application.SpeciesManagement.Commands.Delete;
 using PetFamily.Application.SpeciesManagement.Queries.GetFilteredSpeciesWIthPagination;
-using PetFamily.Application.VolunteersManagement.Queries.GetFilteredVolunteersWithPagination;
 using PetFamily.Contracts.Requests.Species;
 using PetFamily.Contracts.Requests.Species.Breeds;
-using PetFamily.Contracts.Requests.Volunteers;
 
 namespace PetFamily.Api.Controllers
 {

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Providers;
+using PetFamily.Contracts.DTOs.Volunteers.Pets;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.Enums;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
@@ -62,7 +63,8 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add
             var speciesId = SpeciesId.Create(command.Request.SpeciesAndBreed.SpeciesId);
             var breedId = BreedId.Create(command.Request.SpeciesAndBreed.BreedId);
 
-            var isExistsBreedInSpecies = await _readDbContext.Breeds.AnyAsync(b => b.Id == breedId.Value && b.SpeciesId == speciesId.Value);
+            var isExistsBreedInSpecies = await _readDbContext.Breeds
+                .AnyAsync(b => b.Id == breedId.Value && b.SpeciesId == speciesId.Value);
             if (!isExistsBreedInSpecies)
             {
                 _logger.LogWarning("Breed {BreedId} not found in species {SpeciesId}", breedId, speciesId);
@@ -80,11 +82,21 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add
                 command.Request.Address.Country).Value;
             var weightKg = command.Request.WeightKg;
             var heightCm = command.Request.HeightCm;
-            var numberPhone = PhoneNumber.Create(command.Request.NumberPhone).Value;
+            var numberPhone = PhoneNumber.Create(command.Request.OwnerPhone).Value;
             var isCastrated = command.Request.isCastrated;
             var isVacinated = command.Request.isVaccinated;
             var birthDate = command.Request.BirthDate;
-            var supportStatus = Enum.Parse<SupportStatus>(command.Request.SupportStatus);
+            
+            var petSupportStatus = command.Request.SupportStatus;
+            if (!Enum.IsDefined(typeof(PetSupportStatusDto),  command.Request.SupportStatus))
+            {
+                _logger.LogWarning(
+                    "Invalid support status {StatusValue} for pet {PetId}",
+                    command.Request.SupportStatus,
+                    petId);
+
+                return Errors.General.ValueIsInvalid("supportStatus").ToErrorList();
+            }
 
             var petToAddResult = Pet.Create(
                 petId,
@@ -100,7 +112,7 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add
                 isCastrated,
                 isVacinated,
                 birthDate,
-                supportStatus);
+                (SupportStatus)petSupportStatus);
 
             if (petToAddResult.IsFailure)
             {
@@ -123,19 +135,21 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add
                 return petResult.Error.ToErrorList();
             }
 
-            var donationsInfo = command.Request.DonationsInfo?
-                .Select(di => DonationInfo.Create(di.Title, di.Description).Value) ?? [];
-
-            var errorsAddDonationsInfo = volunteerResult.Value.AddDonationsInfoToPet(petId, donationsInfo);
-            if (errorsAddDonationsInfo.Any())
+            if (command.Request.DonationsInfo is not null)
             {
-                _logger.LogWarning(
-                    "Failed to add donations info to pet: {Errors}", errorsAddDonationsInfo);
-
-                return errorsAddDonationsInfo;
+                var donationsInfo = ListDonationInfo.Create(command.Request.DonationsInfo
+                    .Select(di => DonationInfo.Create(di.Title, di.Description).Value));
+                
+                volunteerResult.Value.SetListDonationInfoToPet(petResult.Value, donationsInfo.Value);
             }
 
-            await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+            var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+            if (saveResult.IsFailure)
+            {
+                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+
+                return saveResult.Error.ToErrorList();
+            }
 
             var result = petResult.Value.Id.Value;
 

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using PetFamily.Domain.Shared.Entities;
 
 namespace PetFamily.Domain.Shared.ValueObjects
@@ -6,6 +7,7 @@ namespace PetFamily.Domain.Shared.ValueObjects
     {
         private DonationInfo() { }
 
+        [JsonConstructor]
         private DonationInfo(string title, string description)
         {
             Title = title;

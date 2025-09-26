@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared.Constants;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
+using PetFamily.Domain.Shared.ValueObjects;
+using System.Text.Json;
+using PetFamily.Contracts.DTOs.Volunteers;
+using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 
 namespace PetFamily.Infrastructure.Configurations.Write
 {
@@ -67,35 +71,23 @@ namespace PetFamily.Infrastructure.Configurations.Write
                     .HasColumnName("phone_number");
             });
 
-            builder.OwnsMany(v => v.SocialNetworks, sb =>
-            {
-                sb.ToJson("socials");
+            builder.Property(p => p.SocialNetworks)
+                .HasConversion(
+                ls => JsonSerializer.Serialize(ls.Socials, JsonSerializerOptions.Default),
+                json => ListSocialNetwork
+                .Create(JsonSerializer.Deserialize<List<SocialNetwork>>(
+                        json, JsonSerializerOptions.Default) ?? new List<SocialNetwork>()).Value)
+                .HasColumnType("jsonb")
+                .HasColumnName("socials");
 
-                sb.Property(s => s.URL)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_MEDIUM_TEXT_LENGTH)
-                    .HasColumnName("url");
-
-                sb.Property(s => s.Platform)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("platform");
-            });
-
-            builder.OwnsMany(v => v.DonationsInfo, db =>
-            {
-                db.ToJson("dontations_info");
-
-                db.Property(d => d.Title)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("title");
-
-                db.Property(d => d.Description)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH)
-                    .HasColumnName("description");
-            });
+            builder.Property(p => p.DonationsInfo)
+                .HasConversion(
+                ld => JsonSerializer.Serialize(ld.Donations, JsonSerializerOptions.Default),
+                json => ListDonationInfo
+                .Create(JsonSerializer.Deserialize<List<DonationInfo>>(
+                        json, JsonSerializerOptions.Default) ?? new List<DonationInfo>()).Value)
+                .HasColumnType("jsonb")
+                .HasColumnName("donations_info");
 
             builder.HasMany(v => v.Pets)
                 .WithOne()

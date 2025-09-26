@@ -79,28 +79,20 @@ namespace PetFamily.Application.VolunteersManagement.Commands.Create
                 phoneNumber
             );
 
-            var donationsInfo = command.Request.DonationsInfo?
-                .Select(di => DonationInfo.Create(di.Title, di.Description).Value) ?? [];
-
-            var errorsAddDonationsInfo = volunteer.AddDonationsInfo(donationsInfo);
-            if (errorsAddDonationsInfo.Any())
+            if (command.Request.DonationsInfo is not null)
             {
-                _logger.LogWarning(
-                    "Failed to add donations info to volunteer: {Errors}", errorsAddDonationsInfo);
+                var donationsInfo = ListDonationInfo.Create(command.Request.DonationsInfo
+                    .Select(di => DonationInfo.Create(di.Title, di.Description).Value));
 
-                return errorsAddDonationsInfo;
+                volunteer.SetListDonationInfo(donationsInfo.Value);
             }
 
-            var socialNetworks = command.Request.SocialNetworks?
-                .Select(sn => SocialNetwork.Create(sn.URL, sn.Platform).Value) ?? [];
-
-            var errorsAddSocialNetworks = volunteer.AddSocialNetworks(socialNetworks);
-            if (errorsAddSocialNetworks.Any())
+            if (command.Request.SocialNetworks is not null)
             {
-                _logger.LogWarning(
-                    "Failed to add social networks: {Errors}", errorsAddSocialNetworks);
+                var socialNetworks = ListSocialNetwork.Create(command.Request.SocialNetworks
+                    .Select(di => SocialNetwork.Create(di.URL, di.Platform).Value));
 
-                return errorsAddSocialNetworks;
+                volunteer.SetListSocialNetwork(socialNetworks.Value);
             }
 
             var result = await _volunteersRepository.Add(volunteer, cancellationToken);

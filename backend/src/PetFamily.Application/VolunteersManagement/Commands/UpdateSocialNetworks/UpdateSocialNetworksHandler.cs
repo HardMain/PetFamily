@@ -40,20 +40,15 @@ namespace PetFamily.Application.VolunteersManagement.Commands.UpdateSocialNetwor
             var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancellationToken);
             if (volunteerResult.IsFailure)
             {
-                _logger.LogWarning("Failed to get volunteer with {volunteerId}", volunteerId);
+                _logger.LogWarning("Failed to get volunteer with {VolunteerId}", volunteerId);
 
                 return volunteerResult.Error.ToErrorList();
             }
 
-            var errorsUpdateSocialNetworks = volunteerResult.Value.UpdateSocialNetworks(
-                command.Request.SocialNetworks.Select(sn => SocialNetwork.Create(sn.URL, sn.Platform).Value));
+            var socialNetworks = ListSocialNetwork.Create(command.Request.SocialNetworks
+                    .Select(di => SocialNetwork.Create(di.URL, di.Platform).Value));
 
-            if (errorsUpdateSocialNetworks.Any())
-            {
-                _logger.LogWarning(
-                    "Failed to add social networks: {Errors}", errorsUpdateSocialNetworks);
-                return errorsUpdateSocialNetworks;
-            }
+            volunteerResult.Value.SetListSocialNetwork(socialNetworks.Value);
 
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (result.IsFailure)
@@ -63,7 +58,7 @@ namespace PetFamily.Application.VolunteersManagement.Commands.UpdateSocialNetwor
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Social networks updated for volunteer {volunteerId}", volunteerId);
+            _logger.LogInformation("Social networks updated for volunteer {VolunteerId}", volunteerId);
 
             return result.Value;
         }

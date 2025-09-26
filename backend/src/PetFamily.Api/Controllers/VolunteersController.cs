@@ -14,8 +14,13 @@ using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.FilesOp
 using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.FilesOperations.DeletePetFiles;
 using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Move;
 using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Restore;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.SetMainPhoto;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Update;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.UpdateSupportStatus;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Queries.GetById;
+using PetFamily.Application.VolunteersManagement.PetsOperations.Queries.GetFilteredPetsWithPagination;
+using PetFamily.Application.VolunteersManagement.Queries.GetById;
 using PetFamily.Application.VolunteersManagement.Queries.GetFilteredVolunteersWithPagination;
-using PetFamily.Application.VolunteersManagement.Queries.GetVolunteerById;
 using PetFamily.Contracts.Requests.Volunteers;
 using PetFamily.Contracts.Requests.Volunteers.Pets;
 
@@ -223,6 +228,101 @@ namespace PetFamily.Api.Controllers
             var filesFormDto = fileProcessor.Process(fileCollection);
 
             var command = new AddPetFilesCommand(volunteerId, petId, filesFormDto);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpGet("/pet")]
+        public async Task<ActionResult> GetFilteredPets(
+            [FromServices] GetFilteredPetsWithPaginationHandler handler,
+            [FromQuery] GetFilteredPetsWithPaginationRequest request,
+            CancellationToken cancellationToken)
+        {
+            var query = new GetFilteredPetsWithPaginationQuery(request);
+
+            var response = await handler.Handle(query, cancellationToken);
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpGet("/pet/{id:guid}")] 
+        public async Task<ActionResult> GetPetById(
+            [FromRoute] Guid id,
+            [FromServices] GetPetByIdHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new GetPetByIdQuery(id);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpPut("{volunteerId:guid}/pet/{petId:guid}")]
+        public async Task<ActionResult> UpdatePet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromBody] UpdatePetRequest request,
+            [FromServices] UpdatePetHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new UpdatePetCommand(volunteerId, petId, request);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpPut("{volunteerId:guid}/pet/{petId:guid}/support-status")]
+        public async Task<ActionResult> UpdatePetSupportStatus(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromBody] UpdatePetStatusRequest request,
+            [FromServices] UpdatePetSupportStatusHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new UpdatePetSupportStatusCommand(volunteerId, petId, request);
+
+            var response = await handler.Handle(command, cancellationToken);
+
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            var envelope = Envelope.Ok(response.Value);
+
+            return Ok(envelope);
+        }
+
+        [HttpPut("{volunteerId:guid}/pet/{petId:guid}/main-photo")]
+        public async Task<ActionResult> SetPetMainPhoto(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromBody] SetPetMainPhotoRequest request,
+            [FromServices] SetPetMainPhotoHandler handler,
+            CancellationToken cancellationToken)
+        {
+            var command = new SetPetMainPhotoCommand(volunteerId, petId, request);
 
             var response = await handler.Handle(command, cancellationToken);
 

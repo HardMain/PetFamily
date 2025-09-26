@@ -45,17 +45,10 @@ namespace PetFamily.Application.VolunteersManagement.Commands.UpdateDonationsInf
                 return volunteerResult.Error.ToErrorList();
             }
 
-            var errorsUpdateDonationsInfo = volunteerResult.Value.UpdateDonationsInfo(
-                command.Request.DonationsInfo.Select(
-                    di => DonationInfo.Create(di.Title, di.Description).Value));
+            var donationsInfo = ListDonationInfo.Create(command.Request.DonationsInfo
+                .Select(di => DonationInfo.Create(di.Description, di.Title).Value));
 
-            if (errorsUpdateDonationsInfo.Any())
-            {
-                _logger.LogWarning(
-                    "Failed to add donations info: {Errors}", errorsUpdateDonationsInfo);
-
-                return errorsUpdateDonationsInfo;
-            }
+            volunteerResult.Value.SetListDonationInfo(donationsInfo.Value);
 
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (result.IsFailure)

@@ -2,7 +2,7 @@
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Shared.Entities;
 
-namespace PetFamily.Application.VolunteersManagement.Queries.GetVolunteerById
+namespace PetFamily.Application.VolunteersManagement.Queries.GetById
 {
     public class GetVolunteerByIdQueryValidator : AbstractValidator<GetVolunteerByIdQuery>
     {
