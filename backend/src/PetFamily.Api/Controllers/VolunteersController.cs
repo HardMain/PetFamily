@@ -239,41 +239,6 @@ namespace PetFamily.Api.Controllers
             return Ok(envelope);
         }
 
-        [HttpGet("/pet")]
-        public async Task<ActionResult> GetFilteredPets(
-            [FromServices] GetFilteredPetsWithPaginationHandler handler,
-            [FromQuery] GetFilteredPetsWithPaginationRequest request,
-            CancellationToken cancellationToken)
-        {
-            var query = new GetFilteredPetsWithPaginationQuery(request);
-
-            var response = await handler.Handle(query, cancellationToken);
-            if (response.IsFailure)
-                return response.Error.ToResponse();
-
-            var envelope = Envelope.Ok(response.Value);
-
-            return Ok(envelope);
-        }
-
-        [HttpGet("/pet/{id:guid}")] 
-        public async Task<ActionResult> GetPetById(
-            [FromRoute] Guid id,
-            [FromServices] GetPetByIdHandler handler,
-            CancellationToken cancellationToken)
-        {
-            var command = new GetPetByIdQuery(id);
-
-            var response = await handler.Handle(command, cancellationToken);
-
-            if (response.IsFailure)
-                return response.Error.ToResponse();
-
-            var envelope = Envelope.Ok(response.Value);
-
-            return Ok(envelope);
-        }
-
         [HttpPut("{volunteerId:guid}/pet/{petId:guid}")]
         public async Task<ActionResult> UpdatePet(
             [FromRoute] Guid volunteerId,
