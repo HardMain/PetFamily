@@ -1,6 +1,4 @@
-﻿using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-
-namespace PetFamily.Domain.Shared.ValueObjects.Ids
+﻿namespace PetFamily.Domain.Shared.ValueObjects.Ids
 {
     public record SpeciesId
     {

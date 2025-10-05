@@ -4,7 +4,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
 {
     public record Address
     {
-        public Address(string street, string houseNumber, string city, string country)
+        private Address(string street, string houseNumber, string city, string country)
         {
             Street = street;
             HouseNumber = houseNumber;

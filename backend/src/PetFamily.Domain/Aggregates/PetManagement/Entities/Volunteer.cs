@@ -11,8 +11,6 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
     public class Volunteer : Entity<VolunteerId>, ISoftDeletable
     {
         private readonly List<Pet> _pets = [];
-        private readonly List<SocialNetwork> _socialNetworks = [];
-        private readonly List<DonationInfo> _donationsInfo = [];
 
         private Volunteer(VolunteerId id) : base(id) { }
 
@@ -35,16 +33,16 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public string Description { get; private set; } = default!;
         public int ExperienceYears { get; private set; }
         public PhoneNumber Number { get; private set; } = default!;
-        public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
-        public IReadOnlyList<DonationInfo> DonationsInfo => _donationsInfo;
+        public ListSocialNetwork SocialNetworks { get; private set; } = ListSocialNetwork.CreateEmpty();
+        public ListDonationInfo DonationsInfo { get; private set; } = ListDonationInfo.CreateEmpty();
         public IReadOnlyList<Pet> Pets => _pets;
 
         public DateTime? DeletionDate { get; private set; }
         public bool IsDeleted { get; private set; }
 
-        public int CountPetsWithHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.found_home);
-        public int CountPetsNeedHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.need_home);
-        public int CountPetsNeedHelp() => _pets.Count(pet => pet.SupportStatus == SupportStatus.need_help);
+        public int CountPetsWithHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.FoundHome);
+        public int CountPetsNeedHome() => _pets.Count(pet => pet.SupportStatus == SupportStatus.NeedHome);
+        public int CountPetsNeedHelp() => _pets.Count(pet => pet.SupportStatus == SupportStatus.NeedHelp);
 
         public Result<Pet> AddPet(Pet pet)
         {
@@ -58,6 +56,9 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             return Result<Pet>.Success(pet);
         }
+        public void UpdatePet(Pet pet, PetUpdateData petUpdateData) 
+            => pet.Update(petUpdateData);
+
         public Result<Pet> HardDeletePet(Pet pet)
         {
             var currentPosition = pet.Position.Value;
@@ -102,6 +103,13 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             return Result<Pet>.Success(pet);
         }
+
+        public void UpdatePetSupportStatus(Pet pet, SupportStatus supportStatus)
+            => pet.UpdateSupportStatus(supportStatus);
+
+        public Result<PetFile> SetPetMainPhoto(Pet pet, PetFile mainPhoto)
+            => pet.SetMainPhoto(mainPhoto);
+
         public Result RestorePet(Pet pet, bool cascade = false)
         {
             if (!pet.IsDeleted)
@@ -214,29 +222,8 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             return Result.Success();
         }
-        private Result AddDonationInfoToPet(PetId petId, DonationInfo donationInfo)
-        {
-            var pet = _pets.FirstOrDefault(pet => pet.Id == petId);
-            if (pet == null)
-                return Errors.General.NotFound(petId);
-
-            pet.AddDonationInfo(donationInfo);
-
-            return Result.Success();
-        }
-        public ErrorList AddDonationsInfoToPet(PetId petId, IEnumerable<DonationInfo> donations)
-        {
-            var errors = new List<Error>();
-
-            foreach (var donation in donations)
-            {
-                var result = AddDonationInfoToPet(petId, donation);
-                if (result.IsFailure)
-                    errors.Add(result.Error);
-            }
-
-            return new ErrorList(errors);
-        }
+        public void SetListDonationInfoToPet(Pet pet, ListDonationInfo listDonationInfo)
+            => pet.SetListDonationInfo(listDonationInfo);
         public Result<IReadOnlyList<PetFile>> GetPetFiles(PetId petId)
         {
             var pet = _pets.FirstOrDefault(p => p.Id == petId);
@@ -249,71 +236,23 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         {
             return _pets.SelectMany(pet => pet.Files).ToList().AsReadOnly();
         }
-        private Result<SocialNetwork> AddSocialNetwork(SocialNetwork socialNetwork)
-        {
-            if (_socialNetworks.Any(sn => sn.URL == socialNetwork.URL))
-                return Errors.SocialNetwork.Duplicate();
+        public void SetListSocialNetwork(ListSocialNetwork listSocialNetwork)
+            => SocialNetworks = listSocialNetwork;
+        public void SetListDonationInfo(ListDonationInfo listDonationInfo)
+            => DonationsInfo = listDonationInfo;
 
-            _socialNetworks.Add(socialNetwork);
-
-            return Result<SocialNetwork>.Success(socialNetwork);
-        }
-        public ErrorList AddSocialNetworks(IEnumerable<SocialNetwork> socialNetworks)
-        {
-            var errors = new List<Error>();
-
-            foreach (var socialNetwork in socialNetworks)
-            {
-                var result = AddSocialNetwork(socialNetwork);
-                if (result.IsFailure)
-                    errors.Add(result.Error);
-            }
-
-            return new ErrorList(errors);
-        }
-
-        private Result<DonationInfo> AddDonationInfo(DonationInfo donationInfo)
-        {
-            if (_donationsInfo.Any(di => di == donationInfo))
-                return Errors.DonationInfo.Duplicate();
-
-            _donationsInfo.Add(donationInfo);
-
-            return Result<DonationInfo>.Success(donationInfo);
-        }
-        public ErrorList AddDonationsInfo(IEnumerable<DonationInfo> donations)
-        {
-            var errors = new List<Error>();
-
-            foreach (var donation in donations)
-            {
-                var result = AddDonationInfo(donation);
-                if (result.IsFailure)
-                    errors.Add(result.Error);
-            }
-
-            return new ErrorList(errors);
-        }
-
-        public void UpdateMainInfo(FullName name, Email email, PhoneNumber number, string description, int experienceYears) 
+        public void UpdateMainInfo(
+            FullName name, 
+            Email email, 
+            PhoneNumber number, 
+            string description, 
+            int experienceYears) 
         {
             Name = name;
             Email = email;
             Number = number;
             Description = description;
             ExperienceYears = experienceYears;
-        }
-        public ErrorList UpdateSocialNetworks(IEnumerable<SocialNetwork> socialNetworks)
-        {
-            _socialNetworks.Clear();
-
-            return AddSocialNetworks(socialNetworks);
-        }
-        public ErrorList UpdateDonationsInfo(IEnumerable<DonationInfo> donaitionsInfo)
-        {
-            _donationsInfo.Clear();
-
-            return AddDonationsInfo(donaitionsInfo);
         }
 
         public Result<Pet> GetPetById(PetId petId) => _pets.First(p => p.Id == petId);

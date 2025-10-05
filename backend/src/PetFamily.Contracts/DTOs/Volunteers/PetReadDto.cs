@@ -16,11 +16,13 @@ public class PetReadDto
     public AddressDto Address { get; init; } = default!;
     public double WeightKg { get; init; }
     public double HeightCm { get; init; }
-    public string NumberPhone { get; init; } = default!;
-    public bool IsCastrated { get; init; }
+    public string OwnerPhone { get; init; } = default!;
+    public bool isCastrated { get; init; }
     public DateTime BirthDate { get; init; }
-    public bool IsVaccinated { get; init; }
+    public bool isVaccinated { get; init; }
     public string SupportStatus { get; init; } = default!;
-    //public string[] DonationsInfo { get; init; } = [];
-    public PetFileDto[] Files { get; init; } = [];
+    public PetFileDto MainPhoto { get; init; } = default!;
+    public List<DonationInfoDto> DonationsInfo { get; init; } = [];
+    public List<PetFileDto> Files { get; init; } = [];
+    public int Position { get; init; }
 }

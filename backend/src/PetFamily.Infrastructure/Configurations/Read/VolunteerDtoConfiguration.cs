@@ -52,7 +52,7 @@ namespace PetFamily.Infrastructure.Configurations.Read
 
             builder.OwnsMany(v => v.DonationsInfo, db =>
             {
-                db.ToJson("dontations_info");
+                db.ToJson("donations_info");
 
                 db.Property(d => d.Title)
                     .HasColumnName("title");

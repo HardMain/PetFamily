@@ -1,4 +1,5 @@
-﻿using PetFamily.Domain.Shared.Entities;
+﻿using System.Text.Json.Serialization;
+using PetFamily.Domain.Shared.Entities;
 
 namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
 {
@@ -6,6 +7,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
     {
         private SocialNetwork() { }
 
+        [JsonConstructor]
         private SocialNetwork(string url, string platform)
         {
             URL = url;

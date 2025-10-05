@@ -1,9 +1,12 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Contracts.DTOs.Shared;
 using PetFamily.Contracts.DTOs.Volunteers.Pets;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Constants;
+using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Infrastructure.Extensions;
 
 namespace PetFamily.Infrastructure.Configurations.Write
@@ -124,18 +127,21 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("support_status");
 
-            builder.OwnsMany(p => p.DonationsInfo, db =>
-            {
-                db.ToJson("donations_info");
+            builder.Property(p => p.DonationsInfo)
+                .HasConversion(
+                ld => JsonSerializer.Serialize(ld.Donations, JsonSerializerOptions.Default),
+                json => ListDonationInfo.Create(
+                    JsonSerializer.Deserialize<List<DonationInfo>>(
+                        json, JsonSerializerOptions.Default) ?? new List<DonationInfo>()).Value)
+                .HasColumnType("jsonb")
+                .HasColumnName("donations_info");
 
-                db.Property(d => d.Title)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
-
-                db.Property(d => d.Description)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
-            });
+            builder.Property(p => p.MainPhoto)
+                .HasConversion(
+                pf => pf.PathToStorage.Path,
+                path => new PetFile(FilePath.Create(path).Value))
+                .IsRequired(false)
+                .HasColumnName("main_photo");
 
             builder.Property(p => p.Files)
                 .ValueObjectsCollectionJsonConverter(

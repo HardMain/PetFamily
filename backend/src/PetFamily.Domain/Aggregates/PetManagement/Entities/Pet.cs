@@ -10,7 +10,6 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 {
     public class Pet : Entity<PetId>, ISoftDeletable
     {
-        private readonly List<DonationInfo> _donationsInfo = [];
         private readonly List<PetFile> _files = [];
 
         private Pet(PetId id) : base(id) { }
@@ -61,7 +60,8 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
         public DateTime BirthDate { get; private set; } = default!;
         public bool isVaccinated { get; private set; }
         public SupportStatus SupportStatus { get; private set; }
-        public IReadOnlyList<DonationInfo> DonationsInfo => _donationsInfo;
+        public PetFile MainPhoto { get; private set; }
+        public ListDonationInfo DonationsInfo { get; private set; } = ListDonationInfo.CreateEmpty();
         public IReadOnlyList<PetFile> Files => _files;
 
         public Position Position { get; private set; } = default!;
@@ -108,10 +108,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
                 supportStatus);
         }
 
-        public void AddFile(PetFile file)
-        {
-            _files.Add(file);
-        }
+        public void AddFile(PetFile file) => _files.Add(file);
         public Result DeleteFile(PetFile file)
         {
             var isSuccess = _files.Remove(file);
@@ -124,18 +121,24 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
 
             return Result.Success();
         }
-        public Result<DonationInfo> AddDonationInfo(DonationInfo donationInfo)
-        {
-            if (_donationsInfo.Any(di => di == donationInfo))
-                return Errors.DonationInfo.Duplicate();
 
-            _donationsInfo.Add(donationInfo);
-
-            return Result<DonationInfo>.Success(donationInfo);
-        }
-
+        public void SetListDonationInfo(ListDonationInfo listDonationInfo) 
+            => DonationsInfo = listDonationInfo;
         public void SetPosition(Position position) =>
             Position = position;
+        public Result<PetFile> SetMainPhoto(PetFile mainPhoto)
+        {
+            var existFile = _files.Any(f => f == mainPhoto);
+
+            if (!existFile)
+                return Errors.PetFile.NotFound(mainPhoto.PathToStorage.Path);
+
+            MainPhoto = mainPhoto;
+
+            return Result<PetFile>.Success(mainPhoto);
+        }
+        public void UpdateSupportStatus(SupportStatus supportStatus) => 
+            SupportStatus = supportStatus;
 
         public void SoftDelete(bool cascade = false)
         {
@@ -154,6 +157,23 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             IsDeleted = false;
 
             DeletionDate = null;
+        }
+
+        public void Update(PetUpdateData petUpdateData)
+        {
+            Name = petUpdateData.Name;
+            Description = petUpdateData.Description;
+            SpeciesAndBreed = petUpdateData.SpeciesAndBreed;
+            Color = petUpdateData.Color;
+            HealthInformation = petUpdateData.HealthInformation;
+            Address = petUpdateData.Address;
+            WeightKg = petUpdateData.WeightKg;
+            HeightCm = petUpdateData.HeightCm;
+            OwnerPhone = petUpdateData.OwnerPhone;
+            isCastrated = petUpdateData.isCastrated;
+            isVaccinated = petUpdateData.isVaccinated;
+            BirthDate = petUpdateData.BirthDate;
+            DonationsInfo = petUpdateData.DonationsInfo;
         }
     }
 }

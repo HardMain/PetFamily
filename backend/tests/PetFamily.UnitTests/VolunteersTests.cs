@@ -44,7 +44,7 @@ namespace PetFamily.UnitTests
             var isCastrated = false;
             var isVaccinated = false;
             var birthDate = DateTime.Now;
-            var supportStatus = SupportStatus.found_home;
+            var supportStatus = SupportStatus.FoundHome;
             var filesList = new List<PetFile>();
 
             return Pet.Create(
@@ -103,7 +103,7 @@ namespace PetFamily.UnitTests
             result.IsSuccess.Should().BeTrue();
             addedPetResult.IsSuccess.Should().BeTrue();
             addedPetResult.Value.Id.Should().Be(petToAdd.Id);
-            addedPetResult.Value.Position.Should().Be(targetPosition.Value);
+            addedPetResult.Value.Position.Value.Should().Be(targetPosition.Value);
         }
 
         [Fact]
@@ -271,7 +271,7 @@ namespace PetFamily.UnitTests
         }
 
         [Fact]
-        public void MovePet_WithPositionOutOfRange_ReturnsFailureResult()
+        public void MovePet_WithPositionOutOfRange_ReturnsLastPositionResult()
         {
             // arrange
             const int petsCount = 5;
@@ -286,8 +286,7 @@ namespace PetFamily.UnitTests
             var result = volunteer.MovePet(petToMove, positionToMove);
 
             // assert
-            result.IsFailure.Should().BeTrue();
-            result.Error.Should().Be(Errors.General.ValueIsInvalid("position"));
+            result.Value.Position.Value.Should().Be(5);
         }
     }
 }

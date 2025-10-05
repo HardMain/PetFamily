@@ -1,10 +1,9 @@
 ﻿using PetFamily.Contracts.DTOs.Shared;
 using PetFamily.Contracts.DTOs.Species;
-using PetFamily.Contracts.DTOs.Volunteers.Pets;
 
-namespace PetFamily.Contracts.Requests.Volunteers.Pets
+namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Update
 {
-    public record AddPetRequest(
+    public record UpdatePetRequest(
         string Name,
         string Description,
         SpeciesAndBreedDto SpeciesAndBreed,
@@ -17,6 +16,5 @@ namespace PetFamily.Contracts.Requests.Volunteers.Pets
         bool isCastrated,
         DateTime BirthDate,
         bool isVaccinated,
-        PetSupportStatusDto SupportStatus,
-        IEnumerable<DonationInfoDto>? DonationsInfo);
+        IEnumerable<DonationInfoDto> DonationsInfo);
 }

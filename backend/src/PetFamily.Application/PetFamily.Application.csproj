@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="VolunteersManagement\PetsOperations\Commands\Новая папка\**" />
+    <EmbeddedResource Remove="VolunteersManagement\PetsOperations\Commands\Новая папка\**" />
+    <None Remove="VolunteersManagement\PetsOperations\Commands\Новая папка\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PetFamily.Contracts\PetFamily.Contracts.csproj" />
     <ProjectReference Include="..\PetFamily.Domain\PetFamily.Domain.csproj" />
   </ItemGroup>
@@ -16,10 +22,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
     <PackageReference Include="Scrutor" Version="6.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="VolunteersManagement\PetsOperations\Queries\" />
   </ItemGroup>
 
 </Project>
