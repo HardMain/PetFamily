@@ -17,8 +17,6 @@ using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Restore
 using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.SetMainPhoto;
 using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Update;
 using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.UpdateSupportStatus;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Queries.GetById;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Queries.GetFilteredPetsWithPagination;
 using PetFamily.Application.VolunteersManagement.Queries.GetById;
 using PetFamily.Application.VolunteersManagement.Queries.GetFilteredVolunteersWithPagination;
 using PetFamily.Contracts.Requests.Volunteers;

@@ -20,7 +20,7 @@ namespace PetFamily.Domain.Aggregates.PetManagement.ValueObjects
             public static Result<Position> Create(int number)
             {
                 if (number < 0)
-                    return Errors.General.ValueIsInvalid("serial number");
+                    return Errors.General.ValueIsInvalid("position");
 
                 return new Position(number);
             }
