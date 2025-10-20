@@ -14,7 +14,6 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Del
     {
         private readonly IValidator<DeletePetCommand> _validator;
         private readonly ILogger<HardDeletePetHandler> _logger;
-        private readonly IFileProvider _fileProvider;
         private readonly IVolunteersRepository _volunteersRepository;
 
         public SoftDeletePetHandler(
@@ -25,7 +24,6 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Del
         {
             _validator = validator;
             _logger = logger;
-            _fileProvider = fileProvider;
             _volunteersRepository = volunteersRepository;
         }
 

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Domain.Shared.Constants;
 using PetFamily.Domain.Shared.Entities;
 
 namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.FilesOperations.AddPetFiles
@@ -24,6 +25,10 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Fil
             RuleForEach(pf => pf.Files)
                 .Must(f => f.Content.Length > 0)
                 .WithError(Errors.PetFile.FileIsEmpty());
+
+            RuleForEach(pf => pf.Files)
+                .Must(f => f.Content.Length <= Constants.MAX_FILE_SIZE)
+                .WithError(Errors.PetFile.FileTooLarge());
 
             RuleForEach(pf => pf.Files)
                 .MustBeValueObjects(f => FilePath.Create(f.FileName));

@@ -65,14 +65,14 @@ namespace PetFamily.Domain.Shared.Entities
 
         public static class SpeciesAndBreed
         {
-            public static Error BreedInUse(Guid? breedId)
+            public static Error BreedInUse(Guid? breedId = null)
             {
                 var forId = breedId == null ? "" : $" for Id '{breedId}'"; ;
 
                 return Error.Failure("breed.in.use", $"breed in use{forId}");
             }
 
-            public static Error SpeciesInUse(Guid? breedId)
+            public static Error SpeciesInUse(Guid? breedId = null)
             {
                 var forId = breedId == null ? "" : $" for Id '{breedId}'"; ;
 
@@ -96,11 +96,37 @@ namespace PetFamily.Domain.Shared.Entities
                 return Error.Validation("length.is.invalid", $"file is empty");
             }
 
-            public static Error NotFound(string? name)
+            public static Error FileTooLarge()
+            {
+                return Error.Validation("length.is.invalid", $"file is large");
+            }
+
+            public static Error NotFound(string? name = null)
             {
                 var label = name == null ? " " : " " + name + " ";
 
                 return Error.NotFound("file.not.found", $"file{label}not found");
+            }
+        }
+
+        public static class MinioProvider
+        {
+            public static Error FileUploadError(string? path = null, string? bucket = null)
+            {
+                var label = path == null ? "" : $" with objectName {path}";
+                var label2 = bucket == null ? "" : $" in bucket {bucket}";
+
+                return Error.Failure("file.upload.minio",
+                    $"Fail to upload file in MinIO" + label + label2);
+            }
+
+            public static Error FileDeleteError(string? path = null, string? bucket = null)
+            {
+                var label = path == null ? "" : $" with objectName {path}";
+                var label2 = bucket == null ? "" : $" in bucket {bucket}";
+
+                return Error.Failure("file.delete.minio",
+                    $"Fail to delete file in MinIO" + label + label2);
             }
         }
     }

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
-using PetFamily.Application.Providers;
 using PetFamily.Contracts.DTOs.Volunteers.Pets;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.Enums;
@@ -26,7 +25,6 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add
         public AddPetHandler(
             ILogger<AddPetHandler> logger,
             IValidator<AddPetCommand> validator,
-            IFileProvider fileProvider,
             IVolunteersRepository volunteersRepository,
             IReadDbContext readDbContext)
         {

@@ -261,7 +261,7 @@ namespace PetFamily.Api.Controllers
         public async Task<ActionResult> UpdatePetSupportStatus(
             [FromRoute] Guid volunteerId,
             [FromRoute] Guid petId,
-            [FromBody] UpdatePetStatusRequest request,
+            [FromBody] UpdatePetSupportStatusRequest request,
             [FromServices] UpdatePetSupportStatusHandler handler,
             CancellationToken cancellationToken)
         {

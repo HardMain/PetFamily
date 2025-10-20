@@ -94,7 +94,7 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Upd
                 _logger.LogWarning(
                     "Failed to get pet {PetId}", petId);
 
-                return volunteerResult.Error.ToErrorList();
+                return petResult.Error.ToErrorList();
             }
 
             var petUpdateData = new PetUpdateData(

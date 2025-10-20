@@ -39,6 +39,13 @@ namespace PetFamily.Domain.Aggregates.Species.Entities
             return breed;
         }
 
-        public Result<Breed> GetBreedById(BreedId breedId) => _breeds.First(b => b.Id == breedId);
+        public Result<Breed> GetBreedById(BreedId breedId)
+        {
+            var breed = _breeds.FirstOrDefault(b => b.Id == breedId);
+            if (breed == null)
+                return Errors.General.NotFound(breedId);
+
+            return Result<Breed>.Success(breed);
+        }
     }
 }

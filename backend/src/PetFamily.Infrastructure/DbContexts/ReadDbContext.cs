@@ -9,11 +9,11 @@ namespace PetFamily.Infrastructure.DbContexts
 
     public class ReadDbContext : DbContext, IReadDbContext
     {
-        private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
 
-        public ReadDbContext(IConfiguration configuration)
+        public ReadDbContext(string connectionString)
         {
-            _configuration = configuration;
+            _connectionString = connectionString;
         }
 
         public IQueryable<VolunteerReadDto> Volunteers => Set<VolunteerReadDto>();
@@ -24,7 +24,7 @@ namespace PetFamily.Infrastructure.DbContexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseNpgsql(_configuration.GetConnectionString("Database"))
+                .UseNpgsql(_connectionString)
                 .UseLoggerFactory(CreateLoggerFactory())
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }

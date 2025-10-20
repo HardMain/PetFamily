@@ -176,26 +176,15 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             return Result<Pet>.Success(pet);
         }
 
-        private Result AddFileToPet(PetId petId, PetFile file)
+        public Result AddFileToPet(PetId petId, PetFile file) => AddFilesToPet(petId, [file]);
+        public Result AddFilesToPet(PetId petId, IEnumerable<PetFile> petFiles)
         {
             var pet = _pets.FirstOrDefault(pet => pet.Id == petId);
             if (pet == null)
                 return Errors.General.NotFound(petId);
 
-            pet.AddFile(file);
-
-            return Result.Success();
-        }
-        public Result AddFilesToPet(PetId petId, IEnumerable<PetFile> petFiles)
-        {
-            var errors = new List<Error>();
-
             foreach (var file in petFiles)
-            {
-                var result = AddFileToPet(petId, file);
-                if (result.IsFailure)
-                    return result.Error;
-            }
+                pet.AddFile(file);
 
             return Result.Success();
         }
@@ -255,7 +244,14 @@ namespace PetFamily.Domain.Aggregates.PetManagement.Entities
             ExperienceYears = experienceYears;
         }
 
-        public Result<Pet> GetPetById(PetId petId) => _pets.First(p => p.Id == petId);
+        public Result<Pet> GetPetById(PetId petId)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+            if (pet == null)
+                return Errors.General.NotFound(petId);
+
+            return Result<Pet>.Success(pet);
+        }
 
         public void SoftDelete(bool cascade = false)
         {

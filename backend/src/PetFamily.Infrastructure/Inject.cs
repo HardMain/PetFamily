@@ -34,8 +34,11 @@ namespace PetFamily.Infrastructure
         private static IServiceCollection AddDbContexts(
             this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<WriteDbContext>();
-            services.AddScoped<IReadDbContext, ReadDbContext>();
+            var connectionString = configuration.GetConnectionString("Database")
+                ?? throw new InvalidOperationException("Connection string 'Database' is not configured.");
+
+            services.AddScoped<WriteDbContext>(_ => new WriteDbContext(connectionString));
+            services.AddScoped<IReadDbContext>(_ => new ReadDbContext(connectionString));
 
             return services;
         }
@@ -70,7 +73,7 @@ namespace PetFamily.Infrastructure
         private static IServiceCollection AddMessageQueues(
             this IServiceCollection services)
         {
-            services.AddSingleton<IMessageQueue<IEnumerable<FileStorageDeleteDto>>, 
+            services.AddSingleton<IMessageQueue<IEnumerable<FileStorageDeleteDto>>,
                 InMemoryMessageQueue<IEnumerable<FileStorageDeleteDto>>>();
 
             return services;

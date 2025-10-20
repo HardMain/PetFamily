@@ -8,11 +8,11 @@ namespace PetFamily.Infrastructure.DbContexts
 {
     public class WriteDbContext : DbContext
     {
-        private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
 
-        public WriteDbContext(IConfiguration configuration)
+        public WriteDbContext(string connectionString)
         {
-            _configuration = configuration;
+            _connectionString = connectionString;
         }
 
         public DbSet<Volunteer> Volunteers => Set<Volunteer>();
@@ -21,7 +21,7 @@ namespace PetFamily.Infrastructure.DbContexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseNpgsql(_configuration.GetConnectionString("Database"))
+                .UseNpgsql(_connectionString)
                 .UseLoggerFactory(CreateLoggerFactory());
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -2,5 +2,5 @@
 
 namespace PetFamily.Contracts.Requests.Volunteers.Pets
 {
-    public record UpdatePetStatusRequest(PetSupportStatusDto SupportStatus);
+    public record UpdatePetSupportStatusRequest(PetSupportStatusDto SupportStatus);
 }

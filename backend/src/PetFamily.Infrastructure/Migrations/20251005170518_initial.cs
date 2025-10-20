@@ -35,10 +35,10 @@ namespace PetFamily.Infrastructure.Migrations
                     description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
                     experience_years = table.Column<int>(type: "integer", maxLength: 100, nullable: false),
                     phone_number = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    socials = table.Column<string>(type: "jsonb", nullable: false),
+                    donations_info = table.Column<string>(type: "jsonb", nullable: false),
                     deletion_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
-                    dontations_info = table.Column<string>(type: "jsonb", nullable: true),
-                    socials = table.Column<string>(type: "jsonb", nullable: true)
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,13 +86,14 @@ namespace PetFamily.Infrastructure.Migrations
                     birth_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
                     support_status = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Files = table.Column<string>(type: "jsonb", nullable: false),
+                    main_photo = table.Column<string>(type: "text", nullable: true),
+                    donations_info = table.Column<string>(type: "jsonb", nullable: false),
+                    files = table.Column<string>(type: "jsonb", nullable: false),
                     position = table.Column<int>(type: "integer", nullable: false),
                     creation_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     deletion_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false),
-                    volunteer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    donations_info = table.Column<string>(type: "jsonb", nullable: true)
+                    volunteer_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {

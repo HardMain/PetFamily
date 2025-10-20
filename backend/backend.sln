@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Domain.UnitTests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Applicatoin.UnitTests", "tests\PetFamily.Applicatoin.UnitTests\PetFamily.Applicatoin.UnitTests.csproj", "{1718E84A-E3C5-4C7A-B11F-BC12F7D0FBFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Volunteers.IntegrationTests", "tests\PetFamily.Volunteers.IntegrationTests\PetFamily.Volunteers.IntegrationTests.csproj", "{C7589DAB-28AE-4DF8-BC00-51BD9E6063E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{1718E84A-E3C5-4C7A-B11F-BC12F7D0FBFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1718E84A-E3C5-4C7A-B11F-BC12F7D0FBFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1718E84A-E3C5-4C7A-B11F-BC12F7D0FBFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7589DAB-28AE-4DF8-BC00-51BD9E6063E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7589DAB-28AE-4DF8-BC00-51BD9E6063E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7589DAB-28AE-4DF8-BC00-51BD9E6063E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7589DAB-28AE-4DF8-BC00-51BD9E6063E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +73,6 @@ Global
 		{DFCCB503-41EA-4D0A-A1BD-E43A5B8EABC4} = {473CDD97-2471-4074-ADD5-C7AA6E8303DF}
 		{A0AC75AA-0060-4F95-AD7F-6AC1972A292C} = {9DE3796D-8C9F-404C-AF8E-C5681DA44056}
 		{1718E84A-E3C5-4C7A-B11F-BC12F7D0FBFA} = {9DE3796D-8C9F-404C-AF8E-C5681DA44056}
+		{C7589DAB-28AE-4DF8-BC00-51BD9E6063E3} = {9DE3796D-8C9F-404C-AF8E-C5681DA44056}
 	EndGlobalSection
 EndGlobal

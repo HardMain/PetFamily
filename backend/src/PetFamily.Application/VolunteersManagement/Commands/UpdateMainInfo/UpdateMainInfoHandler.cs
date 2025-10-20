@@ -37,6 +37,17 @@ namespace PetFamily.Application.VolunteersManagement.Commands.UpdateMainInfo
                 return validationResult.ToErrorList();
             }
 
+            var volunteerId = VolunteerId.Create(command.VolunteerId);
+
+            var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancellationToken);
+            if (volunteerResult.IsFailure)
+            {
+                _logger.LogWarning(
+                    "Failed to get volunteer with {volunteerId}", volunteerId);
+
+                return volunteerResult.Error.ToErrorList();
+            }
+
             var phoneNumber = PhoneNumber.Create(command.Request.PhoneNumber).Value;
 
             var volunteerByPhone = await _volunteersRepository.GetByPhoneNumber(phoneNumber, cancellationToken);
@@ -66,16 +77,6 @@ namespace PetFamily.Application.VolunteersManagement.Commands.UpdateMainInfo
 
             var description = command.Request.Description;
             var experienceYears = command.Request.ExperienceYears;
-            var volunteerId = VolunteerId.Create(command.VolunteerId);
-
-            var volunteerResult = await _volunteersRepository.GetById(volunteerId, cancellationToken);
-            if (volunteerResult.IsFailure)
-            {
-                _logger.LogWarning(
-                    "Failed to get volunteer with {volunteerId}", volunteerId);
-
-                return volunteerResult.Error.ToErrorList();
-            }
 
             volunteerResult.Value.UpdateMainInfo(fullName, email, phoneNumber, description, experienceYears);
 

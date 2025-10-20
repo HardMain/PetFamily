@@ -46,7 +46,7 @@ namespace PetFamily.Application.VolunteersManagement.Commands.UpdateDonationsInf
             }
 
             var donationsInfo = ListDonationInfo.Create(command.Request.DonationsInfo
-                .Select(di => DonationInfo.Create(di.Description, di.Title).Value));
+                .Select(di => DonationInfo.Create(di.Title, di.Description).Value));
 
             volunteerResult.Value.SetListDonationInfo(donationsInfo.Value);
 

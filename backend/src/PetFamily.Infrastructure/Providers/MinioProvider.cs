@@ -117,7 +117,8 @@ namespace PetFamily.Infrastructure.Providers
                     fileStorageUpload.ObjectName, 
                     fileStorageUpload.BucketName);
 
-                return Error.Failure("file.upload", "fail to upload file in minio");
+                return Errors.MinioProvider
+                    .FileUploadError(fileStorageUpload.ObjectName, fileStorageUpload.BucketName);
             }
             finally
             {
@@ -149,10 +150,8 @@ namespace PetFamily.Infrastructure.Providers
                     fileStorageDelete.ObjectName,
                     fileStorageDelete.BucketName);
 
-                return Error.Failure("file.delete.minio", 
-                    $"Fail to delete file in MinIO " +
-                    $"with objectName {fileStorageDelete.ObjectName} " +
-                    $"in bucket {fileStorageDelete.BucketName}");
+                return Errors.MinioProvider
+                    .FileDeleteError(fileStorageDelete.ObjectName, fileStorageDelete.BucketName);
             }
             finally
             {

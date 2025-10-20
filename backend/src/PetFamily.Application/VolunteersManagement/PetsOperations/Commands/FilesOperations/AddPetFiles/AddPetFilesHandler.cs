@@ -59,7 +59,7 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Fil
                     volunteerId,
                     volunteerResult.Error);
 
-                return Errors.General.NotFound(volunteerId).ToErrorList();
+                return volunteerResult.Error.ToErrorList();
             }
 
             var petId = PetId.Create(command.PetId);
@@ -71,11 +71,10 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Fil
                     petId,
                     petResult.Error);
 
-                return Errors.General.NotFound(petId).ToErrorList();
+                return petResult.Error.ToErrorList();
             }
 
             var pathListResult = GetPathList(command.Files);
-
             if (pathListResult.IsFailure)
             {
                 _logger.LogWarning("Failed to get path list: {Errors}",
@@ -92,7 +91,8 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Fil
             var result = await _fileProvider.UploadFiles(filesStorageUpload, cancellationToken);
             if (result.IsFailure)
             {
-                var filesStorageDelete = pathListResult.Value.Select(path => new FileStorageDeleteDto(path.Path, BUCKET_NAME));
+                var filesStorageDelete = pathListResult.Value
+                    .Select(path => new FileStorageDeleteDto(path.Path, BUCKET_NAME));
 
                 await _messageQueue.WriteAsync(filesStorageDelete, cancellationToken);
 
@@ -102,11 +102,11 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Fil
                 return result.Error;
             }
 
-            var addedFilesResult = volunteerResult.Value.AddFilesToPet(petId, petFiles);
+            var addedFilesResult = volunteerResult.Value.AddFilesToPet(petResult.Value.Id, petFiles);
             if (addedFilesResult.IsFailure)
             {
                 _logger.LogWarning("Failed to add files to pet {PetId}: {Errors}",
-                    petId,
+                    petResult.Value.Id,
                     addedFilesResult.Error);
 
                 return addedFilesResult.Error.ToErrorList();
@@ -115,7 +115,8 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Fil
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                var filesStorageDelete = pathListResult.Value.Select(path => new FileStorageDeleteDto(path.Path, BUCKET_NAME));
+                var filesStorageDelete = pathListResult.Value
+                    .Select(path => new FileStorageDeleteDto(path.Path, BUCKET_NAME));
 
                 var deleteResult = await _fileProvider.DeleteFiles(filesStorageDelete, cancellationToken);
                 if (deleteResult.IsFailure)

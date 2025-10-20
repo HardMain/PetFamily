@@ -7,6 +7,7 @@ using PetFamily.Application.Extensions;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Application.VolunteersManagement.Commands.Restore;
 using PetFamily.Application.Abstractions;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Restore
 {
@@ -61,17 +62,19 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Res
 
             volunteerResult.Value.RestorePet(petResult.Value, true);
 
-            var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
-            if (result.IsFailure)
+            var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+            if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", result.Error);
+                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
 
-                return result.Error.ToErrorList();
+                return saveResult.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Pet {PetId} restored", petId);
+            _logger.LogInformation("Pet {PetId} restored", petResult.Value.Id);
 
-            return result.Value;
+            var result = petResult.Value.Id.Value;
+
+            return result;
         }
     }
 }

@@ -6,5 +6,5 @@ namespace PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Upd
     public record UpdatePetSupportStatusCommand(
         Guid VolunteerId,
         Guid PetId,
-        UpdatePetStatusRequest Request) : ICommand;
+        UpdatePetSupportStatusRequest Request) : ICommand;
 }
