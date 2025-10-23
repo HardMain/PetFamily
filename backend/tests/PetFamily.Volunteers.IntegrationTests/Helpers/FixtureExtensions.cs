@@ -18,16 +18,11 @@ using PetFamily.Application.VolunteersAggregate.Commands.UpdateMainInfo;
 using PetFamily.Application.VolunteersAggregate.Commands.UpdateMainInfoPet;
 using PetFamily.Application.VolunteersAggregate.Commands.UpdatePetSupportStatus;
 using PetFamily.Application.VolunteersAggregate.Commands.UpdateSocialNetworks;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.SetMainPhoto;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Update;
-using PetFamily.Contracts.DTOs.Shared;
-using PetFamily.Contracts.DTOs.Species;
-using PetFamily.Contracts.DTOs.Volunteers;
-using PetFamily.Contracts.DTOs.Volunteers.Pets;
-using PetFamily.Contracts.Requests.Species;
-using PetFamily.Contracts.Requests.Species.Breeds;
-using PetFamily.Contracts.Requests.Volunteers;
-using PetFamily.Contracts.Requests.Volunteers.Pets;
+using PetFamily.Contracts.Shared;
+using PetFamily.Contracts.SpeciesAggregate.DTOs;
+using PetFamily.Contracts.SpeciesAggregate.Requests;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
+using PetFamily.Contracts.VolunteersAggregate.Requests;
 
 namespace PetFamily.Volunteers.IntegrationTests.Helpers
 {
@@ -185,12 +180,12 @@ namespace PetFamily.Volunteers.IntegrationTests.Helpers
             Guid volunteerId,
             Guid petId)
         {
-            var files = new List<FileFormDto>
+            var files = new List<PetFileFormDto>
             {
-                new FileFormDto(new MemoryStream(new byte[]{1, 2, 3, 4, 5}), $"{Guid.NewGuid()}.jpg"),
-                new FileFormDto(new MemoryStream(new byte[]{2, 3, 4, 5, 6}), $"{Guid.NewGuid()}.mp4"),
-                new FileFormDto(new MemoryStream(new byte[]{3, 4, 5, 6, 7}), $"{Guid.NewGuid()}.jpeg"),
-                new FileFormDto(new MemoryStream(new byte[]{4, 5, 6, 7, 8}), $"{Guid.NewGuid()}.png"),
+                new PetFileFormDto(new MemoryStream(new byte[]{1, 2, 3, 4, 5}), $"{Guid.NewGuid()}.jpg"),
+                new PetFileFormDto(new MemoryStream(new byte[]{2, 3, 4, 5, 6}), $"{Guid.NewGuid()}.mp4"),
+                new PetFileFormDto(new MemoryStream(new byte[]{3, 4, 5, 6, 7}), $"{Guid.NewGuid()}.jpeg"),
+                new PetFileFormDto(new MemoryStream(new byte[]{4, 5, 6, 7, 8}), $"{Guid.NewGuid()}.png"),
             };
 
             return new AddPetFilesCommand(volunteerId, petId, files);

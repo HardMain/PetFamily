@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Contracts.DTOs.Volunteers;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
 
 namespace PetFamily.Infrastructure.Configurations.Read
 {

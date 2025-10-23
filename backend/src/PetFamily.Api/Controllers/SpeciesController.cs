@@ -7,8 +7,7 @@ using PetFamily.Application.SpeciesAggregate.Commands.Delete;
 using PetFamily.Application.SpeciesAggregate.Commands.DeleteBreed;
 using PetFamily.Application.SpeciesAggregate.Queries.GetBreedsBySpeciesIdWithPagination;
 using PetFamily.Application.SpeciesAggregate.Queries.GetFilteredSpeciesWIthPagination;
-using PetFamily.Contracts.Requests.Species;
-using PetFamily.Contracts.Requests.Species.Breeds;
+using PetFamily.Contracts.SpeciesAggregate.Requests;
 
 namespace PetFamily.Api.Controllers
 {

@@ -4,8 +4,7 @@ using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
-using PetFamily.Application.VolunteersAggregate;
-using PetFamily.Contracts.DTOs.Volunteers.Pets;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -138,7 +137,7 @@ namespace PetFamily.Application.VolunteersAggregate.Commands.AddPetFiles
 
             return result;
         }
-        private Result<List<FilePath>> GetPathList(IEnumerable<FileFormDto> files)
+        private Result<List<FilePath>> GetPathList(IEnumerable<PetFileFormDto> files)
         {
             List<FilePath> pathList = [];
 

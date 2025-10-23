@@ -5,7 +5,7 @@ using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 using PetFamily.Application.SpeciesAggregate;
 using PetFamily.Application.VolunteersAggregate;
-using PetFamily.Contracts.DTOs.Volunteers.Pets;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.MessageQueues;

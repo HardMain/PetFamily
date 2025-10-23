@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Contracts.DTOs.Volunteers.Pets;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Constants;
 using PetFamily.Domain.Shared.ValueObjects;

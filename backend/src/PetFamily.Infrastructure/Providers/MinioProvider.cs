@@ -2,7 +2,7 @@
 using Minio;
 using Minio.DataModel.Args;
 using PetFamily.Application.Providers;
-using PetFamily.Contracts.DTOs.Volunteers.Pets;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 

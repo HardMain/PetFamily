@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
-using PetFamily.Contracts.DTOs.Volunteers;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Infrastructure.DbContexts;

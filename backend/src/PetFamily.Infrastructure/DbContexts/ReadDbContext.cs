@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using PetFamily.Contracts.DTOs.Species;
-using PetFamily.Contracts.DTOs.Volunteers;
+using PetFamily.Contracts.SpeciesAggregate.DTOs;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
 
 namespace PetFamily.Infrastructure.DbContexts
 {

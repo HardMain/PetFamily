@@ -1,5 +1,5 @@
 ﻿using PetFamily.Application.Abstractions;
-using PetFamily.Contracts.Requests.Species.Breeds;
+using PetFamily.Contracts.SpeciesAggregate.Requests;
 
 namespace PetFamily.Application.SpeciesAggregate.Commands.AddBreed
 {

@@ -1,5 +1,4 @@
-﻿using PetFamily.Contracts.DTOs.Species;
-using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+﻿using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Infrastructure.DbContexts;
@@ -9,6 +8,7 @@ using PetFamily.Domain.SpeciesAggregate.Entities;
 using PetFamily.Domain.VolunteersAggregate.ValueObjects;
 using PetFamily.Domain.VolunteersAggregate.Entities;
 using PetFamily.Domain.VolunteersAggregate.Enums;
+using PetFamily.Contracts.SpeciesAggregate.DTOs;
 
 namespace PetFamily.Volunteers.IntegrationTests.Helpers
 {

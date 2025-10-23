@@ -3,7 +3,7 @@ using PetFamily.Api.Envelopes;
 using PetFamily.Api.Extensions;
 using PetFamily.Application.VolunteersAggregate.Queries.GetByIdPet;
 using PetFamily.Application.VolunteersAggregate.Queries.GetFilteredPetsWithPagination;
-using PetFamily.Contracts.Requests.Volunteers.Pets;
+using PetFamily.Contracts.VolunteersAggregate.Requests;
 
 namespace PetFamily.Api.Controllers
 {

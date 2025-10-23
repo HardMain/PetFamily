@@ -19,10 +19,7 @@ using PetFamily.Application.VolunteersAggregate.Commands.UpdatePetSupportStatus;
 using PetFamily.Application.VolunteersAggregate.Commands.UpdateSocialNetworks;
 using PetFamily.Application.VolunteersAggregate.Queries.GetById;
 using PetFamily.Application.VolunteersAggregate.Queries.GetFilteredVolunteersWithPagination;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.SetMainPhoto;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Update;
-using PetFamily.Contracts.Requests.Volunteers;
-using PetFamily.Contracts.Requests.Volunteers.Pets;
+using PetFamily.Contracts.VolunteersAggregate.Requests;
 
 namespace PetFamily.Api.Controllers
 {

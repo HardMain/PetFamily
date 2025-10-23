@@ -1,6 +1,5 @@
 ﻿using PetFamily.Application.Abstractions;
-using PetFamily.Contracts.DTOs.Shared;
-using PetFamily.Contracts.Requests.Volunteers.Pets;
+using PetFamily.Contracts.VolunteersAggregate.Requests;
 
 namespace PetFamily.Application.VolunteersAggregate.Queries.GetFilteredPetsWithPagination
 {

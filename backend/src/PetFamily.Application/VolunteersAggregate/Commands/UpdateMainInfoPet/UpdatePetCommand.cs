@@ -1,5 +1,5 @@
 ﻿using PetFamily.Application.Abstractions;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Update;
+using PetFamily.Contracts.VolunteersAggregate.Requests;
 
 namespace PetFamily.Application.VolunteersAggregate.Commands.UpdateMainInfoPet
 {

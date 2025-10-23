@@ -1,7 +1,7 @@
-﻿using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Update;
-using PetFamily.Contracts.DTOs.Shared;
-using PetFamily.Contracts.DTOs.Species;
-using PetFamily.Contracts.DTOs.Volunteers;
+﻿using PetFamily.Contracts.Shared;
+using PetFamily.Contracts.SpeciesAggregate.DTOs;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
+using PetFamily.Contracts.VolunteersAggregate.Requests;
 
 namespace PetFamily.Volunteers.IntegrationTests.Helpers.Mappers
 {

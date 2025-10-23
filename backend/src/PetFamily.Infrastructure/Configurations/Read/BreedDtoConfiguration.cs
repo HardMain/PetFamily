@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Infrastructure.DbContexts;
+using PetFamily.Contracts.SpeciesAggregate.DTOs;
 
 namespace PetFamily.Infrastructure.Configurations.Read
 {

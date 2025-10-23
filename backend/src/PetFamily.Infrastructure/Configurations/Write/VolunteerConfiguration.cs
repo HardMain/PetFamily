@@ -4,7 +4,6 @@ using PetFamily.Domain.Shared.Constants;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Domain.Shared.ValueObjects;
 using System.Text.Json;
-using PetFamily.Contracts.DTOs.Volunteers;
 using PetFamily.Domain.VolunteersAggregate.ValueObjects;
 using PetFamily.Domain.VolunteersAggregate.Entities;
 

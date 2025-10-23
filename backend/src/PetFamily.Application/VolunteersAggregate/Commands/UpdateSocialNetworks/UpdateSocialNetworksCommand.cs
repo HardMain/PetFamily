@@ -1,5 +1,5 @@
 ﻿using PetFamily.Application.Abstractions;
-using PetFamily.Contracts.Requests.Volunteers;
+using PetFamily.Contracts.VolunteersAggregate.Requests;
 
 namespace PetFamily.Application.VolunteersAggregate.Commands.UpdateSocialNetworks
 {

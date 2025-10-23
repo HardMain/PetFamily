@@ -1,5 +1,5 @@
 ﻿using PetFamily.Application.Abstractions;
-using PetFamily.Contracts.Requests.Species;
+using PetFamily.Contracts.SpeciesAggregate.Requests;
 
 namespace PetFamily.Application.SpeciesAggregate.Queries.GetFilteredSpeciesWIthPagination
 {
