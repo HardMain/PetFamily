@@ -1,13 +1,14 @@
 ﻿using PetFamily.Contracts.DTOs.Species;
-using PetFamily.Domain.Aggregates.PetManagement.Entities;
-using PetFamily.Domain.Aggregates.PetManagement.Enums;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Aggregates.Species.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using PetFamily.Domain.Aggregates.SpeciesManagement.ValueObjects;
+using PetFamily.Domain.SpeciesAggregate.ValueObjects;
+using PetFamily.Domain.SpeciesAggregate.Entities;
+using PetFamily.Domain.VolunteersAggregate.ValueObjects;
+using PetFamily.Domain.VolunteersAggregate.Entities;
+using PetFamily.Domain.VolunteersAggregate.Enums;
 
 namespace PetFamily.Volunteers.IntegrationTests.Helpers
 {
@@ -80,8 +81,7 @@ namespace PetFamily.Volunteers.IntegrationTests.Helpers
 
         public async Task<SpeciesAndBreedDto> InitSpeciesAndBreed()
         {
-            var species = Domain.Aggregates.Species.Entities
-                .Species.Create(SpeciesId.NewSpeciesId(), "species").Value;
+            var species = Domain.SpeciesAggregate.Entities.Species.Create(SpeciesId.NewSpeciesId(), "species").Value;
             var breed = Breed.Create(BreedId.NewBreedId(), "breed").Value;
 
             species.AddBreed(breed);
@@ -93,8 +93,7 @@ namespace PetFamily.Volunteers.IntegrationTests.Helpers
         }
         public async Task<SpeciesId> InitSpecies()
         {
-            var species = Domain.Aggregates.Species.Entities
-                .Species.Create(SpeciesId.NewSpeciesId(), "species").Value;
+            var species = Domain.SpeciesAggregate.Entities.Species.Create(SpeciesId.NewSpeciesId(), "species").Value;
 
             await _writeDbContext.Species.AddAsync(species);
             await _writeDbContext.SaveChangesAsync();

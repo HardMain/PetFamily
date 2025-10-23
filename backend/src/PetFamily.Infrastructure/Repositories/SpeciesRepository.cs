@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Species;
-using PetFamily.Domain.Aggregates.Species.Entities;
+using PetFamily.Application.SpeciesAggregate;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
+using PetFamily.Domain.SpeciesAggregate.Entities;
 using PetFamily.Infrastructure.DbContexts;
+
 
 namespace PetFamily.Infrastructure.Repositories
 {

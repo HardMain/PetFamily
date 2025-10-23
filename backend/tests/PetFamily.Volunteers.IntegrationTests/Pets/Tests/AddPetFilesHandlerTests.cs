@@ -6,7 +6,7 @@ using PetFamily.Volunteers.IntegrationTests.Helpers;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Application.Volunteers.Commands.AddPetFiles;
+using PetFamily.Application.VolunteersAggregate.Commands.AddPetFiles;
 
 namespace PetFamily.Volunteers.IntegrationTests.Pets.Tests
 {

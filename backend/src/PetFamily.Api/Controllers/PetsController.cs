@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Envelopes;
 using PetFamily.Api.Extensions;
-using PetFamily.Application.Volunteers.Queries.GetByIdPet;
-using PetFamily.Application.Volunteers.Queries.GetFilteredPetsWithPagination;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Queries.GetById;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Queries.GetFilteredPetsWithPagination;
-using PetFamily.Application.VolunteersManagement.Queries.GetByIdPet;
-using PetFamily.Application.VolunteersManagement.Queries.GetFilteredPetsWithPagination;
+using PetFamily.Application.VolunteersAggregate.Queries.GetByIdPet;
+using PetFamily.Application.VolunteersAggregate.Queries.GetFilteredPetsWithPagination;
 using PetFamily.Contracts.Requests.Volunteers.Pets;
 
 namespace PetFamily.Api.Controllers

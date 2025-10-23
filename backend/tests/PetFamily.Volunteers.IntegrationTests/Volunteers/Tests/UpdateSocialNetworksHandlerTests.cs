@@ -5,7 +5,7 @@ using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
 using FluentAssertions;
-using PetFamily.Application.Volunteers.Commands.UpdateSocialNetworks;
+using PetFamily.Application.VolunteersAggregate.Commands.UpdateSocialNetworks;
 
 namespace PetFamily.Volunteers.IntegrationTests.Volunteers.Tests
 {

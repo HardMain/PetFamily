@@ -2,7 +2,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.Volunteers.Commands.AddPet;
+using PetFamily.Application.VolunteersAggregate.Commands.AddPet;
 using PetFamily.Contracts.DTOs.Species;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;

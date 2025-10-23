@@ -2,10 +2,11 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Contracts.DTOs.Volunteers.Pets;
-using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Constants;
 using PetFamily.Domain.Shared.ValueObjects;
+using PetFamily.Domain.VolunteersAggregate.Entities;
+using PetFamily.Domain.VolunteersAggregate.ValueObjects;
 using PetFamily.Infrastructure.Extensions;
 
 namespace PetFamily.Infrastructure.Configurations.Write

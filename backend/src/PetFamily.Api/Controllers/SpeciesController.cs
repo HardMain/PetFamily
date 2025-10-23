@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Envelopes;
 using PetFamily.Api.Extensions;
-using PetFamily.Application.Species.Commands.AddBreed;
-using PetFamily.Application.Species.Commands.Create;
-using PetFamily.Application.Species.Commands.Delete;
-using PetFamily.Application.Species.Commands.DeleteBreed;
-using PetFamily.Application.Species.Queries.GetBreedsBySpeciesIdWithPagination;
-using PetFamily.Application.Species.Queries.GetFilteredSpeciesWIthPagination;
+using PetFamily.Application.SpeciesAggregate.Commands.AddBreed;
+using PetFamily.Application.SpeciesAggregate.Commands.Create;
+using PetFamily.Application.SpeciesAggregate.Commands.Delete;
+using PetFamily.Application.SpeciesAggregate.Commands.DeleteBreed;
+using PetFamily.Application.SpeciesAggregate.Queries.GetBreedsBySpeciesIdWithPagination;
+using PetFamily.Application.SpeciesAggregate.Queries.GetFilteredSpeciesWIthPagination;
 using PetFamily.Contracts.Requests.Species;
 using PetFamily.Contracts.Requests.Species.Breeds;
 

@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.Volunteers.Commands.DeletePet;
-using PetFamily.Application.Volunteers.Commands.RestorePet;
+using PetFamily.Application.VolunteersAggregate.Commands.DeletePet;
+using PetFamily.Application.VolunteersAggregate.Commands.RestorePet;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;

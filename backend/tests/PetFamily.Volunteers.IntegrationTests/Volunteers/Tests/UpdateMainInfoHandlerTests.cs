@@ -2,13 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
-using PetFamily.Application.VolunteersManagement.Commands.UpdateDonationsInfo;
-using PetFamily.Domain.Aggregates.PetManagement.Entities;
-using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Application.VolunteersAggregate.Commands.UpdateMainInfo;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
+using PetFamily.Domain.VolunteersAggregate.Entities;
+using PetFamily.Domain.VolunteersAggregate.ValueObjects;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
 using PetFamily.Volunteers.IntegrationTests.Helpers.Mappers;
 

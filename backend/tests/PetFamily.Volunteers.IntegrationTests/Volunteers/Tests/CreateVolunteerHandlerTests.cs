@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
-using PetFamily.Domain.Aggregates.PetManagement.Entities;
-using PetFamily.Application.Volunteers.Commands.Create;
+using PetFamily.Application.VolunteersAggregate.Commands.Create;
+using PetFamily.Domain.VolunteersAggregate.ValueObjects;
+using PetFamily.Domain.VolunteersAggregate.Entities;
 
 namespace PetFamily.Volunteers.IntegrationTests.Volunteers.Tests
 {
