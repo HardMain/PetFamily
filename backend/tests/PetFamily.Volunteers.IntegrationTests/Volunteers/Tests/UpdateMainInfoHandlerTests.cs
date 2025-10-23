@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Application.VolunteersManagement.Commands.UpdateDonationsInfo;
-using PetFamily.Application.VolunteersManagement.Commands.UpdateMainInfo;
 using PetFamily.Domain.Aggregates.PetManagement.Entities;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;

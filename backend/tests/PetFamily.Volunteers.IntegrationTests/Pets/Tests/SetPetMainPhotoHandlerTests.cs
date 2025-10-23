@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.FilesOperations.AddPetFiles;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.SetMainPhoto;
+using PetFamily.Application.Volunteers.Commands.AddPetFiles;
+using PetFamily.Application.Volunteers.Commands.SetMainPhotoPet;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;

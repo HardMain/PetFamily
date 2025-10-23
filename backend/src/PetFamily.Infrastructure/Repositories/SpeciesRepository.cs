@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.SpeciesManagement;
+using PetFamily.Application.Species;
 using PetFamily.Domain.Aggregates.Species.Entities;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;

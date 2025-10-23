@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PetFamily.Application.VolunteersManagement;
+using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure.Options;
 
 namespace PetFamily.Infrastructure.BackgroundServices

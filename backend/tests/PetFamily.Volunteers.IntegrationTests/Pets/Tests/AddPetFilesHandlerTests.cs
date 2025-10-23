@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FluentAssertions;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.FilesOperations.AddPetFiles;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Application.Volunteers.Commands.AddPetFiles;
 
 namespace PetFamily.Volunteers.IntegrationTests.Pets.Tests
 {

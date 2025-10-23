@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.SpeciesManagement.Commands.Create;
+using PetFamily.Application.Species.Commands.Create;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
 
 namespace PetFamily.Volunteers.IntegrationTests.Species.Tests
