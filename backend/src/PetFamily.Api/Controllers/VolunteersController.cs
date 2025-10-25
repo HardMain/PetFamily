@@ -2,25 +2,24 @@
 using PetFamily.Api.Envelopes;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
-using PetFamily.Application.VolunteersManagement.Commands.Create;
-using PetFamily.Application.VolunteersManagement.Commands.Delete;
-using PetFamily.Application.VolunteersManagement.Commands.Restore;
-using PetFamily.Application.VolunteersManagement.Commands.UpdateDonationsInfo;
-using PetFamily.Application.VolunteersManagement.Commands.UpdateMainInfo;
-using PetFamily.Application.VolunteersManagement.Commands.UpdateSocialNetworks;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Add;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Delete;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.FilesOperations.AddPetFiles;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.FilesOperations.DeletePetFiles;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Move;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Restore;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.SetMainPhoto;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.Update;
-using PetFamily.Application.VolunteersManagement.PetsOperations.Commands.UpdateSupportStatus;
-using PetFamily.Application.VolunteersManagement.Queries.GetById;
-using PetFamily.Application.VolunteersManagement.Queries.GetFilteredVolunteersWithPagination;
-using PetFamily.Contracts.Requests.Volunteers;
-using PetFamily.Contracts.Requests.Volunteers.Pets;
+using PetFamily.Application.VolunteersAggregate.Commands.AddPet;
+using PetFamily.Application.VolunteersAggregate.Commands.AddPetFiles;
+using PetFamily.Application.VolunteersAggregate.Commands.Create;
+using PetFamily.Application.VolunteersAggregate.Commands.Delete;
+using PetFamily.Application.VolunteersAggregate.Commands.DeletePet;
+using PetFamily.Application.VolunteersAggregate.Commands.DeletePetFiles;
+using PetFamily.Application.VolunteersAggregate.Commands.MovePet;
+using PetFamily.Application.VolunteersAggregate.Commands.Restore;
+using PetFamily.Application.VolunteersAggregate.Commands.RestorePet;
+using PetFamily.Application.VolunteersAggregate.Commands.SetMainPhotoPet;
+using PetFamily.Application.VolunteersAggregate.Commands.UpdateDonationsInfo;
+using PetFamily.Application.VolunteersAggregate.Commands.UpdateMainInfo;
+using PetFamily.Application.VolunteersAggregate.Commands.UpdateMainInfoPet;
+using PetFamily.Application.VolunteersAggregate.Commands.UpdatePetSupportStatus;
+using PetFamily.Application.VolunteersAggregate.Commands.UpdateSocialNetworks;
+using PetFamily.Application.VolunteersAggregate.Queries.GetById;
+using PetFamily.Application.VolunteersAggregate.Queries.GetFilteredVolunteersWithPagination;
+using PetFamily.Contracts.VolunteersAggregate.Requests;
 
 namespace PetFamily.Api.Controllers
 {
@@ -261,7 +260,7 @@ namespace PetFamily.Api.Controllers
         public async Task<ActionResult> UpdatePetSupportStatus(
             [FromRoute] Guid volunteerId,
             [FromRoute] Guid petId,
-            [FromBody] UpdatePetStatusRequest request,
+            [FromBody] UpdatePetSupportStatusRequest request,
             [FromServices] UpdatePetSupportStatusHandler handler,
             CancellationToken cancellationToken)
         {

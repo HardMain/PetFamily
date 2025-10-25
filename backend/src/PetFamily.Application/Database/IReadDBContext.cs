@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Contracts.DTOs.Species;
-using PetFamily.Contracts.DTOs.Volunteers;
+using PetFamily.Contracts.SpeciesAggregate.DTOs;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
 
 namespace PetFamily.Infrastructure.DbContexts
 {

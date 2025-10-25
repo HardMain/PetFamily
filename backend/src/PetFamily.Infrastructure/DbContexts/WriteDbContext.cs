@@ -1,18 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using PetFamily.Domain.Aggregates.PetManagement.Entities;
-using PetFamily.Domain.Aggregates.Species.Entities;
+using PetFamily.Domain.SpeciesAggregate.Entities;
+using PetFamily.Domain.VolunteersAggregate.Entities;
 
 namespace PetFamily.Infrastructure.DbContexts
 {
     public class WriteDbContext : DbContext
     {
-        private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
 
-        public WriteDbContext(IConfiguration configuration)
+        public WriteDbContext(string connectionString)
         {
-            _configuration = configuration;
+            _connectionString = connectionString;
         }
 
         public DbSet<Volunteer> Volunteers => Set<Volunteer>();
@@ -21,7 +21,7 @@ namespace PetFamily.Infrastructure.DbContexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseNpgsql(_configuration.GetConnectionString("Database"))
+                .UseNpgsql(_connectionString)
                 .UseLoggerFactory(CreateLoggerFactory());
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

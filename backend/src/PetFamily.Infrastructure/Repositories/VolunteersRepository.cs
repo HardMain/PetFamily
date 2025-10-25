@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.VolunteersManagement;
-using PetFamily.Domain.Aggregates.PetManagement.Entities;
-using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
+using PetFamily.Application.VolunteersAggregate;
 using PetFamily.Domain.Shared.Entities;
 using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Shared.ValueObjects.Ids;
+using PetFamily.Domain.VolunteersAggregate.Entities;
+using PetFamily.Domain.VolunteersAggregate.ValueObjects;
 using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Repositories

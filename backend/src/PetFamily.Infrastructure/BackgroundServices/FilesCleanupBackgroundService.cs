@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
-using PetFamily.Contracts.DTOs.Volunteers.Pets;
+using PetFamily.Contracts.VolunteersAggregate.DTOs;
 
 namespace PetFamily.Infrastructure.BackgroundServices
 {
