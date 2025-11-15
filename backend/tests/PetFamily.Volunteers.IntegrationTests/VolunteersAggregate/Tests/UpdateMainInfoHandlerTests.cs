@@ -1,16 +1,15 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.VolunteersAggregate.Commands.UpdateMainInfo;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
-using PetFamily.Domain.VolunteersAggregate.Entities;
-using PetFamily.Domain.VolunteersAggregate.ValueObjects;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
 using PetFamily.Volunteers.IntegrationTests.Helpers.Mappers;
-using PetFamily.Volunteers.IntegrationTests.VolunteersAggregate;
+using SharedKernel.Abstractions;
+using SharedKernel.Failures;
+using SharedKernel.ValueObjects;
+using SharedKernel.ValueObjects.Ids;
+using Volunteers.Application.Commands.UpdateMainInfo;
+using Volunteers.Domain.Entities;
+using Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 {
@@ -39,7 +38,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var volunteer = await _readDbContext.Volunteers
+            var volunteer = await _volunteerReadDbContext.Volunteers
                 .AsNoTracking()
                 .FirstAsync();
 
@@ -64,7 +63,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.Error.Should().BeEquivalentTo(
                 Errors.General.NotFound(command.VolunteerId).ToErrorList());
 
-            var volunteer = await _readDbContext.Volunteers
+            var volunteer = await _volunteerReadDbContext.Volunteers
                 .AsNoTracking()
                 .FirstAsync();
 
@@ -105,7 +104,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.Error.Should().BeEquivalentTo(
                 Errors.Volunteer.Duplicate().ToErrorList());
 
-            var volunteer = await _readDbContext.Volunteers
+            var volunteer = await _volunteerReadDbContext.Volunteers
                 .AsNoTracking()
                 .FirstAsync();
 
@@ -145,7 +144,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.Error.Should().BeEquivalentTo(
                 Errors.Volunteer.Duplicate().ToErrorList());
 
-            var volunteer = await _readDbContext.Volunteers
+            var volunteer = await _volunteerReadDbContext.Volunteers
                 .AsNoTracking()
                 .FirstAsync();
 

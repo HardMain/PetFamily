@@ -1,28 +1,27 @@
 ﻿using AutoFixture;
-using PetFamily.Application.SpeciesAggregate.Commands.AddBreed;
-using PetFamily.Application.SpeciesAggregate.Commands.Create;
-using PetFamily.Application.SpeciesAggregate.Commands.Delete;
-using PetFamily.Application.SpeciesAggregate.Commands.DeleteBreed;
-using PetFamily.Application.VolunteersAggregate.Commands.AddPet;
-using PetFamily.Application.VolunteersAggregate.Commands.AddPetFiles;
-using PetFamily.Application.VolunteersAggregate.Commands.Create;
-using PetFamily.Application.VolunteersAggregate.Commands.Delete;
-using PetFamily.Application.VolunteersAggregate.Commands.DeletePet;
-using PetFamily.Application.VolunteersAggregate.Commands.DeletePetFiles;
-using PetFamily.Application.VolunteersAggregate.Commands.MovePet;
-using PetFamily.Application.VolunteersAggregate.Commands.Restore;
-using PetFamily.Application.VolunteersAggregate.Commands.RestorePet;
-using PetFamily.Application.VolunteersAggregate.Commands.SetMainPhotoPet;
-using PetFamily.Application.VolunteersAggregate.Commands.UpdateDonationsInfo;
-using PetFamily.Application.VolunteersAggregate.Commands.UpdateMainInfo;
-using PetFamily.Application.VolunteersAggregate.Commands.UpdateMainInfoPet;
-using PetFamily.Application.VolunteersAggregate.Commands.UpdatePetSupportStatus;
-using PetFamily.Application.VolunteersAggregate.Commands.UpdateSocialNetworks;
-using PetFamily.Contracts.Shared;
-using PetFamily.Contracts.SpeciesAggregate.DTOs;
-using PetFamily.Contracts.SpeciesAggregate.Requests;
-using PetFamily.Contracts.VolunteersAggregate.DTOs;
-using PetFamily.Contracts.VolunteersAggregate.Requests;
+using Core.Dtos;
+using Species.Application.Commands.AddBreed;
+using Species.Application.Commands.Create;
+using Species.Application.Commands.Delete;
+using Species.Application.Commands.DeleteBreed;
+using Species.Contracts.Requests;
+using Volunteers.Application.Commands.AddPet;
+using Volunteers.Application.Commands.AddPetFiles;
+using Volunteers.Application.Commands.Create;
+using Volunteers.Application.Commands.Delete;
+using Volunteers.Application.Commands.DeletePet;
+using Volunteers.Application.Commands.DeletePetFiles;
+using Volunteers.Application.Commands.MovePet;
+using Volunteers.Application.Commands.Restore;
+using Volunteers.Application.Commands.RestorePet;
+using Volunteers.Application.Commands.SetMainPhotoPet;
+using Volunteers.Application.Commands.UpdateDonationsInfo;
+using Volunteers.Application.Commands.UpdateMainInfo;
+using Volunteers.Application.Commands.UpdateMainInfoPet;
+using Volunteers.Application.Commands.UpdatePetSupportStatus;
+using Volunteers.Application.Commands.UpdateSocialNetworks;
+using Volunteers.Contracts.DTOs;
+using Volunteers.Contracts.Requests;
 
 namespace PetFamily.Volunteers.IntegrationTests.Helpers
 {
@@ -180,12 +179,12 @@ namespace PetFamily.Volunteers.IntegrationTests.Helpers
             Guid volunteerId,
             Guid petId)
         {
-            var files = new List<PetFileFormDto>
+            var files = new List<FileFormDto>
             {
-                new PetFileFormDto(new MemoryStream(new byte[]{1, 2, 3, 4, 5}), $"{Guid.NewGuid()}.jpg"),
-                new PetFileFormDto(new MemoryStream(new byte[]{2, 3, 4, 5, 6}), $"{Guid.NewGuid()}.mp4"),
-                new PetFileFormDto(new MemoryStream(new byte[]{3, 4, 5, 6, 7}), $"{Guid.NewGuid()}.jpeg"),
-                new PetFileFormDto(new MemoryStream(new byte[]{4, 5, 6, 7, 8}), $"{Guid.NewGuid()}.png"),
+                new FileFormDto(new MemoryStream(new byte[]{1, 2, 3, 4, 5}), $"{Guid.NewGuid()}.jpg"),
+                new FileFormDto(new MemoryStream(new byte[]{2, 3, 4, 5, 6}), $"{Guid.NewGuid()}.mp4"),
+                new FileFormDto(new MemoryStream(new byte[]{3, 4, 5, 6, 7}), $"{Guid.NewGuid()}.jpeg"),
+                new FileFormDto(new MemoryStream(new byte[]{4, 5, 6, 7, 8}), $"{Guid.NewGuid()}.png"),
             };
 
             return new AddPetFilesCommand(volunteerId, petId, files);

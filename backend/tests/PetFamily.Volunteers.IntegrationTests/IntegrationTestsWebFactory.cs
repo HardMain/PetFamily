@@ -2,11 +2,15 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
-using PetFamily.Infrastructure.DbContexts;
 using Respawn;
+using Species.Application.Abstractions;
+using Species.Infrastructure.DbContexts;
 using Testcontainers.PostgreSql;
+using Volunteers.Application.Abstractions;
+using Volunteers.Infrastructure.DbContexts;
 
 namespace PetFamily.Volunteers.IntegrationTests
 {
@@ -29,23 +33,40 @@ namespace PetFamily.Volunteers.IntegrationTests
 
         protected virtual void ConfigureDefaultServices(IServiceCollection services)
         {
-            var readContext = services
-                .SingleOrDefault(s => s.ServiceType == typeof(IReadDbContext));
+            RemoveDecriptor(services, typeof(IVolunteersReadDbContext));
+            RemoveDecriptor(services, typeof(VolunteersWriteDbContext));
+            RemoveDecriptor(services, typeof(ISpeciesReadDbContext));
+            RemoveDecriptor(services, typeof(SpeciesWriteDbContext));
 
-            var writeContext = services
-                .SingleOrDefault(s => s.ServiceType == typeof(WriteDbContext));
+            var connectionString = _dbContainer.GetConnectionString();
 
-            if (readContext is not null)
-                services.Remove(readContext);
+            services.AddDbContext<VolunteersReadDbContext>(options =>
+                options.UseNpgsql(connectionString)
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
-            if (writeContext is not null)
-                services.Remove(writeContext);
+            services.AddDbContext<SpeciesReadDbContext>(options =>
+                options.UseNpgsql(connectionString)
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+            
+            services.AddDbContext<VolunteersWriteDbContext>(options =>
+                options.UseNpgsql(connectionString));
 
-            services.AddScoped<IReadDbContext>(
-                _ => new ReadDbContext(_dbContainer.GetConnectionString()));
+            services.AddDbContext<SpeciesWriteDbContext>(options =>
+                options.UseNpgsql(connectionString));
 
-            services.AddScoped(
-                _ => new WriteDbContext(_dbContainer.GetConnectionString()));
+            services.AddScoped<IVolunteersReadDbContext>(sp =>
+                sp.GetRequiredService<VolunteersReadDbContext>());
+
+            services.AddScoped<ISpeciesReadDbContext>(sp =>
+                sp.GetRequiredService<SpeciesReadDbContext>());
+
+        }
+
+        private static void RemoveDecriptor(IServiceCollection services, Type serviceType)
+        {
+            var descriptor = services.SingleOrDefault(s => s.ServiceType == serviceType);
+            if (descriptor is not null)
+                services.Remove(descriptor);
         }
 
         public async Task InitializeAsync()
@@ -53,8 +74,11 @@ namespace PetFamily.Volunteers.IntegrationTests
             await _dbContainer.StartAsync();
 
             using var scope = Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
-            await dbContext.Database.EnsureCreatedAsync();
+            var VolunteerdbContext = scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
+            await VolunteerdbContext.Database.EnsureCreatedAsync();
+
+            var SpeciesdbContext = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
+            await SpeciesdbContext.Database.EnsureCreatedAsync();
 
             _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
             await InitializeRespawner();

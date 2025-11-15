@@ -1,13 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.VolunteersAggregate.Commands.AddPetFiles;
-using PetFamily.Application.VolunteersAggregate.Commands.SetMainPhotoPet;
-using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
+using SharedKernel.Abstractions;
+using SharedKernel.Failures;
+using SharedKernel.ValueObjects.Ids;
+using Volunteers.Application.Commands.AddPetFiles;
+using Volunteers.Application.Commands.SetMainPhotoPet;
 
 namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 {
@@ -40,7 +39,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 
             addFilesResult.IsSuccess.Should().BeTrue();
 
-            var petBefore = await _readDbContext.Pets
+            var petBefore = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync(p => p.Id == petId);
             var newMainPhoto = petBefore.Files.First().PathToStorage;
@@ -55,7 +54,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var pet = await _readDbContext.Pets
+            var pet = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync();
 
@@ -79,7 +78,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 
             addFilesResult.IsSuccess.Should().BeTrue();
 
-            var petBefore = await _readDbContext.Pets
+            var petBefore = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync(p => p.Id == petId);
             var newMainPhoto = petBefore.Files.First().PathToStorage;
@@ -99,7 +98,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
                 .NotFound(setMainPhotoCommand.VolunteerId)
                 .ToErrorList());
 
-            var pet = await _readDbContext.Pets
+            var pet = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync();
 
@@ -122,7 +121,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 
             addFilesResult.IsSuccess.Should().BeTrue();
 
-            var petBefore = await _readDbContext.Pets
+            var petBefore = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync(p => p.Id == petId);
             var newMainPhoto = petBefore.Files.First().PathToStorage;
@@ -142,7 +141,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
                 .NotFound(setMainPhotoCommand.PetId)
                 .ToErrorList());
 
-            var pet = await _readDbContext.Pets
+            var pet = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync();
 

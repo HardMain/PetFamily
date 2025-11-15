@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
+﻿using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
 using FluentAssertions;
-using PetFamily.Application.VolunteersAggregate.Commands.UpdateDonationsInfo;
-using PetFamily.Volunteers.IntegrationTests.VolunteersAggregate;
+using SharedKernel.Abstractions;
+using Volunteers.Application.Commands.UpdateDonationsInfo;
+using SharedKernel.ValueObjects.Ids;
+using SharedKernel.Failures;
+using Microsoft.EntityFrameworkCore;
 
 namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 {
@@ -34,7 +33,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var volunteer = await _readDbContext.Volunteers
+            var volunteer = await _volunteerReadDbContext.Volunteers
                 .AsNoTracking()
                 .FirstAsync();
 
@@ -60,7 +59,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.Error.Should().BeEquivalentTo(
                 Errors.General.NotFound(command.VolunteerId).ToErrorList());
 
-            var volunteer = await _readDbContext.Volunteers
+            var volunteer = await _volunteerReadDbContext.Volunteers
                 .AsNoTracking()
                 .FirstAsync();
 

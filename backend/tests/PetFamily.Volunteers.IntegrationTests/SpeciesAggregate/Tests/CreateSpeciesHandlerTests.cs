@@ -1,10 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.SpeciesAggregate.Commands.Create;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
-using PetFamily.Volunteers.IntegrationTests.SpeciesAggregate;
+using SharedKernel.Abstractions;
+using Species.Application.Commands.Create;
 
 namespace PetFamily.Volunteers.IntegrationTests.SpeciesAggregate.Tests
 {
@@ -32,7 +31,7 @@ namespace PetFamily.Volunteers.IntegrationTests.SpeciesAggregate.Tests
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var species = await _readDbContext.Species
+            var species = await _speciesReadDbContext.Species
                 .AsNoTracking()
                 .FirstAsync();
 

@@ -1,15 +1,11 @@
 using FluentAssertions;
-using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Aggregates.PetManagement.ValueObjects.PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
-using PetFamily.Domain.SpeciesAggregate.ValueObjects;
-using PetFamily.Domain.VolunteersAggregate.Entities;
-using PetFamily.Domain.VolunteersAggregate.Enums;
-using PetFamily.Domain.VolunteersAggregate.ValueObjects;
-using PetFile = PetFamily.Domain.VolunteersAggregate.ValueObjects.PetFile;
+using SharedKernel.ValueObjects;
+using SharedKernel.ValueObjects.Ids;
+using Volunteers.Domain.Entities;
+using Volunteers.Domain.Enums;
+using Volunteers.Domain.ValueObjects;
 
-namespace PetFamily.UnitTests
+namespace PetFamily.Domain.UnitTests
 {
     public class VolunteersTests
     {
