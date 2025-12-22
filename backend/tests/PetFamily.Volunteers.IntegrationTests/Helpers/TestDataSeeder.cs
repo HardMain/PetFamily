@@ -1,23 +1,26 @@
-﻿using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
-using PetFamily.Domain.Shared.ValueObjects;
-using PetFamily.Infrastructure.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using PetFamily.Domain.SpeciesAggregate.ValueObjects;
-using PetFamily.Domain.SpeciesAggregate.Entities;
-using PetFamily.Domain.VolunteersAggregate.ValueObjects;
-using PetFamily.Domain.VolunteersAggregate.Entities;
-using PetFamily.Domain.VolunteersAggregate.Enums;
-using PetFamily.Contracts.SpeciesAggregate.DTOs;
+﻿using Microsoft.EntityFrameworkCore;
+using SharedKernel.ValueObjects;
+using SharedKernel.ValueObjects.Ids;
+using Species.Contracts.DTOs;
+using Species.Domain.Entities;
+using Species.Infrastructure.DbContexts;
+using Volunteers.Domain.Entities;
+using Volunteers.Domain.Enums;
+using Volunteers.Domain.ValueObjects;
+using Volunteers.Infrastructure.DbContexts;
 
 namespace PetFamily.Volunteers.IntegrationTests.Helpers
 {
     public class TestDataSeeder
     {
-        private readonly WriteDbContext _writeDbContext;
-        public TestDataSeeder(WriteDbContext writeDbContext)
+        private readonly VolunteersWriteDbContext _volunteerWriteDbContext;
+        private readonly SpeciesWriteDbContext _speciesWriteDbContext;
+        public TestDataSeeder(
+            VolunteersWriteDbContext volunteerWriteDbContext,
+            SpeciesWriteDbContext speciesWriteDbContext)
         {
-            _writeDbContext = writeDbContext;
+            _volunteerWriteDbContext = volunteerWriteDbContext;
+            _speciesWriteDbContext = speciesWriteDbContext;
         }
 
         public async Task<Guid> InitVolunteer()
@@ -33,16 +36,16 @@ namespace PetFamily.Volunteers.IntegrationTests.Helpers
                 1,
                 PhoneNumber.Create(uniquePhone).Value);
 
-            await _writeDbContext.Volunteers.AddAsync(volunteer);
-            await _writeDbContext.SaveChangesAsync();
+            await _volunteerWriteDbContext.Volunteers.AddAsync(volunteer);
+            await _volunteerWriteDbContext.SaveChangesAsync();
 
             return volunteer.Id;
         }
 
         public async Task<Guid> InitVolunteer(Volunteer volunteer)
         {
-            await _writeDbContext.Volunteers.AddAsync(volunteer);
-            await _writeDbContext.SaveChangesAsync();
+            await _volunteerWriteDbContext.Volunteers.AddAsync(volunteer);
+            await _volunteerWriteDbContext.SaveChangesAsync();
 
             return volunteer.Id;
         }
@@ -51,7 +54,7 @@ namespace PetFamily.Volunteers.IntegrationTests.Helpers
         {
             var speciesAndBreedDto = await InitSpeciesAndBreed();
 
-            var volunteer = await _writeDbContext.Volunteers
+            var volunteer = await _volunteerWriteDbContext.Volunteers
                 .FirstAsync(v => v.Id == volunteerId);
 
             var uniquePhone = $"+7999999{new Random().Next(1000, 9999)}";
@@ -75,28 +78,28 @@ namespace PetFamily.Volunteers.IntegrationTests.Helpers
 
             volunteer.AddPet(pet);
 
-            await _writeDbContext.SaveChangesAsync();
+            await _volunteerWriteDbContext.SaveChangesAsync();
             return pet.Id;
         }
 
         public async Task<SpeciesAndBreedDto> InitSpeciesAndBreed()
         {
-            var species = Domain.SpeciesAggregate.Entities.Species.Create(SpeciesId.NewSpeciesId(), "species").Value;
+            var species = Species.Domain.Entities.Species.Create(SpeciesId.NewSpeciesId(), "species").Value;
             var breed = Breed.Create(BreedId.NewBreedId(), "breed").Value;
 
             species.AddBreed(breed);
 
-            await _writeDbContext.Species.AddAsync(species);
-            await _writeDbContext.SaveChangesAsync();
+            await _speciesWriteDbContext.Species.AddAsync(species);
+            await _speciesWriteDbContext.SaveChangesAsync();
 
             return new SpeciesAndBreedDto(species.Id, breed.Id);
         }
         public async Task<SpeciesId> InitSpecies()
         {
-            var species = Domain.SpeciesAggregate.Entities.Species.Create(SpeciesId.NewSpeciesId(), "species").Value;
+            var species = Species.Domain.Entities.Species.Create(SpeciesId.NewSpeciesId(), "species").Value;
 
-            await _writeDbContext.Species.AddAsync(species);
-            await _writeDbContext.SaveChangesAsync();
+            await _speciesWriteDbContext.Species.AddAsync(species);
+            await _speciesWriteDbContext.SaveChangesAsync();
 
             return species.Id;
         }

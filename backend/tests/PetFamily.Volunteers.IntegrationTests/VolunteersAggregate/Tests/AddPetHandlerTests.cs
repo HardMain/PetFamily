@@ -1,12 +1,12 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.VolunteersAggregate.Commands.AddPet;
-using PetFamily.Contracts.SpeciesAggregate.DTOs;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
+using SharedKernel.Abstractions;
+using SharedKernel.Failures;
+using SharedKernel.ValueObjects.Ids;
+using Species.Contracts.DTOs;
+using Volunteers.Application.Commands.AddPet;
 
 namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests;
 
@@ -36,7 +36,7 @@ public class AddPetHandlerTests : VolunteerTestsBase
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
 
-        var pet = await _readDbContext.Pets
+        var pet = await _volunteerReadDbContext.Pets
             .AsNoTracking()
             .FirstAsync();
 
@@ -65,7 +65,7 @@ public class AddPetHandlerTests : VolunteerTestsBase
                 .NotFound(command.VolunteerId)
                 .ToErrorList());
 
-        var pet = await _readDbContext.Pets
+        var pet = await _volunteerReadDbContext.Pets
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
@@ -91,7 +91,7 @@ public class AddPetHandlerTests : VolunteerTestsBase
             .NotFound(speciesAndBreed.SpeciesId, speciesAndBreed.BreedId)
             .ToErrorList());
 
-        var pet = await _readDbContext.Pets
+        var pet = await _volunteerReadDbContext.Pets
             .AsNoTracking()
             .FirstOrDefaultAsync();
 

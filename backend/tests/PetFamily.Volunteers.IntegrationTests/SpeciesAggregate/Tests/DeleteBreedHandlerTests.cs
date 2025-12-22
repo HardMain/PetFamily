@@ -1,12 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.SpeciesAggregate.Commands.AddBreed;
-using PetFamily.Application.SpeciesAggregate.Commands.DeleteBreed;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
+using SharedKernel.Abstractions;
+using SharedKernel.Failures;
+using SharedKernel.ValueObjects.Ids;
+using Species.Application.Commands.AddBreed;
+using Species.Application.Commands.DeleteBreed;
 
 namespace PetFamily.Volunteers.IntegrationTests.SpeciesAggregate.Tests
 {
@@ -48,7 +48,7 @@ namespace PetFamily.Volunteers.IntegrationTests.SpeciesAggregate.Tests
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var breed = await _readDbContext.Breeds
+            var breed = await _speciesReadDbContext.Breeds
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 
@@ -81,7 +81,7 @@ namespace PetFamily.Volunteers.IntegrationTests.SpeciesAggregate.Tests
                 .Should()
                 .BeEquivalentTo(Errors.General.NotFound(deleteCommand.SpeciesId).ToErrorList());
 
-            var breed = await _readDbContext.Breeds
+            var breed = await _speciesReadDbContext.Breeds
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 
@@ -114,7 +114,7 @@ namespace PetFamily.Volunteers.IntegrationTests.SpeciesAggregate.Tests
                 .Should()
                 .BeEquivalentTo(Errors.General.NotFound(deleteCommand.BreedId).ToErrorList());
 
-            var breed = await _readDbContext.Breeds
+            var breed = await _speciesReadDbContext.Breeds
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 

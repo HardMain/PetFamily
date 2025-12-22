@@ -1,14 +1,14 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
-using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
-using PetFamily.Application.VolunteersAggregate.Commands.Create;
-using PetFamily.Domain.VolunteersAggregate.ValueObjects;
-using PetFamily.Domain.VolunteersAggregate.Entities;
+using SharedKernel.Abstractions;
+using SharedKernel.Failures;
+using SharedKernel.ValueObjects;
+using SharedKernel.ValueObjects.Ids;
+using Volunteers.Application.Commands.Create;
+using Volunteers.Domain.Entities;
+using Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 {
@@ -36,7 +36,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var volunteer = await _readDbContext.Volunteers
+            var volunteer = await _volunteerReadDbContext.Volunteers
                 .AsNoTracking()
                 .FirstAsync();
 
@@ -67,7 +67,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.Error.Should().BeEquivalentTo(
                 Errors.Volunteer.Duplicate().ToErrorList());
 
-            var countVolunteer = _readDbContext.Volunteers.Count();
+            var countVolunteer = _volunteerReadDbContext.Volunteers.Count();
 
             countVolunteer.Should().Be(1);
         }

@@ -1,5 +1,5 @@
-﻿using PetFamily.Contracts.VolunteersAggregate.DTOs;
-using PetFamily.Contracts.VolunteersAggregate.Requests;
+﻿using Volunteers.Contracts.DTOs;
+using Volunteers.Contracts.Requests;
 
 namespace PetFamily.Volunteers.IntegrationTests.Helpers.Mappers
 {

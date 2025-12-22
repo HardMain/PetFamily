@@ -1,7 +1,10 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
+using Species.Application.Abstractions;
+using Species.Infrastructure.DbContexts;
+using Volunteers.Application.Abstractions;
+using Volunteers.Infrastructure.DbContexts;
 
 namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate
 {
@@ -10,8 +13,10 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate
         protected readonly VolunteerTestsWebFactory _factory;
         protected readonly Fixture _fixture;
         protected readonly IServiceScope _scope;
-        protected readonly IReadDbContext _readDbContext;
-        protected readonly WriteDbContext _writeDbContext;
+        protected readonly IVolunteersReadDbContext _volunteerReadDbContext;
+        protected readonly VolunteersWriteDbContext _volunteerWriteDbContext;
+        protected readonly ISpeciesReadDbContext _speciesReadDbContext;
+        protected readonly SpeciesWriteDbContext _speciesWriteDbContext;
         protected readonly TestDataSeeder _dataSeeder;
 
         public VolunteerTestsBase(VolunteerTestsWebFactory factory)
@@ -19,9 +24,14 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate
             _factory = factory;
             _fixture = new Fixture();
             _scope = factory.Services.CreateAsyncScope();
-            _readDbContext = _scope.ServiceProvider.GetRequiredService<IReadDbContext>();
-            _writeDbContext = _scope.ServiceProvider.GetRequiredService<WriteDbContext>();
-            _dataSeeder = new TestDataSeeder(_writeDbContext);
+            
+            _volunteerReadDbContext = _scope.ServiceProvider.GetRequiredService<IVolunteersReadDbContext>();
+            _volunteerWriteDbContext = _scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
+
+            _speciesReadDbContext = _scope.ServiceProvider.GetRequiredService<ISpeciesReadDbContext>();
+            _speciesWriteDbContext = _scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
+
+            _dataSeeder = new TestDataSeeder(_volunteerWriteDbContext, _speciesWriteDbContext);
         }
 
         public Task InitializeAsync() => Task.CompletedTask;

@@ -1,13 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.VolunteersAggregate.Commands.AddPetFiles;
-using PetFamily.Application.VolunteersAggregate.Commands.DeletePetFiles;
-using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
+using SharedKernel.Abstractions;
+using SharedKernel.Failures;
+using SharedKernel.ValueObjects.Ids;
+using Volunteers.Application.Commands.AddPetFiles;
+using Volunteers.Application.Commands.DeletePetFiles;
 
 namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 {
@@ -40,7 +39,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 
             addResult.IsSuccess.Should().BeTrue();
 
-            var petBefore = await _readDbContext.Pets
+            var petBefore = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync(p => p.Id == petId);
             var fileNames = petBefore.Files.Select(f => f.PathToStorage).ToList();
@@ -54,7 +53,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var petAfter = await _readDbContext.Pets
+            var petAfter = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync(p => p.Id == petId);
 
@@ -76,7 +75,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 
             addResult.IsSuccess.Should().BeTrue();
 
-            var pet = await _readDbContext.Pets
+            var pet = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync(p => p.Id == petId);
             var fileNames = pet.Files.Select(f => f.PathToStorage).ToList();
@@ -113,7 +112,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 
             addResult.IsSuccess.Should().BeTrue();
 
-            var pet = await _readDbContext.Pets
+            var pet = await _volunteerReadDbContext.Pets
                 .AsNoTracking()
                 .FirstAsync(p => p.Id == petId);
             var fileNames = pet.Files.Select(f => f.PathToStorage).ToList();

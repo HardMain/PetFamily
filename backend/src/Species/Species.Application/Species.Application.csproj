@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Volunteers\Volunteers.Contracts\Volunteers.Contracts.csproj" />
+    <ProjectReference Include="..\Species.Contracts\Species.Contracts.csproj" />
+    <ProjectReference Include="..\Species.Domain\Species.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

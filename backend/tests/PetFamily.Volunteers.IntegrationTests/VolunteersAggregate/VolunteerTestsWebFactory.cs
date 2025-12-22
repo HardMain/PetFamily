@@ -1,15 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Core.Providers;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using PetFamily.Application.Providers;
-using PetFamily.Contracts.VolunteersAggregate.DTOs;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects;
+using SharedKernel.Failures;
+using SharedKernel.ValueObjects;
 
 namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate
 {
     public class VolunteerTestsWebFactory : IntegrationTestsWebFactory
     {
-        private readonly IFileProvider _fileProviderMock = Substitute.For<IFileProvider>();
+        private readonly IFilesProvider _fileProviderMock = Substitute.For<IFilesProvider>();
 
         public VolunteerTestsWebFactory() { }
 
@@ -18,7 +17,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate
             base.ConfigureDefaultServices(services);
 
             var fileProvider = services
-                .SingleOrDefault(s => s.ServiceType == typeof(IFileProvider));
+                .SingleOrDefault(s => s.ServiceType == typeof(IFilesProvider));
 
             if (fileProvider is not null)
                 services.Remove(fileProvider);

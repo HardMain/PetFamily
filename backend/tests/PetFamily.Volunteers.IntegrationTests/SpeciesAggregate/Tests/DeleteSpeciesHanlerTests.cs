@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.SpeciesAggregate.Commands.Delete;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
-using PetFamily.Volunteers.IntegrationTests.SpeciesAggregate;
+using SharedKernel.Abstractions;
+using SharedKernel.Failures;
+using SharedKernel.ValueObjects.Ids;
+using Species.Application.Commands.Delete;
 
 namespace PetFamily.Volunteers.IntegrationTests.SpeciesAggregate.Tests
 {
@@ -35,7 +34,7 @@ namespace PetFamily.Volunteers.IntegrationTests.SpeciesAggregate.Tests
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var species = await _readDbContext.Species
+            var species = await _speciesReadDbContext.Species
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 
@@ -59,7 +58,7 @@ namespace PetFamily.Volunteers.IntegrationTests.SpeciesAggregate.Tests
                 .Should()
                 .BeEquivalentTo(Errors.General.NotFound(command.Id).ToErrorList());
 
-            var species = await _readDbContext.Species
+            var species = await _speciesReadDbContext.Species
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 

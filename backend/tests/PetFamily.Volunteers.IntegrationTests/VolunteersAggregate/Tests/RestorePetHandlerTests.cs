@@ -1,13 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.VolunteersAggregate.Commands.DeletePet;
-using PetFamily.Application.VolunteersAggregate.Commands.RestorePet;
-using PetFamily.Domain.Aggregates.PetManagement.ValueObjects;
-using PetFamily.Domain.Shared.Entities;
-using PetFamily.Domain.Shared.ValueObjects.Ids;
 using PetFamily.Volunteers.IntegrationTests.Helpers;
+using SharedKernel.Abstractions;
+using SharedKernel.Failures;
+using SharedKernel.ValueObjects.Ids;
+using Volunteers.Application.Commands.DeletePet;
+using Volunteers.Application.Commands.RestorePet;
 
 namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
 {
@@ -49,7 +48,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var pet = (await _writeDbContext.Volunteers
+            var pet = (await _volunteerWriteDbContext.Volunteers
                 .Include(v => v.Pets)
                 .FirstAsync(v => v.Id == volunteerId))
                 .Pets.First();
@@ -86,7 +85,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
                     Errors.General.NotFound(restoreCommand.VolunteerId)
                     .ToErrorList());
 
-            var pet = (await _writeDbContext.Volunteers
+            var pet = (await _volunteerWriteDbContext.Volunteers
                 .Include(v => v.Pets)
                 .FirstAsync(v => v.Id == volunteerId))
                 .Pets.First();
@@ -123,7 +122,7 @@ namespace PetFamily.Volunteers.IntegrationTests.VolunteersAggregate.Tests
                     Errors.General.NotFound(restoreCommand.PetId)
                     .ToErrorList());
 
-            var pet = (await _writeDbContext.Volunteers
+            var pet = (await _volunteerWriteDbContext.Volunteers
                 .Include(v => v.Pets)
                 .FirstAsync(v => v.Id == volunteerId))
                 .Pets.First();
