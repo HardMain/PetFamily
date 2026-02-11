@@ -18,7 +18,7 @@ namespace Accounts.Application.Commands.RegisterUser
             _userManager = userManager;
             _logger = logger;
         }
-
+        //логи
         public async Task<UnitResult<ErrorList>> Handle(
             RegisterUserCommand command, CancellationToken cancellationToken = default)
         {
@@ -29,12 +29,14 @@ namespace Accounts.Application.Commands.RegisterUser
             {
                 var errors = new ErrorList(result.Errors.Select(err => Error.Failure(err.Code, err.Description)));
 
+                _logger.LogWarning("Failed to register user {UserName}: {Errors}", user.UserName, errors);
+
                 return errors;
             } 
 
             await _userManager.AddToRoleAsync(user, ParticipantAccount.PARTICIPANT);
 
-            _logger.LogInformation("User created: {userName} a new account with password.", user.UserName);
+            _logger.LogInformation("User {userName} refistered successfully.", user.UserName);
 
             return UnitResult<ErrorList>.Success();
         }

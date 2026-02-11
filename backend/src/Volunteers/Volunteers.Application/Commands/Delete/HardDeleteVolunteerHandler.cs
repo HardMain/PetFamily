@@ -70,7 +70,7 @@ namespace Volunteers.Application.Commands.Delete
             var result = await _volunteersRepository.Delete(volunteerResult.Value, cancellationToken);
             if (result.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", result.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", result.Error);
 
                 return result.Error.ToErrorList();
             }

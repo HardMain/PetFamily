@@ -50,7 +50,7 @@ namespace Volunteers.Application.Commands.Restore
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (result.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", result.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", result.Error);
 
                 return result.Error.ToErrorList();
             }

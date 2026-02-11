@@ -11,12 +11,12 @@ namespace Volunteers.Application.Commands.RestorePet
 {
     public class RestorePetHandler : ICommandHandler<Guid, RestorePetCommand>
     {
-        private readonly ILogger<RestoreVolunteerHandler> _logger;
+        private readonly ILogger<RestorePetHandler> _logger;
         private readonly IValidator<RestorePetCommand> _validator;
         private readonly IVolunteersRepository _volunteersRepository;
 
         public RestorePetHandler(
-            ILogger<RestoreVolunteerHandler> logger,
+            ILogger<RestorePetHandler> logger,
             IValidator<RestorePetCommand> validator,
             IVolunteersRepository repository)
         {
@@ -63,7 +63,7 @@ namespace Volunteers.Application.Commands.RestorePet
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }

@@ -55,7 +55,7 @@ namespace Volunteers.Application.Commands.UpdateMainInfo
             if (volunteerByPhone.IsSuccess && volunteerByPhone.Value.Id != command.VolunteerId)
             {
                 _logger.LogWarning(
-                    "Volunteer creation failed: Phone number {PhoneNumber} already exists", phoneNumber.Value);
+                    "Volunteer update failed: Phone number {PhoneNumber} already exists", phoneNumber.Value);
 
                 return Errors.Volunteer.Duplicate().ToErrorList();
             }
@@ -66,7 +66,7 @@ namespace Volunteers.Application.Commands.UpdateMainInfo
             if (volunteerByEmail.IsSuccess && volunteerByEmail.Value.Id != command.VolunteerId)
             {
                 _logger.LogWarning(
-                    "Volunteer creation failed: Email {Email} already exists", email.Value);
+                    "Volunteer update failed: Email {Email} already exists", email.Value);
 
                 return Errors.Volunteer.Duplicate().ToErrorList();
             }
@@ -84,7 +84,7 @@ namespace Volunteers.Application.Commands.UpdateMainInfo
             var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (result.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", result.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", result.Error);
 
                 return result.Error.ToErrorList();
             }

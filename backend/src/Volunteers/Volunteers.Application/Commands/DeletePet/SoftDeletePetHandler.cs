@@ -11,12 +11,12 @@ namespace Volunteers.Application.Commands.DeletePet
     public class SoftDeletePetHandler : ICommandHandler<Guid, DeletePetCommand>
     {
         private readonly IValidator<DeletePetCommand> _validator;
-        private readonly ILogger<HardDeletePetHandler> _logger;
+        private readonly ILogger<SoftDeletePetHandler> _logger;
         private readonly IVolunteersRepository _volunteersRepository;
 
         public SoftDeletePetHandler(
             IValidator<DeletePetCommand> validator,
-            ILogger<HardDeletePetHandler> logger,
+            ILogger<SoftDeletePetHandler> logger,
             IVolunteersRepository volunteersRepository)
         {
             _validator = validator;
@@ -75,14 +75,14 @@ namespace Volunteers.Application.Commands.DeletePet
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }
 
             var result = deletedPetResult.Value.Id.Value;
 
-            _logger.LogInformation("Pet {PetId} to deleted", result);
+            _logger.LogInformation("Pet {PetId} deleted", result);
 
             return result;
         }

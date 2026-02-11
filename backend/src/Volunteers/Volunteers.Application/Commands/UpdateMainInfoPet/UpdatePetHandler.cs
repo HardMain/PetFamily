@@ -14,13 +14,13 @@ namespace Volunteers.Application.Commands.UpdateMainInfoPet
     public class UpdatePetHandler : ICommandHandler<Guid, UpdatePetCommand>
     {
         private readonly IValidator<UpdatePetCommand> _validator;
-        private readonly ILogger<UpdatePetCommand> _logger;
+        private readonly ILogger<UpdatePetHandler> _logger;
         private readonly IVolunteersRepository _volunteersRepository;
         private readonly ISpeciesContract _speciesContract;
 
         public UpdatePetHandler(
             IValidator<UpdatePetCommand> validator,
-            ILogger<UpdatePetCommand> logger,
+            ILogger<UpdatePetHandler> logger,
             IVolunteersRepository volunteersRepository,
             IVolunteersReadDbContext readDbContext,
             ISpeciesContract speciesContract)
@@ -118,7 +118,7 @@ namespace Volunteers.Application.Commands.UpdateMainInfoPet
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }

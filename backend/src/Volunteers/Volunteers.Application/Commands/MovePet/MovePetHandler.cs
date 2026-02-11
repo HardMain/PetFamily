@@ -85,12 +85,12 @@ namespace Volunteers.Application.Commands.MovePet
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Pet {PetId} moved", saveResult);
+            _logger.LogInformation("Pet {PetId} moved", petId);
 
             var result = moveResult.Value.Id.Value;
 

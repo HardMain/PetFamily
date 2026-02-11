@@ -27,7 +27,7 @@ namespace Accounts.Infrastructure.Seeding
                 ?? throw new ApplicationException("Could not deserialize role permission config.");
 
             await SeedPermissions(seedData, cancellationToken);
-            await SeedRoles(seedData, cancellationToken);
+            await SeedRoles(seedData);
             await SeedRolePermissions(seedData, cancellationToken);
             await SeedAdminAccount(cancellationToken);
         }
@@ -50,7 +50,7 @@ namespace Accounts.Infrastructure.Seeding
             logger.LogInformation("RolePermissions added to database.");
         }
 
-        private async Task SeedRoles(RolePermissionConfig seedData, CancellationToken cancellationToken)
+        private async Task SeedRoles(RolePermissionConfig seedData)
         {
             foreach (var roleName in seedData.Roles.Keys)
             {
@@ -76,7 +76,10 @@ namespace Accounts.Infrastructure.Seeding
         {
             var existingAdmin = await userManager.FindByEmailAsync(adminOptions.Value.Email);
             if (existingAdmin != null)
+            {
+                logger.LogInformation("Admin account already exists, seeding skipped.");
                 return;
+            }    
 
             var adminUser = User.CreateUser(adminOptions.Value.UserName, adminOptions.Value.Email);
 
@@ -93,6 +96,8 @@ namespace Accounts.Infrastructure.Seeding
             var adminAccount = new AdminAccount(fullName, adminUser);
             await adminAccountManager
                 .CreateAdminAccount(adminAccount, cancellationToken);
+
+            logger.LogInformation("Admin account successfully created for {Email}.", adminUser.Email);
         }
     }
 }

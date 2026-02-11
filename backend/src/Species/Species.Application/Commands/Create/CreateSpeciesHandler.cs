@@ -44,12 +44,12 @@ namespace Species.Application.Commands.Create
             var result = await _speciesRepository.Add(species, cancellationToken);
             if (result.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", result.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", result.Error);
 
                 return result.Error.ToErrorList();
             }
 
-            _logger.LogWarning("Species {SpeciesId} added", speciesId);
+            _logger.LogInformation("Species {SpeciesId} added", speciesId);
 
             return result.Value;
         }

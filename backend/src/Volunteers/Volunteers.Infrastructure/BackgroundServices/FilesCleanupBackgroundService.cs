@@ -37,7 +37,7 @@ namespace Volunteers.Infrastructure.BackgroundServices
                     _logger.LogDebug("FilesCleanupBackgroundService: Failed to clean up MinIO files - {Errors}",
                         deleteResult.Error);
                 else
-                    _logger.LogWarning("FilesCleanupBackgroundService: Files deleted - {DeletedFiles}",
+                    _logger.LogInformation("FilesCleanupBackgroundService: Files deleted - {DeletedFiles}",
                         deleteResult.Value);
             }
         }

@@ -127,7 +127,7 @@ namespace Volunteers.Application.Commands.AddPetFiles
                     return deleteResult.Error;
                 }
 
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }

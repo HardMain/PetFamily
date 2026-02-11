@@ -15,6 +15,7 @@ using Volunteers.Application.Commands.MovePet;
 using Volunteers.Application.Commands.Restore;
 using Volunteers.Application.Commands.RestorePet;
 using Volunteers.Application.Commands.SetMainPhotoPet;
+using Volunteers.Application.Commands.SetPetMainPhoto;
 using Volunteers.Application.Commands.UpdateDonationsInfo;
 using Volunteers.Application.Commands.UpdateMainInfo;
 using Volunteers.Application.Commands.UpdateMainInfoPet;

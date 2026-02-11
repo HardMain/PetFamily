@@ -105,7 +105,7 @@ namespace Volunteers.Application.Commands.DeletePet
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }

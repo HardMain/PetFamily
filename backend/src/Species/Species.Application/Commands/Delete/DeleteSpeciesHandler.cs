@@ -13,13 +13,13 @@ namespace Species.Application.Commands.Delete
     public class DeleteSpeciesHandler : ICommandHandler<Guid, DeleteSpeciesCommand>
     {
         private readonly IValidator<DeleteSpeciesCommand> _validator;
-        private readonly ILogger<DeleteBreedHandler> _logger;
+        private readonly ILogger<DeleteSpeciesHandler> _logger;
         private readonly ISpeciesRepository _speciesRepository;
         private readonly IVolunteersContract _volunteersContract;
 
         public DeleteSpeciesHandler(
             IValidator<DeleteSpeciesCommand> validator,
-            ILogger<DeleteBreedHandler> logger,
+            ILogger<DeleteSpeciesHandler> logger,
             ISpeciesRepository speciesRepository,
             IVolunteersContract volunteersContract)
         {
@@ -44,7 +44,7 @@ namespace Species.Application.Commands.Delete
             if (speciesResult.IsFailure)
             {
                 _logger.LogWarning(
-                    "Failed to get volunteer {VolunteerId}: {Errors}",
+                    "Failed to get species {SpeciesId}: {Errors}",
                     speciesId,
                     speciesResult.Error);
 
@@ -63,14 +63,14 @@ namespace Species.Application.Commands.Delete
             var deletedSpeciesResult = await _speciesRepository.Delete(speciesResult.Value);
             if (deletedSpeciesResult.IsFailure)
             {
-                _logger.LogInformation("Failed to delete species {SpeciesId}: {Errors}", speciesId, deletedSpeciesResult.Error);
+                _logger.LogWarning("Failed to delete species {SpeciesId}: {Errors}", speciesId, deletedSpeciesResult.Error);
 
                 return deletedSpeciesResult.Error.ToErrorList();
             }
 
             var result = deletedSpeciesResult.Value;
 
-            _logger.LogInformation("Species {SpeciesId} to deleted", result);
+            _logger.LogInformation("Species {SpeciesId} deleted", result);
 
             return result;
         }

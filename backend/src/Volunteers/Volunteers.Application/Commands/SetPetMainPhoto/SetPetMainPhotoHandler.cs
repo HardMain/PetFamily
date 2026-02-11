@@ -5,9 +5,10 @@ using Microsoft.Extensions.Logging;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects.Ids;
 using Volunteers.Application.Abstractions;
+using Volunteers.Application.Commands.SetMainPhotoPet;
 using Volunteers.Domain.ValueObjects;
 
-namespace Volunteers.Application.Commands.SetMainPhotoPet
+namespace Volunteers.Application.Commands.SetPetMainPhoto
 {
     public class SetPetMainPhotoHandler : ICommandHandler<string, SetPetMainPhotoCommand>
     {
@@ -78,12 +79,12 @@ namespace Volunteers.Application.Commands.SetMainPhotoPet
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }
 
-            _logger.LogInformation("Pet {PetId} moved", saveResult);
+            _logger.LogInformation("Main photo set for Pet {PetId}", petId);
 
             var result = setMainPhotoResult.Value.PathToStorage.Path;
 
