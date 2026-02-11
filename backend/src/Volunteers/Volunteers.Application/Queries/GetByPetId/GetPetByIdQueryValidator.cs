@@ -1,8 +1,8 @@
-﻿using FluentValidation;
-using Framework.Validation;
+﻿using Core.Validation;
+using FluentValidation;
 using SharedKernel.Failures;
 
-namespace Volunteers.Application.Queries.GetByIdPet
+namespace Volunteers.Application.Queries.GetByPetId
 {
     public class GetPetByIdQueryValidator : AbstractValidator<GetPetByIdQuery>
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.Caching;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects;
 using SharedKernel.ValueObjects.Ids;
@@ -12,10 +13,12 @@ namespace Volunteers.Infrastructure.Repositories
     public class VolunteersRepository : IVolunteersRepository
     {
         private readonly VolunteersWriteDbContext _dbContext;
+        private readonly ICacheService _cache;
 
-        public VolunteersRepository(VolunteersWriteDbContext dbContext)
+        public VolunteersRepository(VolunteersWriteDbContext dbContext, ICacheService cache)
         {
             _dbContext = dbContext;
+            _cache = cache;
         }
 
         public async Task<Result<Guid>> Add(
@@ -36,6 +39,12 @@ namespace Volunteers.Infrastructure.Repositories
             try
             {
                 await _dbContext.SaveChangesAsync(cancellationToken);
+
+                await _cache.RemoveByPrefixAsync($"volunteer:{volunteer.Id.Value}", cancellationToken);
+
+                foreach (var pet in volunteer.Pets)
+                    await _cache.RemoveByPrefixAsync($"pet:{pet.Id.Value}", cancellationToken);
+
                 return volunteer.Id.Value;
             }
             catch
@@ -111,9 +120,11 @@ namespace Volunteers.Infrastructure.Repositories
         public async Task<int> DeleteSoftDeletedEarlierThan(
             DateTime dateTime, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Volunteers.IgnoreQueryFilters()
+            var count = await _dbContext.Volunteers.IgnoreQueryFilters()
                 .Where(v => v.IsDeleted && v.DeletionDate <= dateTime)
                 .ExecuteDeleteAsync(cancellationToken);
+
+            return count;
         }
     }
 }

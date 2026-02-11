@@ -1,4 +1,4 @@
-﻿using SharedKernel.Abstractions;
+﻿using Core.Abstractions;
 using Species.Contracts.Requests;
 
 namespace Species.Application.Queries.GetBreedsBySpeciesIdWithPagination
