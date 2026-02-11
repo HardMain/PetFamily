@@ -1,5 +1,5 @@
 ﻿using System.Threading.Channels;
-using SharedKernel.Abstractions;
+using Core.Abstractions;
 
 namespace Volunteers.Infrastructure.MessageQueues
 {

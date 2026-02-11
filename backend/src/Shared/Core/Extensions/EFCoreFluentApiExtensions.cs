@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Volunteers.Infrastructure.Extensions
+namespace Core.Extensions
 {
     public static class EFCoreFluentApiExtensions
     {

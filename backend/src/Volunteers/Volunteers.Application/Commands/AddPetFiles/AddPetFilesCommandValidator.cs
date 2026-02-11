@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using Framework.Validation;
+﻿using Core.Validation;
+using FluentValidation;
 using SharedKernel.Constants;
 using SharedKernel.Failures;
 using Volunteers.Domain.ValueObjects;

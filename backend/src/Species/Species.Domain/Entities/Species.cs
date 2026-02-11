@@ -1,4 +1,4 @@
-﻿using SharedKernel.Abstractions;
+﻿using Core.Abstractions;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects.Ids;
 

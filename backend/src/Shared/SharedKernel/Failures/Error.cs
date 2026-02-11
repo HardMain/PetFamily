@@ -20,7 +20,8 @@ namespace SharedKernel.Failures
             Type = type;
             InvalidField = invalidField;
         }
-
+        public static Error Unauthorized(string code, string message, string? invalidField = null) =>
+            new(code, message, ErrorType.Unauthorized, invalidField);
         public static Error Validation(string code, string message, string? invalidField = null) =>
             new(code, message, ErrorType.Validation, invalidField);
         public static Error NotFound(string code, string message) =>
@@ -56,6 +57,7 @@ namespace SharedKernel.Failures
         Validation,
         NotFound,
         Failure,
-        Conflict
+        Conflict,
+        Unauthorized
     }
 }

@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
 using SharedKernel.Failures;
 
-namespace Framework.Validation
+namespace Core.Extensions
 {
     public static class ValidationExtensions
     {

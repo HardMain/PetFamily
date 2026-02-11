@@ -1,5 +1,5 @@
-﻿using Core.Interfaces;
-using SharedKernel.Abstractions;
+﻿using Core.Abstractions;
+using Core.Interfaces;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects;
 using SharedKernel.ValueObjects.Ids;

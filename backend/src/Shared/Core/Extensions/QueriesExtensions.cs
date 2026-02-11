@@ -2,7 +2,7 @@
 using Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Framework.Extensions
+namespace Core.Extensions
 {
     public static class QueriesExtensions
     {

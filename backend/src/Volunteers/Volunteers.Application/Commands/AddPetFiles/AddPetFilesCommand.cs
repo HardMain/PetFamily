@@ -1,5 +1,5 @@
-﻿using Core.Dtos;
-using SharedKernel.Abstractions;
+﻿using Core.Abstractions;
+using Core.Dtos;
 
 namespace Volunteers.Application.Commands.AddPetFiles
 {

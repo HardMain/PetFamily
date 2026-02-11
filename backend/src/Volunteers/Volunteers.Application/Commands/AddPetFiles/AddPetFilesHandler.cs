@@ -1,9 +1,9 @@
-﻿using Core.Dtos;
+﻿using Core.Abstractions;
+using Core.Dtos;
+using Core.Extensions;
 using Core.Providers;
 using FluentValidation;
-using Framework.Validation;
 using Microsoft.Extensions.Logging;
-using SharedKernel.Abstractions;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects;
 using SharedKernel.ValueObjects.Ids;

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.Caching;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects.Ids;
 using Species.Application.Abstractions;
@@ -10,10 +11,12 @@ namespace Species.Infrastructure.Repositories
     public class SpeciesRepository : ISpeciesRepository
     {
         private readonly SpeciesWriteDbContext _dbContext;
+        private readonly ICacheService _cache;
 
-        public SpeciesRepository(SpeciesWriteDbContext dbContext)
+        public SpeciesRepository(SpeciesWriteDbContext dbContext, ICacheService cache)
         {
             _dbContext = dbContext;
+            _cache = cache;
         }
 
         public async Task<Result<Guid>> Add(
@@ -24,6 +27,8 @@ namespace Species.Infrastructure.Repositories
             var saveResult = await Save(species, cancellationToken);
             if (saveResult.IsFailure)
                 return saveResult.Error;
+
+            await _cache.RemoveByPrefixAsync($"species:name", cancellationToken);
 
             return species.Id.Value;
         }
@@ -36,6 +41,9 @@ namespace Species.Infrastructure.Repositories
             var saveResult = await Save(species, cancellationToken);
             if (saveResult.IsFailure)
                 return saveResult.Error;
+
+            await _cache.RemoveByPrefixAsync($"species:{species.Id.Value}", cancellationToken);
+            await _cache.RemoveByPrefixAsync($"species:name", cancellationToken);
 
             return species.Id.Value;
         }
@@ -59,6 +67,10 @@ namespace Species.Infrastructure.Repositories
             try
             {
                 await _dbContext.SaveChangesAsync(cancellationToken);
+
+                await _cache.RemoveByPrefixAsync($"species:{species.Id.Value}", cancellationToken);
+                await _cache.RemoveByPrefixAsync("species:name", cancellationToken);
+
                 return species.Id.Value;
             }
             catch (Exception)

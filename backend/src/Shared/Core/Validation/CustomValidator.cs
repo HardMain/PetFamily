@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SharedKernel.Failures;
 
-namespace Framework.Validation
+namespace Core.Validation
 {
     public static class CustomValidator
     {

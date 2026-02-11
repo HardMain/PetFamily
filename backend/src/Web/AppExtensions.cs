@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Accounts.Infrastructure.DbContexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Species.Infrastructure.DbContexts;
 using Volunteers.Infrastructure.DbContexts;
 
@@ -13,8 +16,21 @@ public static class AppExtensions
             typeof(SpeciesReadDbContext),
             typeof(SpeciesWriteDbContext),
             typeof(VolunteersReadDbContext),
-            typeof(VolunteersWriteDbContext)
+            typeof(VolunteersWriteDbContext),
+            typeof(AccountsDbContext)
         };
+
+        var firstContext = scope.ServiceProvider.GetService(contextTypes[0]) as DbContext;
+        if (firstContext != null)
+        {
+            var databaseCreator = firstContext.Database.GetService<IRelationalDatabaseCreator>();
+            if (databaseCreator != null && !await databaseCreator.ExistsAsync())
+            {
+                app.Logger.LogInformation("Database does not exist. Creating database...");
+                await databaseCreator.CreateAsync();
+                app.Logger.LogInformation("Database created successfully");
+            }
+        }
 
         foreach (var contextType in contextTypes)
         {

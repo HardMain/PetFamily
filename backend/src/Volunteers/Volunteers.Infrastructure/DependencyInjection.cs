@@ -9,11 +9,11 @@ using Volunteers.Infrastructure.Providers;
 using Volunteers.Application.Abstractions;
 using Volunteers.Infrastructure.DbContexts;
 using Core.Providers;
-using SharedKernel.Abstractions;
 using SharedKernel.ValueObjects;
 using Volunteers.Infrastructure.MessageQueues;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Core.Abstractions;
 
 namespace Volunteers.Infrastructure
 {

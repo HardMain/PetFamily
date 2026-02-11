@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Constants;
@@ -7,7 +8,6 @@ using SharedKernel.ValueObjects.Ids;
 using Volunteers.Contracts.DTOs;
 using Volunteers.Domain.Entities;
 using Volunteers.Domain.ValueObjects;
-using Volunteers.Infrastructure.Extensions;
 
 namespace Volunteers.Infrastructure.Configurations.Write
 {

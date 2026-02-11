@@ -1,9 +1,8 @@
-﻿using Core.Models;
+﻿using Core.Abstractions;
+using Core.Extensions;
+using Core.Models;
 using FluentValidation;
-using Framework.Extensions;
-using Framework.Validation;
 using Microsoft.Extensions.Logging;
-using SharedKernel.Abstractions;
 using SharedKernel.Failures;
 using Volunteers.Application.Abstractions;
 using Volunteers.Contracts.DTOs;

@@ -1,8 +1,7 @@
-﻿using FluentValidation;
-using Framework.Validation;
-using Microsoft.EntityFrameworkCore;
+﻿using Core.Abstractions;
+using Core.Extensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
-using SharedKernel.Abstractions;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects;
 using SharedKernel.ValueObjects.Ids;
