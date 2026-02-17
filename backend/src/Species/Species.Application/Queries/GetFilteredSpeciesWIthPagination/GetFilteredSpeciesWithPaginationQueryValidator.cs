@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using Framework.Validation;
+﻿using Core.Validation;
+using FluentValidation;
 using SharedKernel.Failures;
 
 namespace Species.Application.Queries.GetFilteredSpeciesWIthPagination
