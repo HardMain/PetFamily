@@ -1,8 +1,10 @@
 ﻿using Framework;
+using Framework.Authorization;
 using Framework.Envelopes;
 using Framework.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Constants;
 using Volunteers.Application.Commands.AddPet;
 using Volunteers.Application.Commands.AddPetFiles;
 using Volunteers.Application.Commands.Create;
@@ -29,7 +31,7 @@ namespace Volunteers.Presenters
     public class VolunteersController : ControllerBase
     {
         // ----------- Volunteer -------------
-
+        [Permission(Permissions.Volunteers.Create)]
         [HttpPost]
         public async Task<ActionResult> Create(
             [FromServices] CreateVolunteerHandler handler,
@@ -48,6 +50,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Volunteers.Read)]
         [HttpGet]
         public async Task<ActionResult> GetFilteredVolunteers(
             [FromServices] GetFilteredVolunteersWithPaginationHandler handler,
@@ -65,6 +68,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Volunteers.Read)]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult> GetVolunteerById(
             [FromServices] GetVolunteerByIdHandler handler,
@@ -82,6 +86,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Volunteers.Update)]
         [HttpPut("{id:guid}/main-info")]
         public async Task<ActionResult> UpdateMainInfo(
             [FromRoute] Guid id,
@@ -101,6 +106,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Volunteers.Update)]
         [HttpPut("{id:guid}/social-networks")]
         public async Task<ActionResult> UpdateSocialNetworks(
             [FromRoute] Guid id,
@@ -120,6 +126,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Volunteers.Update)]
         [HttpPut("{id:guid}/donations")]
         public async Task<ActionResult> UpdateDonationsInfo(
             [FromRoute] Guid id,
@@ -139,6 +146,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Volunteers.Delete)]
         [HttpPut("{id:guid}/soft")]
         public async Task<ActionResult> SoftDelete(
             [FromRoute] Guid id,
@@ -157,6 +165,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Volunteers.Restore)]
         [HttpPut("{id:guid}/restore")]
         public async Task<ActionResult> Restore(
             [FromRoute] Guid id,
@@ -175,6 +184,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Volunteers.Delete)]
         [HttpDelete("{id:guid}/hard")]
         public async Task<ActionResult> HardDelete(
             [FromRoute] Guid id,
@@ -195,6 +205,7 @@ namespace Volunteers.Presenters
 
         // ----------- Pet -------------
 
+        [Permission(Permissions.Pets.Create)]
         [HttpPost("{volunteerId:guid}/pet")]
         public async Task<ActionResult> AddPet(
             [FromRoute] Guid volunteerId,
@@ -214,6 +225,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Pets.ManageFiles)]
         [HttpPost("{volunteerId:guid}/pet/{petId:guid}/files")]
         public async Task<ActionResult> AddPetFiles(
             [FromRoute] Guid volunteerId,
@@ -237,6 +249,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Pets.Update)]
         [HttpPut("{volunteerId:guid}/pet/{petId:guid}")]
         public async Task<ActionResult> UpdatePet(
             [FromRoute] Guid volunteerId,
@@ -257,6 +270,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Pets.Update)]
         [HttpPut("{volunteerId:guid}/pet/{petId:guid}/support-status")]
         public async Task<ActionResult> UpdatePetSupportStatus(
             [FromRoute] Guid volunteerId,
@@ -277,6 +291,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Pets.ManageFiles)]
         [HttpPut("{volunteerId:guid}/pet/{petId:guid}/main-photo")]
         public async Task<ActionResult> SetPetMainPhoto(
             [FromRoute] Guid volunteerId,
@@ -297,6 +312,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Pets.Delete)]
         [HttpPut("{volunteerId:guid}/pet/{petId:guid}/soft")]
         public async Task<ActionResult> SoftDeletePet(
             [FromRoute] Guid volunteerId,
@@ -316,6 +332,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Pets.Restore)]
         [HttpPut("{volunteerId:guid}/pet/{petId:guid}/restore")]
         public async Task<ActionResult> Restore(
             [FromRoute] Guid volunteerId,
@@ -335,6 +352,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Pets.Update)]
         [HttpPut("{volunteerId:guid}/pet/{petId:guid}/position")]
         public async Task<ActionResult> MovePet(
             [FromRoute] Guid volunteerId,
@@ -355,6 +373,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Pets.Delete)]
         [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/hard")]
         public async Task<ActionResult> HardDeletePet(
             [FromRoute] Guid volunteerId,
@@ -374,6 +393,7 @@ namespace Volunteers.Presenters
             return Ok(envelope);
         }
 
+        [Permission(Permissions.Pets.Delete)]
         [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/files")]
         public async Task<ActionResult> DeletePetFiles(
             [FromRoute] Guid volunteerId,

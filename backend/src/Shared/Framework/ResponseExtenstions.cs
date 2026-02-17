@@ -53,6 +53,7 @@ namespace Framework
                 ErrorType.NotFound => StatusCodes.Status404NotFound,
                 ErrorType.Failure => StatusCodes.Status500InternalServerError,
                 ErrorType.Conflict => StatusCodes.Status409Conflict,
+                ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
                 _ => StatusCodes.Status500InternalServerError
             };
     }
