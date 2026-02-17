@@ -1,0 +1,43 @@
+﻿using Core.Abstractions;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Species.Application.Commands.Create;
+using Tests.Infrastructure;
+using Tests.Infrastructure.Helpers;
+
+namespace Species.IntegrationTests.Tests
+{
+    public class CreateSpeciesHandlerTests : SpeciesTestsBase
+    {
+        private readonly ICommandHandler<Guid, CreateSpeciesCommand> _sut;
+
+        public CreateSpeciesHandlerTests(IntegrationTestsWebFactory factory) : base(factory)
+        {
+            _sut = _scope.ServiceProvider
+                .GetRequiredService<ICommandHandler<Guid, CreateSpeciesCommand>>();
+        }
+
+        [Fact]
+        public async Task Add_breed_to_database_successfuly_adds_breed()
+        {
+            // Arrange
+            var command = _fixture
+                .CreateCreateSpeciesCommand();
+
+            // Act
+            var result = await _sut.Handle(command, CancellationToken.None);
+
+            // Assert
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().NotBeEmpty();
+
+            var species = await _speciesReadDbContext.Species
+                .AsNoTracking()
+                .FirstAsync();
+
+            species.Should().NotBeNull();
+            species.Id.Should().Be(result.Value);
+        }
+    }
+}

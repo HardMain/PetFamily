@@ -2,12 +2,12 @@
 using Volunteers.Domain.ValueObjects;
 using Volunteers.Domain.Entities;
 using Volunteers.Application.Abstractions;
-using SharedKernel.Abstractions;
 using FluentValidation;
 using SharedKernel.Failures;
-using Framework.Validation;
 using SharedKernel.ValueObjects;
 using SharedKernel.ValueObjects.Ids;
+using Core.Extensions;
+using Core.Abstractions;
 
 namespace Volunteers.Application.Commands.Create
 {
@@ -99,7 +99,7 @@ namespace Volunteers.Application.Commands.Create
             var result = await _volunteersRepository.Add(volunteer, cancellationToken);
             if (result.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", result.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", result.Error);
 
                 return result.Error.ToErrorList();
             }

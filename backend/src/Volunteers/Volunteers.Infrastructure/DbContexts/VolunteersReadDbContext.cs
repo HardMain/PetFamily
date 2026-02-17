@@ -4,7 +4,6 @@ using Volunteers.Contracts.DTOs;
 
 namespace Volunteers.Infrastructure.DbContexts
 {
-
     public class VolunteersReadDbContext : DbContext, IVolunteersReadDbContext
     {
         public VolunteersReadDbContext(DbContextOptions<VolunteersReadDbContext> options) : base(options) { }

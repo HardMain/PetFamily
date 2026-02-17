@@ -1,7 +1,7 @@
 ﻿using Framework;
 using Framework.Envelopes;
 using Microsoft.AspNetCore.Mvc;
-using Volunteers.Application.Queries.GetByIdPet;
+using Volunteers.Application.Queries.GetByPetId;
 using Volunteers.Application.Queries.GetFilteredPetsWithPagination;
 using Volunteers.Contracts.Requests;
 
@@ -34,9 +34,9 @@ namespace Volunteers.Presenters
             [FromServices] GetPetByIdHandler handler,
             CancellationToken cancellationToken)
         {
-            var command = new GetPetByIdQuery(id);
+            var query = new GetPetByIdQuery(id);
 
-            var response = await handler.Handle(command, cancellationToken);
+            var response = await handler.Handle(query, cancellationToken);
 
             if (response.IsFailure)
                 return response.Error.ToResponse();

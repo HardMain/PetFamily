@@ -1,7 +1,7 @@
-﻿using FluentValidation;
-using Framework.Validation;
+﻿using Core.Abstractions;
+using Core.Extensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
-using SharedKernel.Abstractions;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects.Ids;
 using Species.Application.Abstractions;
@@ -44,7 +44,7 @@ namespace Species.Application.Commands.DeleteBreed
             if (speciesResult.IsFailure)
             {
                 _logger.LogWarning(
-                    "Failed to get volunteer {VolunteerId}: {Errors}",
+                    "Failed to get species {SpeciesId}: {Errors}",
                     speciesId,
                     speciesResult.Error);
 
@@ -57,8 +57,8 @@ namespace Species.Application.Commands.DeleteBreed
             if (breedResult.IsFailure)
             {
                 _logger.LogWarning(
-                    "Failed to get pet {PetId}: {Errors}",
-                    breedResult,
+                    "Failed to get breed {BreedId}: {Errors}",
+                    breedId,
                     breedResult.Error);
 
                 return breedResult.Error.ToErrorList();
@@ -78,14 +78,14 @@ namespace Species.Application.Commands.DeleteBreed
             var saveResult = await _speciesRepository.Save(speciesResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }
 
             var result = breedResult.Value.Id.Value;
 
-            _logger.LogInformation("Breed {BreedId} to deleted", result);
+            _logger.LogInformation("Breed {BreedId} deleted", result);
 
             return result;
         }

@@ -22,7 +22,7 @@ namespace Volunteers.Infrastructure.BackgroundServices
             _options = options;
             _logger = logger;
         }
-
+          
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("SoftDeleteCleanupService is starting");

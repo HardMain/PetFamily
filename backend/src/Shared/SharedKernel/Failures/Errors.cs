@@ -34,6 +34,23 @@
             {
                 return Error.Failure("data.save.failed", "failed to save data in database");
             }
+
+            public static Error Duplicate()
+            {
+                return Error.Validation("record.already.exist", $"record already exist");
+            }
+        }
+
+        public static class Tokens
+        {
+            public static Error ExpiredToken()
+            {
+                return Error.Unauthorized("token.is.expired", "Your token is expired");
+            }
+            public static Error InvalidToken()
+            {
+                return Error.Unauthorized("token.is.invalid", "Your token is invalid");
+            }
         }
 
         public static class Volunteer
@@ -124,6 +141,14 @@
 
                 return Error.Failure("file.delete.minio",
                     $"Fail to delete file in MinIO" + label + label2);
+            }
+        }
+
+        public static class User
+        {
+            public static Error InvalidCredentials(string? name = null)
+            {
+                return Error.Validation("credentials.is.invalid", "Your credentials is invalid");
             }
         }
     }

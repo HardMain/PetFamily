@@ -40,7 +40,27 @@ namespace SharedKernel.Failures
         public static new Result<TValue> Failure(Error error) => new Result<TValue>(default!, false, error);
 
         public static implicit operator Result<TValue>(TValue value) => Success(value);
+        
         public static implicit operator Result<TValue>(Error error) => Failure(error);
+    }
+    public class UnitResult<TError>
+    {
+        private readonly TError _error;
+
+        public UnitResult(bool isSuccess, TError error)
+        {
+            _error = error;
+            IsSuccess = isSuccess;
+        }
+        
+        public bool IsSuccess { get; }
+        public bool IsFailure => !IsSuccess;
+        public TError Error => IsFailure ? _error : throw new InvalidOperationException("The error of a successful result cannot be accessed.");
+
+        public static UnitResult<TError> Success() => new UnitResult<TError>(true, default!);
+        public static UnitResult<TError> Failure(TError error) => new UnitResult<TError>(false, error);
+
+        public static implicit operator UnitResult<TError>(TError error) => Failure(error);
     }
 
     public class Result<TValue, TError>

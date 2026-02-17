@@ -1,4 +1,4 @@
-﻿using SharedKernel.Abstractions;
+﻿using Core.Abstractions;
 
 namespace Species.Application.Commands.DeleteBreed
 {

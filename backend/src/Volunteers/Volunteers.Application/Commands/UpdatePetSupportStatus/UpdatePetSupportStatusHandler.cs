@@ -1,7 +1,7 @@
-﻿using FluentValidation;
-using Framework.Validation;
+﻿using Core.Abstractions;
+using Core.Extensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
-using SharedKernel.Abstractions;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects.Ids;
 using Volunteers.Application.Abstractions;
@@ -74,14 +74,14 @@ namespace Volunteers.Application.Commands.UpdatePetSupportStatus
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }
 
             var result = petResult.Value.Id.Value;
 
-            _logger.LogWarning("PetSupportStatus updated {PetId}", result);
+            _logger.LogInformation("PetSupportStatus updated {PetId}", result);
 
             return result;
         }

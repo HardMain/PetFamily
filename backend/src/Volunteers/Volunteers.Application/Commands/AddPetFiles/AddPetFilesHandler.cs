@@ -1,9 +1,9 @@
-﻿using Core.Dtos;
+﻿using Core.Abstractions;
+using Core.Dtos;
+using Core.Extensions;
 using Core.Providers;
 using FluentValidation;
-using Framework.Validation;
 using Microsoft.Extensions.Logging;
-using SharedKernel.Abstractions;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects;
 using SharedKernel.ValueObjects.Ids;
@@ -127,7 +127,7 @@ namespace Volunteers.Application.Commands.AddPetFiles
                     return deleteResult.Error;
                 }
 
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }

@@ -1,16 +1,16 @@
 ﻿using FluentValidation;
-using Framework.Validation;
-using Microsoft.Extensions.Logging;
-using SharedKernel.Abstractions;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects;
 using SharedKernel.ValueObjects.Ids;
 using Volunteers.Application.Abstractions;
 using Volunteers.Contracts.DTOs;
-using Volunteers.Domain.Entities;
 using Volunteers.Domain.Enums;
 using Volunteers.Domain.ValueObjects;
 using Species.Contracts;
+using Core.Extensions;
+using Core.Abstractions;
+using Microsoft.Extensions.Logging;
+using Volunteers.Domain.Entities;
 
 namespace Volunteers.Application.Commands.AddPet
 {
@@ -143,7 +143,7 @@ namespace Volunteers.Application.Commands.AddPet
             var saveResult = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
             if (saveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", saveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", saveResult.Error);
 
                 return saveResult.Error.ToErrorList();
             }

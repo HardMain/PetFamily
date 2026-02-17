@@ -1,8 +1,8 @@
-﻿using Core.Providers;
+﻿using Core.Abstractions;
+using Core.Providers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SharedKernel.Abstractions;
 using SharedKernel.ValueObjects;
 
 namespace Volunteers.Infrastructure.BackgroundServices
@@ -37,7 +37,7 @@ namespace Volunteers.Infrastructure.BackgroundServices
                     _logger.LogDebug("FilesCleanupBackgroundService: Failed to clean up MinIO files - {Errors}",
                         deleteResult.Error);
                 else
-                    _logger.LogWarning("FilesCleanupBackgroundService: Files deleted - {DeletedFiles}",
+                    _logger.LogInformation("FilesCleanupBackgroundService: Files deleted - {DeletedFiles}",
                         deleteResult.Value);
             }
         }

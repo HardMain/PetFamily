@@ -1,7 +1,7 @@
-﻿using FluentValidation;
-using Framework.Validation;
+﻿using Core.Abstractions;
+using Core.Extensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
-using SharedKernel.Abstractions;
 using SharedKernel.Failures;
 using SharedKernel.ValueObjects.Ids;
 using Species.Application.Abstractions;
@@ -55,12 +55,12 @@ namespace Species.Application.Commands.AddBreed
             var SaveResult = await _speciesRepository.Save(speciesResult.Value, cancellationToken);
             if (SaveResult.IsFailure)
             {
-                _logger.LogInformation("Failed to save data: {Errors}", SaveResult.Error);
+                _logger.LogWarning("Failed to save data: {Errors}", SaveResult.Error);
 
                 return SaveResult.Error.ToErrorList();
             }
 
-            _logger.LogWarning("Breed {BreedId} added", result);
+            _logger.LogInformation("Breed {BreedId} added", result);
 
             return result;
         }

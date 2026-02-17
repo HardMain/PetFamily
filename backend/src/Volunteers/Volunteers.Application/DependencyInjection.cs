@@ -1,6 +1,6 @@
-﻿using FluentValidation;
+﻿using Core.Abstractions;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Abstractions;
 
 namespace Volunteers.Application
 {
